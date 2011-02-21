@@ -8,7 +8,8 @@ class _RealValFunc(Mapping, NumberTypeable):
     """A real-valued function"""
 
     def __init__(self, mapping, number_type=None):
-        """
+        """Create a real-valued function
+        
         :param mapping: a mapping to real values.
         :type data: |collections.Mapping|
         :param number_type: The type to use for numbers:
@@ -28,15 +29,23 @@ class _RealValFunc(Mapping, NumberTypeable):
         else:
             raise TypeError('specify a mapping')
 
+    @classmethod
+    def _make(cls, mapping):
+        return mapping if isinstance(mapping, cls) else cls(mapping)
+
     __len__ = lambda self: len(self._mapping)
     __iter__ = lambda self: iter(self._mapping)
     __contains__ = lambda self, element: element in self._mapping
     __getitem__ = lambda self, element: self._mapping[element]
-    __repr__ = lambda self: '_RealValFunc(' + dict(self).__repr__() + ')'
-    __str__ = lambda self: dict(self).__str__()
+    __repr__ = lambda self: '_RealValFunc(' + self._mapping.__repr__() + ')'
+    __str__ = lambda self: self._mapping.__str__()
 
     domain = lambda self: frozenset(self.keys())
     range = lambda self: frozenset(self.values())
+
+    def support(self):
+      return frozenset(element for element, value
+                               in self.iteritems() if value != 0)
 
     __add__ = lambda self, other: self._oper(other, '__add__')
     __radd__ = __add__
@@ -57,23 +66,16 @@ class _RealValFunc(Mapping, NumberTypeable):
             return self._scalar(other, oper)
 
     def _pointwise(self, other, oper):
-        """
-        :raises: :exc:`~exceptions.ValueError` if possibility spaces
-        do not match
-        """
         if self.number_type != other.number_type:
             raise ValueError("number type mismatch")
-        return _RealValFunc(dict((arg, oper(self[arg], other[arg]))
-                                 for arg in self._domain_joiner(other)),
-                            number_type=self.number_type)
+        return type(self)(dict((arg, oper(self[arg], other[arg]))
+                               for arg in self._domain_joiner(other)),
+                          number_type=self.number_type)
 
     _domain_joiner = lambda self, other: self.domain() & other.domain()
 
     def _scalar(self, other, oper):
-        """
-        :raises: :exc:`~exceptions.TypeError` if other is not a scalar
-        """
         other = self.make_number(other)
-        return _RealValFunc(dict((arg, oper(value, other))
-                                 for arg, value in self.iteritems()),
-                            number_type=self.number_type)
+        return type(self)(dict((arg, oper(value, other))
+                               for arg, value in self.iteritems()),
+                          number_type=self.number_type)
