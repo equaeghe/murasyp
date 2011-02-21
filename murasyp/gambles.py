@@ -24,7 +24,9 @@ class Gamble(_RealValFunc, Hashable):
         return hash((self.domain,
                      tuple(self._mapping[omega] for omega in self.pspace())))
 
-    pspace = lambda self: self.domain()
+    def pspace(self):
+        """The gamble's possibility space"""
+        return self.domain()
 
     def __mul__(self, other):
         if isinstance(other, Event):
@@ -38,7 +40,12 @@ class Gamble(_RealValFunc, Hashable):
     _domain_joiner = lambda self, other: self.domain() | other.domain()
 
     def norm(self):
-        """The max-norm of the gamble"""
+        """The max-norm of the gamble
+
+        :returns: the max-norm of the gamble
+        :rtype: :class:`~cdd.NumberTypeable.NumberType`
+
+        """
         return max(map(abs, self.range()))
 
     def normalized(self):

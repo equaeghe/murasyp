@@ -11,6 +11,18 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
+.. automodule:: murasyp
+   :members:
+   :undoc-members:
+
+.. automodule:: murasyp.events
+   :members:
+   :undoc-members:
+
+.. automodule:: murasyp.gambles
+   :members:
+   :undoc-members:
+
 Indices and tables
 ==================
 
