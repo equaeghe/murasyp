@@ -22,20 +22,39 @@ class Gamble(_RealValFunc, Hashable):
 
     def __hash__(self):
         return hash((self.domain,
-                     tuple(self._mapping[omega] for omega in self.pspace())))
+                     tuple(self._mapping[x] for x in self.pspace())))
 
     def pspace(self):
         """The gamble's possibility space"""
         return self.domain()
 
-    def __mul__(self, other):
-        if isinstance(other, Event):
-            return type(self)(dict((omega, self[omega]) for omega in other),
-                              self.number_type)
-        else:
-            return self._oper(other, '__mul__')
+    def __or__(self, other):
+        """Restriction or extension with zero
 
-    __rmul__ = __mul__
+        >>> f = Gamble({'a': 1, 'b': -1})
+        >>> A = Event(['b', 'c'])
+        >>> f | A
+        Gamble({'c': 0.0, 'b': -1.0})
+
+        """
+        if isinstance(other, Event):
+            return type(self)(dict((x, self[x]) for x in other),
+                              self.number_type)
+
+    def __xor__(self, other):
+        """Cylindrical extension
+
+        >>> f = Gamble({'a': 1, 'b': -1})
+        >>> A = Event(['c', 'd'])
+        >>> f ^ A
+        Gamble({('b', 'c'): -1.0, ('a', 'd'): 1.0,
+        ...     ('a', 'c'): 1.0, ('b', 'd'): -1.0})
+
+        """
+        if isinstance(other, Event):
+            return type(self)(dict(((x, y), self[x])
+                                   for x in self for y in other),
+                              self.number_type)
 
     _domain_joiner = lambda self, other: self.domain() | other.domain()
 

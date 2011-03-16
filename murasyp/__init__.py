@@ -9,7 +9,7 @@ class _RealValFunc(Mapping, NumberTypeable):
 
     def __init__(self, mapping, number_type=None):
         """Create a real-valued function
-        
+
         :param mapping: a mapping to real values.
         :type data: |collections.Mapping|
         :param number_type: The type to use for numbers:
