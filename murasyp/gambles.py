@@ -9,24 +9,24 @@ class Gamble(_RealValFunc, Hashable):
     def __init__(self, data, number_type=None):
         """Create a gamble"""
         if isinstance(data, Event):
-          data = dict(izip(data, repeat(1)))
+            data = dict(izip(data, repeat(1)))
         return _RealValFunc.__init__(self, data, number_type)
 
     __repr__ = lambda self: 'Gamble(' + self._mapping.__repr__() + ')'
 
-    def __getitem__(self, omega):
+    def __getitem__(self, x):
         try:
-            return self._mapping[omega]
+            return self._mapping[x]
         except KeyError:
             return self.make_number(0)
-
-    def __hash__(self):
-        return hash((self.domain,
-                     tuple(self._mapping[x] for x in self.pspace())))
 
     def pspace(self):
         """The gamble's possibility space"""
         return self.domain()
+
+    def __hash__(self):
+        return hash((self.domain,
+                     tuple(self._mapping[x] for x in self.pspace())))
 
     def __or__(self, other):
         """Restriction or extension with zero
