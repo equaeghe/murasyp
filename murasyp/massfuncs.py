@@ -29,25 +29,6 @@ class MassFunc(_RealValFunc, Hashable):
         return hash((self.domain,
                      tuple(self._mapping[x] for x in self.pspace())))
 
-    def __and__(self, other):
-        """Scalar product
-
-        >>> mf = MassFunc({'a': 2, 'b': 4, 'c': 8}, number_type='fraction')
-        >>> A = Event(['a','b'])
-        >>> mf & A
-        Fraction(6, 1)
-        >>> f = Gamble({'c': -5, 'd': 17})
-        >>> mf & f
-        -40.0
-
-        """
-        if isinstance(other, Event):
-            return sum(self[x] for x in other)
-        if isinstance(other, Gamble):
-            return sum(self[x] * other[x] for x in self)
-
-    _domain_joiner = lambda self, other: self.domain() | other.domain()
-
     def total_mass(self):
         """The total mass of the mass function
 
@@ -57,6 +38,32 @@ class MassFunc(_RealValFunc, Hashable):
 
         """
         return sum(self.itervalues())
+
+    def __and__(self, other):
+        """Scalar product
+
+        >>> mf = MassFunc({'a': 2, 'b': 4, 'c': 8}, number_type='fraction')
+        >>> A = Event(['a','b'])
+        >>> mf & A
+        Fraction(6, 1)
+        >>> f = Gamble({'c': -5, 'd': 17})
+        >>> mf & f
+        -70.0
+
+        """
+        if isinstance(other, Event):
+            return sum(self[x] for x in other)
+        if isinstance(other, Gamble):
+            norm = self.total_mass()
+            local_mass = sum(self[x] for x in other)
+            try:
+                return (norm / local_mass) * sum(self[x] * other[x]
+                                                 for x in other)
+            except ZeroDivisionError:
+                print("Cannot calculate the conditional weighted sum: "
+                      + Event(other.pspace()).__str__() + " has zero mass.")
+
+    _domain_joiner = lambda self, other: self.domain() | other.domain()
 
     def normalized(self):
         """Sum-norm normalized version of the mass function
@@ -68,7 +75,10 @@ class MassFunc(_RealValFunc, Hashable):
 
         """
         norm = self.total_mass()
-        return ((1 / norm) * self, norm)
+        try:
+            return ((1 / norm) * self, norm)
+        except ZeroDivisionError:
+            print("The mass function has zero total mass.")
 
     def is_pmf(self):
         """Checks whether the mass function is a probability mass function

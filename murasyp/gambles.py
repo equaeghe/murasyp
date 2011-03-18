@@ -70,11 +70,17 @@ class Gamble(_RealValFunc, Hashable):
     def normalized(self):
         """Max-norm normalized version of the gamble"""
         norm = self.norm()
-        return ((1 / norm) * self, norm)
+        if norm == 0:
+            return (self, norm)
+        else:
+            return ((1 / norm) * self, norm)
 
     def scaled_shifted(self):
         """Shifted and scaled version of the gamble"""
         values = self.range()
         shift = min(values)
         scale = max(values) - shift
-        return ((1 / scale) * (self - shift), shift, scale)
+        if scale == 0:
+            return ((self - shift), shift, scale)
+        else:
+            return ((1 / scale) * (self - shift), shift, scale)
