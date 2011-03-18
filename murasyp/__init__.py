@@ -4,7 +4,7 @@ __release__ = __version__
 from cdd import NumberTypeable, get_number_type_from_sequences
 from collections import Mapping
 
-class _RealValFunc(Mapping, NumberTypeable):
+class RealValFunc(Mapping, NumberTypeable):
     """A real-valued function"""
 
     def __init__(self, mapping, number_type=None):
@@ -37,7 +37,7 @@ class _RealValFunc(Mapping, NumberTypeable):
     __iter__ = lambda self: iter(self._mapping)
     __contains__ = lambda self, element: element in self._mapping
     __getitem__ = lambda self, element: self._mapping[element]
-    __repr__ = lambda self: '_RealValFunc(' + self._mapping.__repr__() + ')'
+    __repr__ = lambda self: 'RealValFunc(' + self._mapping.__repr__() + ')'
     __str__ = lambda self: self._mapping.__str__()
 
     domain = lambda self: frozenset(self.keys())
@@ -60,7 +60,7 @@ class _RealValFunc(Mapping, NumberTypeable):
 
     def _oper(self, other, oper_str):
         oper = getattr(self.NumberType, oper_str)
-        if isinstance(other, _RealValFunc):
+        if isinstance(other, RealValFunc):
             return self._pointwise(other, oper)
         else:
             return self._scalar(other, oper)

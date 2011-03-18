@@ -1,16 +1,16 @@
 from collections import Hashable
 from itertools import repeat, izip
-from murasyp import _RealValFunc
+from murasyp import RealValFunc
 from murasyp.events import Event
 
-class Gamble(_RealValFunc, Hashable):
+class Gamble(RealValFunc, Hashable):
     """An immutable, hashable real-valued function"""
 
     def __init__(self, data, number_type=None):
         """Create a gamble"""
         if isinstance(data, Event):
             data = dict(izip(data, repeat(1)))
-        return _RealValFunc.__init__(self, data, number_type)
+        RealValFunc.__init__(self, data, number_type)
 
     __repr__ = lambda self: 'Gamble(' + self._mapping.__repr__() + ')'
 
@@ -40,6 +40,9 @@ class Gamble(_RealValFunc, Hashable):
         if isinstance(other, Event):
             return type(self)(dict((x, self[x]) for x in other),
                               self.number_type)
+        else:
+            raise TypeError:
+                print("The argument must be an Event")
 
     def __xor__(self, other):
         """Cylindrical extension
@@ -55,6 +58,9 @@ class Gamble(_RealValFunc, Hashable):
             return type(self)(dict(((x, y), self[x])
                                    for x in self for y in other),
                               self.number_type)
+        else:
+            raise TypeError:
+                print("The argument must be an Event")
 
     _domain_joiner = lambda self, other: self.domain() | other.domain()
 
