@@ -47,25 +47,22 @@ class RealValFunc(Mapping, NumberTypeable):
       return frozenset(element for element, value
                                in self.iteritems() if value != 0)
 
-    __add__ = lambda self, other: self._oper(other, '__add__')
-    __radd__ = __add__
-    __sub__ = lambda self, other: self._oper(other, '__sub__')
-    __rsub__ = lambda self, other: -(self - other)
-    __mul__ = lambda self, other: self._oper(other, '__mul__')
-    __rmul__ = __mul__
-    __truediv__ = lambda self, other: self._oper(other, '__truediv__')
-    __rtruediv__ = lambda self, other: (self / other) ** (-1)
-    __neg__ = lambda self: self * (-1)
-    __pow__ = lambda self, other: self._oper(other, '__pow__')
-
-    def _oper(self, other, oper_str):
-        oper = getattr(self.NumberType, oper_str)
+    def __add__(self, other):
+        """Pointwise addition of real-valued functions"""
         if isinstance(other, RealValFunc):
-            return self._pointwise(other, oper)
-        else:
-            return self._scalar(other, oper)
+            return self._pointwise(other, '__add__')
 
-    def _pointwise(self, other, oper):
+    def __mul__(self, other):
+        """Scalar multiplication of real-valued functions"""
+        if isinstance(other, self.NumberType):
+            return self._scalar(other, '__mul__')
+
+    __rmul__ = __mul__
+    __neg__ = lambda self: self * (-1)
+    __sub__ = lambda self, other: self + (-other)
+
+    def _pointwise(self, other, oper_str):
+        oper = getattr(self.NumberType, oper_str)
         if self.number_type != other.number_type:
             raise ValueError("number type mismatch")
         return type(self)(dict((arg, oper(self[arg], other[arg]))
@@ -75,6 +72,7 @@ class RealValFunc(Mapping, NumberTypeable):
     _domain_joiner = lambda self, other: self.domain() & other.domain()
 
     def _scalar(self, other, oper):
+        oper = getattr(self.NumberType, oper_str)
         other = self.make_number(other)
         return type(self)(dict((arg, oper(value, other))
                                for arg, value in self.iteritems()),

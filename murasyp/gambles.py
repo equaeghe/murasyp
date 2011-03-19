@@ -28,6 +28,22 @@ class Gamble(RealValFunc, Hashable):
         return hash((self.domain,
                      tuple(self._mapping[x] for x in self.pspace())))
 
+    def __add__(self, other):
+        """Addition of real-valued functions and scalars"""
+        if isinstance(other, self.NumberType):
+            return self._scalar(other, '__add__')
+        else:
+            return RealValFunc.__add__(self, other, '__add__')
+
+    __radd__ = __add__
+
+    def __mul__(self, other):
+        """Pointwise multiplication of real-valued functions"""
+        if isinstance(other, Gamble):
+            return self._pointwise(other, '__mul__')
+        else:
+            return RealValFunc.__mul__(self, other, '__mul__')
+
     def __or__(self, other):
         """Restriction or extension with zero
 
