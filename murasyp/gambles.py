@@ -1,46 +1,50 @@
 from collections import Hashable
 from itertools import repeat, izip
-from murasyp import RealValFunc
+from murasyp import _make_real, RealValFunc
 from murasyp.events import Event
 
 class Gamble(RealValFunc, Hashable):
     """An immutable, hashable real-valued function"""
 
-    def __init__(self, data, number_type=None):
+    def __init__(self, data):
         """Create a gamble"""
         if isinstance(data, Event):
             data = dict(izip(data, repeat(1)))
-        RealValFunc.__init__(self, data, number_type)
+        RealValFunc.__init__(self, data)
 
-    def __getitem__(self, x):
-        try:
-            return self._mapping[x]
-        except KeyError:
-            return self.make_number(0)
+    __getitem__ = lambda self, x: self._mapping[x] if x in self else 0
+    __hash__ = lambda self: hash(self._mapping)
 
     def pspace(self):
         """The gamble's possibility space"""
         return self.domain()
 
-    def __hash__(self):
-        return hash((self.domain,
-                     tuple(self._mapping[x] for x in self.pspace())))
-
     def __add__(self, other):
-        """Addition of real-valued functions and scalars"""
-        if isinstance(other, self.NumberType):
-            return self._scalar(other, self.NumberType.__add__)
+        """Also allow addition of real-valued functions and scalars"""
+        if isinstance(other, Gamble):
+            return RealValFunc.__add__(self, other)
         else:
-            return RealValFunc.__add__(self, other, self.NumberType.__add__)
+            other = _make_real(other)
+            return type(self)(dict((arg, value + other) for arg, value
+                                                        in self.items()))
 
     __radd__ = __add__
 
     def __mul__(self, other):
         """Pointwise multiplication of real-valued functions"""
         if isinstance(other, Gamble):
-            return self._pointwise(other, self.NumberType.__mul__)
+            return type(self)(dict((x, self[x] * other[x])
+                                   for x in self._domain_joiner(other)))
         else:
-            return RealValFunc.__mul__(self, other, self.NumberType.__add__)
+            return RealValFunc.__mul__(self, other)
+
+    def _domain_joiner(self, other):
+        if type(self) == type(other):
+            return iter(self.domain() | other.domain())
+        else:
+            raise TypeError("cannot combine domains of objects with different"
+                            "types: '" + type(self).__name__ + "' and '"
+                                       + type(other).__name__ + "'")
 
     def __or__(self, other):
         """Restriction or extension with zero
@@ -52,8 +56,7 @@ class Gamble(RealValFunc, Hashable):
 
         """
         if isinstance(other, Event):
-            return type(self)(dict((x, self[x]) for x in other),
-                              self.number_type)
+            return type(self)(dict((x, self[x]) for x in other))
         else:
             raise("the argument must be an Event")
 
@@ -69,12 +72,9 @@ class Gamble(RealValFunc, Hashable):
         """
         if isinstance(other, Event):
             return type(self)(dict(((x, y), self[x])
-                                   for x in self for y in other),
-                              self.number_type)
+                                   for x in self for y in other))
         else:
             raise TypeError("the argument must be an Event")
-
-    _domain_joiner = lambda self, other: self.domain() | other.domain()
 
     def norm(self):
         """The max-norm of the gamble

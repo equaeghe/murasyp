@@ -13,7 +13,7 @@ class MassFuncSet(MutableSet):
         else:
             raise TypeError('specify a set of mass functions')
 
-    __repr__ = lambda self: 'MassFuncSet(' + self._set.__repr__() + ')'
+    __repr__ = lambda self: type(self).__name__ + '(' + repr(self._set) + ')'
 
     def add(self, mf):
         """Add a mass functions to the set of mass functions"""
@@ -31,21 +31,21 @@ class MassFuncSet(MutableSet):
         else:
             mfs = set(mf | other for mf in self)
             if any(mf == None for mf in mfs):
-                return MassFuncSet(set(MassFunc(set[x]) for x in other))
+                return type(self)(set(MassFunc(set[x]) for x in other))
             else:
-                return MassFuncSet(mfs)
+                return type(self)(mfs)
 
     def __lshift__(self, other):
         rs = [self._weighted_sum(mf) for mf in self]
         if any(r == None for r in rs):
-            return min(other.itervalues())
+            return min(other.values())
         else:
           min(rs)
 
     def __rshift__(self, other):
         rs = [self._weighted_sum(mf) for mf in self]
         if any(r == None for r in rs):
-            return max(other.itervalues())
+            return max(other.values())
         else:
           max(rs)
 
@@ -58,7 +58,7 @@ class MassFuncSet(MutableSet):
         ...        'b': Fraction(2, 7)}), Fraction(14, 1))
 
         """
-        return MassFuncSet(set(mf.normalized() for mf in self))
+        return type(self)(set(mf.normalized() for mf in self))
 
     def is_credal_set(self):
         """Checks whether the mass function set is a credal set"""
