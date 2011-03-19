@@ -7,10 +7,16 @@ from collections import Mapping
 class RealValFunc(Mapping, NumberTypeable):
     """Immutable real-valued functions
 
-    Members are created by passing a mapping (such as a `'dict'`) to real values
-    to the constructor.
+        :param mapping: a mapping (such as a :class:`dict`) to real values,
+            i.e., :class:`~cdd.NumberTypeable`.
+        :type mapping: :class:`~collections.Mapping`
+        :param number_type: The type to use for numbers: for :class:`float` or
+            :class:`~fractions.Fraction`. If omitted, then
+            :func:`~cdd.get_number_type_from_sequences` is used to determine
+            the number type.
+        :type number_type: :class:`string`
 
-    They behave like typical real-valued functions: their domain, range,
+    Members behave like typical real-valued functions: their domain, range,
     support, and individual values are accessible. Morever, they form a vector
     space; i.e., scalar multiplication as well as pointwise addition and
     subtraction is possible.
@@ -27,8 +33,8 @@ class RealValFunc(Mapping, NumberTypeable):
       Notice that the domain of results of sums and differences is the intersection of
       the respective domains.
 
-    Furthermore, the type of real values used, `'float'` or `'fraction'` can be
-    specified or automatically detected:
+    Furthermore, the type of real values used, :class:`float` or
+    :class:`~fractions.Fraction` can be specified or automatically detected:
 
     >>> RealValFunc({'b': 2, 'c': -2, 'd': 0}, number_type='fraction')
     RealValFunc({'c': Fraction(-2, 1), 'b': Fraction(2, 1), 'd': Fraction(0, 1)})
@@ -46,16 +52,7 @@ class RealValFunc(Mapping, NumberTypeable):
     """
 
     def __init__(self, mapping, number_type=None):
-        """Create a real-valued function
-
-        :param mapping: a mapping to real values.
-        :type data: |collections.Mapping|
-        :param number_type: The type to use for numbers:
-            ``'float'`` or ``'fraction'``. If omitted,
-            then :func:`~cdd.get_number_type_from_sequences`
-            is used to determine the number type.
-        :type number_type: :class:`str`
-        """
+        """Create a real-valued function"""
         if isinstance(mapping, Mapping):
             if number_type is None:
                 NumberTypeable.__init__(self,
