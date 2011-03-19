@@ -15,8 +15,6 @@ class MassFunc(RealValFunc, Hashable):
         if sum(self._mapping.itervalues()) == 0:
             raise ValueError("mass functions must have a nonzero total mass")
 
-    __repr__ = lambda self: 'MassFunc(' + self._mapping.__repr__() + ')'
-
     def __getitem__(self, x):
         try:
             return self._mapping[x]

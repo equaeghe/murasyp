@@ -12,8 +12,6 @@ class Gamble(RealValFunc, Hashable):
             data = dict(izip(data, repeat(1)))
         RealValFunc.__init__(self, data, number_type)
 
-    __repr__ = lambda self: 'Gamble(' + self._mapping.__repr__() + ')'
-
     def __getitem__(self, x):
         try:
             return self._mapping[x]
@@ -31,18 +29,18 @@ class Gamble(RealValFunc, Hashable):
     def __add__(self, other):
         """Addition of real-valued functions and scalars"""
         if isinstance(other, self.NumberType):
-            return self._scalar(other, '__add__')
+            return self._scalar(other, self.NumberType.__add__)
         else:
-            return RealValFunc.__add__(self, other, '__add__')
+            return RealValFunc.__add__(self, other, self.NumberType.__add__)
 
     __radd__ = __add__
 
     def __mul__(self, other):
         """Pointwise multiplication of real-valued functions"""
         if isinstance(other, Gamble):
-            return self._pointwise(other, '__mul__')
+            return self._pointwise(other, self.NumberType.__mul__)
         else:
-            return RealValFunc.__mul__(self, other, '__mul__')
+            return RealValFunc.__mul__(self, other, self.NumberType.__add__)
 
     def __or__(self, other):
         """Restriction or extension with zero

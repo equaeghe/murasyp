@@ -13,6 +13,8 @@ class MassFuncSet(MutableSet):
         else:
             raise TypeError('specify a set of mass functions')
 
+    __repr__ = lambda self: 'MassFuncSet(' + self._set.__repr__() + ')'
+
     def add(self, mf):
         """Add a mass functions to the set of mass functions"""
         if isinstance(mf, MassFunc):
