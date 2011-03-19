@@ -55,7 +55,7 @@ class MassFunc(RealValFunc, Hashable):
 
     def _weighted_sum(self, other):
         """Calculates the self-weighted sum of other"""
-        if not (isinstance(other, Event) or isinstance(other, Gamble)):
+        if not isinstance(other, (Event, Gamble)):
             raise TypeError("the argument must be an Event or a Gamble")
         else:
             if self.number_type != other.number_type:
@@ -64,24 +64,24 @@ class MassFunc(RealValFunc, Hashable):
                 if other.pspace() >= self.pspace():
                     return sum(self[x] * other[x] for x in self)
                 else:
-                    mass_func = self | other.pspace()
-                    if mass_func == None:
+                    mf = self | other.pspace()
+                    if mf == None:
                         None
                     else:
                         return sum(mf[x] * other[x] for x in mf)
 
     def __lshift__(self, other):
-      r = self._weighted_sum(other)
-      return r if r != None else min(other.itervalues())
+        r = self._weighted_sum(other)
+        return r if r != None else min(other.itervalues())
 
     def __lshift__(self, other):
-      r = self._weighted_sum(other)
-      return r if r != None else max(other.itervalues())
+        r = self._weighted_sum(other)
+        return r if r != None else max(other.itervalues())
 
     _domain_joiner = lambda self, other: self.domain() | other.domain()
 
     def normalized(self):
-        """Sum-norm normalized version of the mass function
+        """Total mass-normalized version of the mass function
 
         >>> mf = MassFunc({'a': 2, 'b': 4, 'c': 8}, number_type='fraction')
         >>> mf.normalized()
@@ -89,11 +89,7 @@ class MassFunc(RealValFunc, Hashable):
         ...        'b': Fraction(2, 7)}), Fraction(14, 1))
 
         """
-        norm = self.total_mass()
-        try:
-            return ((1 / norm) * self, norm)
-        except ZeroDivisionError:
-            print("The mass function has zero total mass.")
+        return (1 / self.total_mass()) * self
 
     def is_pmf(self):
         """Checks whether the mass function is a probability mass function
@@ -106,4 +102,4 @@ class MassFunc(RealValFunc, Hashable):
         True
 
         """
-        return (self.total_mass() == 1 and min(self.itervalues()) >= 0)
+        return self.total_mass() == 1 and min(self.itervalues()) >= 0
