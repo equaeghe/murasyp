@@ -8,7 +8,7 @@ class MassFuncSet(MutableSet):
 
     def __init__(self, set=set([])):
         """Create a set of mass functions"""
-        if isinstance(set, Set) && all(isinstance(x, MassFunc) for x in set):
+        if isinstance(set, Set) and all(isinstance(x, MassFunc) for x in set):
             self._set = set(set)
         else:
             raise TypeError('specify a set of mass functions')

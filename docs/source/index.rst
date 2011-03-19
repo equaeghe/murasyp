@@ -23,6 +23,14 @@ Contents:
    :members:
    :undoc-members:
 
+.. automodule:: murasyp.massfuncs
+   :members:
+   :undoc-members:
+
+.. automodule:: murasyp.massfuncsets
+   :members:
+   :undoc-members:
+
 Indices and tables
 ==================
 

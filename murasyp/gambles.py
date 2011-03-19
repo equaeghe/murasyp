@@ -41,8 +41,7 @@ class Gamble(RealValFunc, Hashable):
             return type(self)(dict((x, self[x]) for x in other),
                               self.number_type)
         else:
-            raise TypeError:
-                print("The argument must be an Event")
+            raise("the argument must be an Event")
 
     def __xor__(self, other):
         """Cylindrical extension
@@ -59,8 +58,7 @@ class Gamble(RealValFunc, Hashable):
                                    for x in self for y in other),
                               self.number_type)
         else:
-            raise TypeError:
-                print("The argument must be an Event")
+            raise TypeError("the argument must be an Event")
 
     _domain_joiner = lambda self, other: self.domain() | other.domain()
 
