@@ -5,7 +5,45 @@ from cdd import NumberTypeable, get_number_type_from_sequences
 from collections import Mapping
 
 class RealValFunc(Mapping, NumberTypeable):
-    """A real-valued function"""
+    """Immutable real-valued functions
+
+    Members are created by passing a mapping (such as a `'dict'`) to real values
+    to the constructor.
+
+    They behave like typical real-valued functions: their domain, range,
+    support, and individual values are accessible. Morever, they form a vector
+    space; i.e., scalar multiplication as well as pointwise addition and
+    subtraction is possible.
+
+    >>> f = RealValFunc({'a': 1, 'b': -1, 'c': 0})
+    >>> g = RealValFunc({'b': 2, 'c': -2, 'd': 0})
+    >>> f['a']
+    1.0
+    >>> (2 * f - g) * .5
+    RealValFunc({'c': 1.0, 'b': -2.0})
+
+    .. note::
+
+      Notice that the domain of results of sums and differences is the intersection of
+      the respective domains.
+
+    Furthermore, the type of real values used, `'float'` or `'fraction'` can be
+    specified or automatically detected:
+
+    >>> RealValFunc({'b': 2, 'c': -2, 'd': 0}, number_type='fraction')
+    RealValFunc({'c': Fraction(-2, 1), 'b': Fraction(2, 1), 'd': Fraction(0, 1)})
+    >>> RealValFunc({'b': '1/2', 'c': '-1/2', 'd': '0'}, number_type='float')
+    RealValFunc({'c': -0.5, 'b': 0.5, 'd': 0.0})
+    >>> h = RealValFunc({'b': '1/2', 'c': '-1/2', 'd': '0'})
+    >>> h
+    RealValFunc({'c': Fraction(-1, 2), 'b': Fraction(1, 2), 'd': Fraction(0, 1)})
+    >>> h * .5
+    RealValFunc({'c': Fraction(-1, 4), 'b': Fraction(1, 4), 'd': Fraction(0, 1)})
+    >>> from fractions import Fraction
+    >>> h * Fraction(1, 4)
+    RealValFunc({'c': Fraction(-1, 8), 'b': Fraction(1, 8), 'd': Fraction(0, 1)})
+
+    """
 
     def __init__(self, mapping, number_type=None):
         """Create a real-valued function
@@ -29,50 +67,64 @@ class RealValFunc(Mapping, NumberTypeable):
         else:
             raise TypeError('specify a mapping')
 
-    @classmethod
-    def _make(cls, mapping):
-        return mapping if isinstance(mapping, cls) else cls(mapping)
-
     __len__ = lambda self: len(self._mapping)
     __iter__ = lambda self: iter(self._mapping)
     __contains__ = lambda self, element: element in self._mapping
     __getitem__ = lambda self, element: self._mapping[element]
-    __repr__ = lambda self: 'RealValFunc(' + self._mapping.__repr__() + ')'
-    __str__ = lambda self: self._mapping.__str__()
+    __repr__ = lambda self: type(self).__name__ + '(' + `self._mapping` + ')'
+    __str__ = lambda self: str(self._mapping)
 
-    domain = lambda self: frozenset(self.keys())
-    range = lambda self: frozenset(self.values())
+    def domain(self):
+        """Returns the domain of the real-valued function
+
+        >>> f = RealValFunc({'a': 1, 'b': -1, 'c': 0})
+        >>> f.domain()
+        frozenset(['a', 'c', 'b'])
+
+        """
+        return frozenset(self.keys())
+
+    def range(self):
+        """Returns the range of the real-valued function
+
+        >>> f = RealValFunc({'a': 1, 'b': -1, 'c': 0})
+        >>> f.range()
+        frozenset([0.0, 1.0, -1.0])
+
+        """
+        return frozenset(self.values())
 
     def support(self):
-      return frozenset(element for element, value
-                               in self.iteritems() if value != 0)
+        """Returns the support of the real-valued function
 
-    def __add__(self, other):
-        """Pointwise addition of real-valued functions"""
-        if isinstance(other, RealValFunc):
-            return self._pointwise(other, '__add__')
+        >>> f = RealValFunc({'a': 1, 'b': -1, 'c': 0})
+        >>> f.support()
+        frozenset(['a', 'b'])
 
-    def __mul__(self, other):
-        """Scalar multiplication of real-valued functions"""
-        if isinstance(other, self.NumberType):
-            return self._scalar(other, '__mul__')
+        """
+        return frozenset(element for element, value
+                                 in self.iteritems() if value != 0)
 
+    __add__ = lambda self, other: self._pointwise(other, self.NumberType.__add__)
+    __mul__ = lambda self, other: self._scalar(other, self.NumberType.__mul__)
     __rmul__ = __mul__
     __neg__ = lambda self: self * (-1)
     __sub__ = lambda self, other: self + (-other)
 
-    def _pointwise(self, other, oper_str):
-        oper = getattr(self.NumberType, oper_str)
+    def _pointwise(self, other, oper):
+        if type(self) != type(other):
+            raise TypeError("unsupported operand type(s) for "
+                            + oper.__name__ + ": '" + type(self).__name__
+                            + "' and '" + type(other).__name__ + "'")
         if self.number_type != other.number_type:
             raise ValueError("number type mismatch")
         return type(self)(dict((arg, oper(self[arg], other[arg]))
                                for arg in self._domain_joiner(other)),
                           number_type=self.number_type)
 
-    _domain_joiner = lambda self, other: self.domain() & other.domain()
+    _domain_joiner = lambda self, other: iter(self.domain() & other.domain())
 
     def _scalar(self, other, oper):
-        oper = getattr(self.NumberType, oper_str)
         other = self.make_number(other)
         return type(self)(dict((arg, oper(value, other))
                                for arg, value in self.iteritems()),
