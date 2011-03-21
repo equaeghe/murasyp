@@ -9,27 +9,12 @@ Welcome to murasyp's documentation!
 Contents:
 
 .. toctree::
-   :maxdepth: 2
+  :maxdepth: 2
 
-.. automodule:: murasyp
-   :members:
-   :undoc-members:
-
-.. automodule:: murasyp.events
-   :members:
-   :undoc-members:
-
-.. automodule:: murasyp.gambles
-   :members:
-   :undoc-members:
-
-.. automodule:: murasyp.massfuncs
-   :members:
-   :undoc-members:
-
-.. automodule:: murasyp.massfuncsets
-   :members:
-   :undoc-members:
+  realvalfuncs
+  gambles
+  massfuncs
+  massfuncsets
 
 Indices and tables
 ==================

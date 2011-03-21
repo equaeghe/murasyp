@@ -52,7 +52,7 @@ class MassFuncSet(MutableSet):
     def normalized(self):
         """Set of sum-normalized version of the mass functions in the set
 
-        >>> mf = MassFunc({'a': 2, 'b': 4, 'c': 8}, number_type='fraction')
+        >>> mf = MassFunc({'a': 2, 'b': 4, 'c': 8})
         >>> mf.normalized()
         (MassFunc({'a': Fraction(1, 7), 'c': Fraction(4, 7),
         ...        'b': Fraction(2, 7)}), Fraction(14, 1))

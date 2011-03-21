@@ -25,9 +25,9 @@ class MassFunc(RealValFunc, Hashable):
     def total_mass(self):
         """The total mass of the mass function
 
-        >>> mf = MassFunc({'a': 2, 'b': 4, 'c': 8}, number_type='fraction')
+        >>> mf = MassFunc({'a': 2, 'b': 4, 'c': 8})
         >>> mf.total_mass()
-        Fraction(14, 1)
+        14
 
         """
         return sum(self.values())
@@ -73,7 +73,7 @@ class MassFunc(RealValFunc, Hashable):
     def normalized(self):
         """Total mass-normalized version of the mass function
 
-        >>> mf = MassFunc({'a': 2, 'b': 4, 'c': 8}, number_type='fraction')
+        >>> mf = MassFunc({'a': 2, 'b': 4, 'c': 8})
         >>> mf.normalized()
         (MassFunc({'a': Fraction(1, 7), 'c': Fraction(4, 7),
         ...        'b': Fraction(2, 7)}), Fraction(14, 1))
@@ -84,7 +84,7 @@ class MassFunc(RealValFunc, Hashable):
     def is_pmf(self):
         """Checks whether the mass function is a probability mass function
 
-        >>> mf = MassFunc({'a': 2, 'b': 4, 'c': 8}, number_type='fraction')
+        >>> mf = MassFunc({'a': 2, 'b': 4, 'c': 8})
         >>> mf.is_pmf()
         False
         >>> pmf, norm = mf.normalized()
