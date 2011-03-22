@@ -1,5 +1,5 @@
 from collections import Hashable
-from itertools import repeat, izip
+from itertools import repeat
 from murasyp import RealValFunc
 from murasyp.events import Event
 from murasyp.gambles import Gamble
@@ -10,7 +10,7 @@ class MassFunc(RealValFunc, Hashable):
     def __init__(self, data):
         """Create a mass function"""
         if isinstance(data, Event):
-            data = dict(izip(data, repeat(1/self.make_number(len(data)))))
+            data = dict(zip(data, repeat(1 / len(data))))
         RealValFunc.__init__(self, data)
         if sum(self._mapping.values()) == 0:
             raise ValueError("mass functions must have a nonzero total mass")
@@ -75,11 +75,11 @@ class MassFunc(RealValFunc, Hashable):
 
         >>> mf = MassFunc({'a': 2, 'b': 4, 'c': 8})
         >>> mf.normalized()
-        (MassFunc({'a': Fraction(1, 7), 'c': Fraction(4, 7),
-        ...        'b': Fraction(2, 7)}), Fraction(14, 1))
+        (MassFunc({'a': Fraction(1, 7), 'c': Fraction(4, 7), \
+'b': Fraction(2, 7)}), Fraction(14, 1))
 
         """
-        return (1 / self.total_mass()) * self
+        return self / self.total_mass()
 
     def is_pmf(self):
         """Checks whether the mass function is a probability mass function
