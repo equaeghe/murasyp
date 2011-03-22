@@ -16,18 +16,18 @@ def _make_real(value):
 class RealValFunc(Mapping):
     """Immutable real-valued functions
 
-        :param: a mapping (such as a :class:`dict`) to real values,
-            i.e., :class:`~numbers.Real`, which includes the built-in types
-            :class:`float` and :class:`int`, but also
-            :class:`~fractions.Fraction`, which can be used for exact
-            arithmetic. The fractions may be given in their
-            :class:`str`-representation.
-        :type: :class:`~collections.Mapping`
+      :param: a mapping (such as a :class:`dict`) to real values,
+          i.e., :class:`~numbers.Real`, which includes the built-in types
+          :class:`float` and :class:`int`, but also
+          :class:`~fractions.Fraction`, which can be used for exact
+          arithmetic. The fractions may be given in their
+          :class:`str`-representation.
+      :type: :class:`~collections.Mapping`
 
     Members behave like typical real-valued functions: their domain, range,
     support, and individual values are accessible. Morever, they form a vector
-    space; i.e., scalar multiplication as well as pointwise addition and
-    subtraction is possible.
+    space; i.e., scalar multiplication (and division) as well as pointwise
+    addition and subtraction is possible.
 
     >>> f = RealValFunc({'a': 1.1, 'b': '-1/2','c': 0})
     >>> f
@@ -37,7 +37,7 @@ class RealValFunc(Mapping):
     >>> g = RealValFunc({'b': '.6', 'c': -2, 'd': 0.0})
     >>> g
     RealValFunc({'c': -2, 'b': Fraction(3, 5), 'd': 0.0})
-    >>> (.3 * f - g) * Fraction(1, 2)
+    >>> (.3 * f - g) / 2
     RealValFunc({'c': 1.0, 'b': -0.375})
 
     .. note::
@@ -63,7 +63,10 @@ class RealValFunc(Mapping):
     __str__ = lambda self: str(self._mapping)
 
     def domain(self):
-        """Returns the domain of the real-valued function
+        """The domain of the real-valued function
+
+          :returns: the domain of the real-valued function
+          :rtype: :class:`frozenset`
 
         >>> f = RealValFunc({'a': 1, 'b': -1, 'c': 0})
         >>> f.domain()
@@ -75,6 +78,9 @@ class RealValFunc(Mapping):
     def range(self):
         """Returns the range of the real-valued function
 
+          :returns: the range of the real-valued function
+          :rtype: :class:`frozenset`
+
         >>> f = RealValFunc({'a': 1, 'b': -1, 'c': 0})
         >>> f.range()
         frozenset({0, 1, -1})
@@ -84,6 +90,10 @@ class RealValFunc(Mapping):
 
     def support(self):
         """Returns the support of the real-valued function
+
+          :returns: the support of the real-valued function, i.e., that part of
+                    the domain for which the function is nonzero
+          :rtype: :class:`frozenset`
 
         >>> f = RealValFunc({'a': 1, 'b': -1, 'c': 0})
         >>> f.support()
@@ -110,6 +120,12 @@ class RealValFunc(Mapping):
         """Scalar multiplication of real-valued functions"""
         other = _make_real(other)
         return type(self)(dict((arg, value * other) for arg, value
+                                                    in self.items()))
+
+    def __truediv__(self, other):
+        """Scalar division of real-valued functions"""
+        other = _make_real(other)
+        return type(self)(dict((arg, value / other) for arg, value
                                                     in self.items()))
 
     __rmul__ = __mul__
