@@ -75,8 +75,8 @@ class MassFunc(RealValFunc, Hashable):
 
         >>> mf = MassFunc({'a': 2, 'b': 4, 'c': 8})
         >>> mf.normalized()
-        (MassFunc({'a': Fraction(1, 7), 'c': Fraction(4, 7), \
-'b': Fraction(2, 7)}), Fraction(14, 1))
+        (MassFunc({'a': Fraction(1, 7), 'c': Fraction(4, 7),
+        ...        'b': Fraction(2, 7)}), Fraction(14, 1))
 
         """
         return self / self.total_mass()

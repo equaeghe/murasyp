@@ -20,7 +20,7 @@ class Gamble(RealValFunc, Hashable):
     :class:`~collections.Mapping`, and their built-in variants :class:`set`
     and :class:`dict`). What has changed:
 
-    * pointwise multiplication scalar addition and subtraction has been added;
+    * pointwise multiplication and scalar addition & subtraction has been added;
     * how domains are combined under pointwise operations;
     * unspecified values are assumed to be zero.
 
@@ -55,8 +55,9 @@ class Gamble(RealValFunc, Hashable):
     >>> f | Event({'a', 'd'})
     Gamble({'a': 1.1, 'd': 0})
     >>> f ^ Event({'e', 'f'})
-    Gamble({('c', 'f'): 0, ('a', 'f'): 1.1, ('a', 'e'): 1.1, \
-('b', 'f'): Fraction(-1, 2), ('b', 'e'): Fraction(-1, 2), ('c', 'e'): 0})
+    Gamble({('c', 'f'): 0, ('a', 'f'): 1.1, ('a', 'e'): 1.1,
+    ...     ('b', 'f'): Fraction(-1, 2), ('b', 'e'): Fraction(-1, 2),
+    ...     ('c', 'e'): 0})
 
     Additionally, gambles' properties and related gambles are computed by
     calling the appropriate methods. Their possibility spaces coincide with
@@ -156,7 +157,7 @@ class Gamble(RealValFunc, Hashable):
 
         .. note::
 
-          The gamble itself is returned in case it is constant.
+          The zero gamble is returned in case the gamble is constant.
 
         """
         minval, maxval = self.bounds()
