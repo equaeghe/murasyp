@@ -3,62 +3,47 @@ from murasyp.events import Event
 from murasyp.gambles import Gamble
 from murasyp.massassignments import MassAssignment
 
-class MassFuncSet(MutableSet):
+class CredalSet(MutableSet):
     """A mutable set of mass functions"""
 
-    def __init__(self, set=set([])):
-        """Create a set of mass functions"""
-        if isinstance(set, Set) and all(isinstance(x, MassFunc) for x in set):
-            self._set = set(set)
+    def __init__(self, data=set([])):
+        """Create a credal set"""
+        if isinstance(data, Event):
+            self._set = set(MassAssignment(set(x)) for x in data) # vacuous
+        elif isinstance(data, Set) and all(isinstance(x, MassAssignment)
+                                           and x.is_pmf() for x in data):
+            self._set = set(data)
         else:
-            raise TypeError('specify a set of mass functions')
+            raise TypeError('specify an even or a set of mass functions')
 
     __repr__ = lambda self: type(self).__name__ + '(' + repr(self._set) + ')'
 
-    def add(self, mf):
-        """Add a mass functions to the set of mass functions"""
-        if isinstance(mf, MassFunc):
-            self._set.add(mf)
+    def add(self, pmf):
+        """Add a probability mass function to the credal set"""
+        if isinstance(pmf, MassAssignment) and pmf.is_pmf():
+            self._set.add(pmf)
         else:
             raise TypeError('specify a mass function')
 
-    discard = lambda self, mf: self._set.discard(mf)
+    def discard(self, pmf):
+        """Remove a probability mass function from the credal set"""
+        return self._set.discard(pmf)
 
     def __or__(self, other):
-        """Mass function set conditional on the given event"""
+        """Credal set conditional on the given event"""
         if not isinstance(other, Event):
             raise TypeError("the argument must be an Event")
         else:
-            mfs = set(mf | other for mf in self)
-            if any(mf == None for mf in mfs):
-                return type(self)(set(MassFunc(set[x]) for x in other))
+            pmfs = set(pmf | other for pmf in self)
+            if any(pmf == None for pmf in pmfs):
+                return type(self)(set(MassAssignment(set(x)) for x in other))
             else:
                 return type(self)(mfs)
 
-    def __lshift__(self, other):
-        rs = [self._weighted_sum(mf) for mf in self]
-        if any(r == None for r in rs):
-            return min(other.values())
-        else:
-          min(rs)
+    def __mult__(self, other):
+        """Lower expectation of gamble"""
+        return NotImplementedError
 
-    def __rshift__(self, other):
-        rs = [self._weighted_sum(mf) for mf in self]
-        if any(r == None for r in rs):
-            return max(other.values())
-        else:
-          max(rs)
-
-    def normalized(self):
-        """Set of sum-normalized version of the mass functions in the set
-
-        >>> mf = MassFunc({'a': 2, 'b': 4, 'c': 8})
-        >>> mf.normalized()
-        MassFunc({'a': Fraction(1, 7), 'c': Fraction(4, 7), 'b': Fraction(2, 7)})
-
-        """
-        return type(self)(set(mf.normalized() for mf in self))
-
-    def is_credal_set(self):
-        """Checks whether the mass function set is a credal set"""
-        return all(mf.is_pmf for mf in self)
+    def __pow__(self, other):
+        """Upper expectation of gamble"""
+        return NotImplementedError

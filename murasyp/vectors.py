@@ -6,10 +6,9 @@ class Vector(Function, Hashable):
     """Vectors are immutable, hashable rational-valued functions
 
       :param: a mapping (such as a :class:`dict`) to Rational values,
-          i.e., :class:`~numbers.Rational`, which includes the built-in type
-          :class:`int`, but also :class:`~fractions.Fraction`. The fractions
-          may be given as a :class:`float` or in their
-          :class:`str`-representation.
+          i.e., :class:`~fractions.Fraction`. The fractions
+          may be specified by giving an :class:`int`, a :class:`float` or in
+          their :class:`str`-representation.
       :type: :class:`~collections.Mapping`
 
     This class derives from :class:`~murasyp.functions.Function`, so its
@@ -20,7 +19,8 @@ class Vector(Function, Hashable):
 
     * unspecified values are assumed to be zero;
     * the union of domains is used under pointwise operations;
-    * a vector's domain can be restricted/extended to a specified :class:`~murasyp.events.Event`.
+    * a vector's domain can be restricted/extended to a specified
+      :class:`~murasyp.events.Event`.
 
     >>> f = Vector({'a': 1.1, 'b': '-1/2','c': 0})
     >>> f
@@ -56,14 +56,33 @@ class Vector(Function, Hashable):
             raise("the argument must be an Event")
 
     def mass(self):
-        """Sum of the values of the vector"""
+        """Sum of the values of the vector
+
+          :returns: the sum of all values of the function
+          :rtype: :class:`~fractions.Fraction`
+
+        >>> Vector({'a': 1, 'b': '-1/2','c': 0}).mass()
+        Fraction(1, 2)
+
+        """
         return sum(self._mapping.itervalues())
 
-    def normalized(self):
-        """'sum-of-values'-normalized version of the vector
+    def sum_normalized(self):
+        """'Sum-of-values'-normalized version of the vector
 
-        >>> print('add doctest')
-        add doctest
+          :returns: the gamble, but with its values divided by the sum of the
+                    vector's values
+          :rtype: :class:`~murasyp.vectors.Vector`
+
+        >>> Vector({'a': 1, 'b': '-1/2','c': 0}).sum_normalized()
+        Vector({'a': Fraction(2, 1), 'c': Fraction(0, 1), 'b': Fraction(-1, 1)})
+        >>> Vector({'a': 1, 'b': -1,'c': 0}).sum_normalized() == None
+        True
+
+        .. note::
+
+          ``None`` is returned in case the the sum of the vector's values is
+          zero.
 
         """
         mass = self.mass()

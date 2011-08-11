@@ -7,10 +7,9 @@ class Gamble(Vector):
     """Gambles are immutable, hashable rational-valued functions
 
       :param: a mapping (such as a :class:`dict`) to Rational values,
-          i.e., :class:`~numbers.Rational`, which includes the built-in type
-          :class:`int`, but also :class:`~fractions.Fraction`. The fractions
-          may be given as a :class:`float` or in their
-          :class:`str`-representation.
+          i.e., :class:`~fractions.Fraction`. The fractions
+          may be specified by giving an :class:`int`, a :class:`float` or in
+          their :class:`str`-representation.
       :type: :class:`~collections.Mapping`
 
     This class derives from :class:`~murasyp.vectors.Vector`, so its methods
@@ -39,7 +38,7 @@ class Gamble(Vector):
         Vector.__init__(self, data)
 
     def __add__(self, other):
-        """Also allow addition of rational-valued functions and scalars"""
+        """Also allow addition of gambles and scalars"""
         if isinstance(other, Gamble):
             return Vector.__add__(self, other)
         else:
@@ -51,7 +50,7 @@ class Gamble(Vector):
     __rsub__ = lambda self, other: -(self - other)
 
     def __mul__(self, other):
-        """Pointwise multiplication of rational-valued functions"""
+        """Pointwise multiplication of gambles"""
         if isinstance(other, Gamble):
             return type(self)(dict((x, self[x] * other[x])
                                    for x in self._domain_joiner(other)))
@@ -70,10 +69,9 @@ class Gamble(Vector):
         """The minimum and maximum values of the gamble
 
           :returns: the minimum and maximum values of the gamble
-          :rtype: a pair (:class:`tuple`) of :class:`~numbers.Rational`
+          :rtype: a pair (:class:`tuple`) of :class:`~fractions.Fraction`
 
-        >>> h = Gamble({'a': 1, 'b': 3, 'c': 4})
-        >>> h.bounds()
+        >>> Gamble({'a': 1, 'b': 3, 'c': 4}).bounds()
         (Fraction(1, 1), Fraction(4, 1))
 
         """
@@ -85,10 +83,9 @@ class Gamble(Vector):
 
           :returns: a scaled and shifted version
                     :math:`(f-\min f)/(\max f-\min f)` of the gamble :math:`f`
-          :rtype: :class:`~murasyp.Gamble`
+          :rtype: :class:`~murasyp.gambles.Gamble`
 
-        >>> h = Gamble({'a': 1, 'b': 3, 'c': 4})
-        >>> h.scaled_shifted()
+        >>> Gamble({'a': 1, 'b': 3, 'c': 4}).scaled_shifted()
         Gamble({'a': Fraction(0, 1), 'c': Fraction(1, 1), 'b': Fraction(2, 3)})
 
         .. note::
@@ -107,7 +104,7 @@ class Gamble(Vector):
           :returns: the max-norm
                     :math:`\|f\|_\infty=\max_{x\in\mathcal{X}}|f(x)|` of the
                     gamble :math:`f`
-          :rtype: :class:`~numbers.Rational`
+          :rtype: :class:`~fractions.Fraction`
 
         >>> h = Gamble({'a': 1, 'b': 3, 'c': 4})
         >>> h.norm()
@@ -122,7 +119,7 @@ class Gamble(Vector):
 
           :returns: a normalized version :math:`f/\|f\|_\infty` of the gamble
                     :math:`f`
-          :rtype: :class:`~murasyp.Gamble`
+          :rtype: :class:`~murasyp.gambles.Gamble`
 
         >>> h = Gamble({'a': 1, 'b': 3, 'c': 4})
         >>> h.normalized()

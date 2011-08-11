@@ -5,14 +5,13 @@ class Function(Mapping):
     """Immutable rational-valued functions
 
       :param: a mapping (such as a :class:`dict`) to Rational values,
-          i.e., :class:`~numbers.Rational`, which includes the built-in type
-          :class:`int`, but also :class:`~fractions.Fraction`. The fractions
-          may be given as a :class:`float` or in their
-          :class:`str`-representation.
+          i.e., :class:`~fractions.Fraction`. The fractions
+          may be specified by giving an :class:`int`, a :class:`float` or in
+          their :class:`str`-representation.
       :type: :class:`~collections.Mapping`
 
     Members behave like typical rational-valued functions: their domain, range,
-    support, and individual values are accessible. Morever, they form a vector
+    support, and individual values are accessible. Morover, they form a vector
     space; i.e., scalar multiplication (and division) as well as pointwise
     addition and subtraction is possible.
 
@@ -22,8 +21,6 @@ class Function(Mapping):
     >>> f['a']
     Fraction(11, 10)
     >>> g = Function({'b': '.6', 'c': -2, 'd': 0.0})
-    >>> g
-    Function({'c': Fraction(-2, 1), 'b': Fraction(3, 5), 'd': Fraction(0, 1)})
     >>> (.3 * f - g) / 2
     Function({'c': Fraction(1, 1), 'b': Fraction(-3, 8)})
 
@@ -50,40 +47,39 @@ class Function(Mapping):
     __str__ = lambda self: str(self._mapping)
 
     def domain(self):
-        """The domain of the rational-valued function
+        """Domain of the function
 
-          :returns: the domain of the rational-valued function
+          :returns: the domain of the function, i.e., those values for which the
+                    function is defined
           :rtype: :class:`frozenset`
 
-        >>> f = Function({'a': 1, 'b': -1, 'c': 0})
-        >>> f.domain()
+        >>> Function({'a': 1, 'b': -1, 'c': 0}).domain()
         frozenset(['a', 'c', 'b'])
 
         """
         return frozenset(self.keys())
 
     def range(self):
-        """Returns the range of the rational-valued function
+        """Range of the function
 
-          :returns: the range of the rational-valued function
+          :returns: the range of the function, i.e., the set of all values
+                    returned by the function
           :rtype: :class:`frozenset`
 
-        >>> f = Function({'a': 1, 'b': -1, 'c': 0})
-        >>> f.range()
+        >>> Function({'a': 1, 'b': -1, 'c': 0}).range()
         frozenset([Fraction(0, 1), Fraction(1, 1), Fraction(-1, 1)])
 
         """
         return frozenset(self.values())
 
     def support(self):
-        """Returns the support of the rational-valued function
+        """Support of the function
 
-          :returns: the support of the rational-valued function, i.e., that
-                    part of the domain for which the function is nonzero
+          :returns: the support of the function, i.e., that part of the domain
+                    for which the function is nonzero
           :rtype: :class:`frozenset`
 
-        >>> f = Function({'a': 1, 'b': -1, 'c': 0})
-        >>> f.support()
+        >>> Function({'a': 1, 'b': -1, 'c': 0}).support()
         frozenset(['a', 'b'])
 
         """
