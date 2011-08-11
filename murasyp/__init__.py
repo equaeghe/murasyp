@@ -13,11 +13,11 @@ def _make_rational(value):
 class RatValFunc(Mapping):
     """Immutable rational-valued functions
 
-      :param: a mapping (such as a :class:`dict`) to
-        :class:`~fractions.Fraction`,
-        i.e., :class:`~numbers.Rational`, which includes the built-in type
-          , but also . The fractions may be given as :class:`int`,
-          :class:`float`, or in their :class:`str`-representation.
+      :param: a mapping (such as a :class:`dict`) to Rational values,
+          i.e., :class:`~numbers.Rational`, which includes the built-in type
+          :class:`int`, but also :class:`~fractions.Fraction`. The fractions
+          may be given as a :class:`float` or in their
+          :class:`str`-representation.
       :type: :class:`~collections.Mapping`
 
     Members behave like typical rational-valued functions: their domain, range,

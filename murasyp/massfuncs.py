@@ -28,7 +28,7 @@ class MassFunc(RatValFunc, Hashable):
 
         >>> mf = MassFunc({'a': 2, 'b': 4, 'c': 8})
         >>> mf.total_mass()
-        14
+        Fraction(14, 1)
 
         """
         return sum(self.values())
@@ -84,7 +84,7 @@ class MassFunc(RatValFunc, Hashable):
         >>> mf = MassFunc({'a': 2, 'b': 4, 'c': 8})
         >>> mf.is_pmf()
         False
-        >>> pmf, norm = mf.normalized()
+        >>> pmf = mf.normalized()
         >>> pmf.is_pmf()
         True
 

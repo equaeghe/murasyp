@@ -28,16 +28,16 @@ class Gamble(RatValFunc, Hashable):
     >>> f['d']
     0
     >>> f
-    Gamble({'a': 1.1, 'c': 0, 'b': Fraction(-1, 2)})
+    Gamble({'a': Fraction(11, 10), 'c': Fraction(0, 1), 'b': Fraction(-1, 2)})
     >>> g = Gamble({'b': '.6', 'c': -2, 'd': 0.0})
     >>> g
-    Gamble({'c': -2, 'b': Fraction(3, 5), 'd': 0.0})
+    Gamble({'c': Fraction(-2, 1), 'b': Fraction(3, 5), 'd': Fraction(0, 1)})
     >>> (.3 * f - g) / 2
-    Gamble({'a': 0.165, 'c': 1.0, 'b': -0.375, 'd': 0.0})
+    Gamble({'a': Fraction(33, 200), 'c': Fraction(1, 1), 'b': Fraction(-3, 8), 'd': Fraction(0, 1)})
     >>> f * g
-    Gamble({'a': 0.0, 'c': 0, 'b': Fraction(-3, 10), 'd': 0.0})
+    Gamble({'a': Fraction(0, 1), 'c': Fraction(0, 1), 'b': Fraction(-3, 10), 'd': Fraction(0, 1)})
     >>> -3 - f
-    Gamble({'a': -4.1, 'c': -3, 'b': Fraction(-5, 2)})
+    Gamble({'a': Fraction(-41, 10), 'c': Fraction(-3, 1), 'b': Fraction(-5, 2)})
 
     .. note::
 
@@ -51,11 +51,11 @@ class Gamble(RatValFunc, Hashable):
 
     >>> f = Gamble({'a': 1.1, 'b': '-1/2','c': 0})
     >>> f | Event({'a', 'b'})
-    Gamble({'a': 1.1, 'b': Fraction(-1, 2)})
+    Gamble({'a': Fraction(11, 10), 'b': Fraction(-1, 2)})
     >>> f | Event({'a', 'd'})
-    Gamble({'a': 1.1, 'd': 0})
+    Gamble({'a': Fraction(11, 10), 'd': Fraction(0, 1)})
     >>> f ^ Event({'e', 'f'})
-    Gamble({('c', 'f'): 0, ('a', 'f'): 1.1, ('a', 'e'): 1.1, ('b', 'f'): Fraction(-1, 2), ('b', 'e'): Fraction(-1, 2), ('c', 'e'): 0})
+    Gamble({('c', 'f'): Fraction(0, 1), ('a', 'f'): Fraction(11, 10), ('a', 'e'): Fraction(11, 10), ('b', 'f'): Fraction(-1, 2), ('b', 'e'): Fraction(-1, 2), ('c', 'e'): Fraction(0, 1)})
 
     Additionally, gambles' properties and related gambles are computed by
     calling the appropriate methods. Their possibility spaces coincide with
@@ -136,7 +136,7 @@ class Gamble(RatValFunc, Hashable):
 
         >>> h = Gamble({'a': 1, 'b': 3, 'c': 4})
         >>> h.bounds()
-        (1, 4)
+        (Fraction(1, 1), Fraction(4, 1))
 
         """
         values = self.range()
@@ -151,7 +151,7 @@ class Gamble(RatValFunc, Hashable):
 
         >>> h = Gamble({'a': 1, 'b': 3, 'c': 4})
         >>> h.scaled_shifted()
-        Gamble({'a': 0.0, 'c': 1.0, 'b': 0.6666666666666666})
+        Gamble({'a': Fraction(0, 1), 'c': Fraction(1, 1), 'b': Fraction(2, 3)})
 
         .. note::
 
@@ -173,7 +173,7 @@ class Gamble(RatValFunc, Hashable):
 
         >>> h = Gamble({'a': 1, 'b': 3, 'c': 4})
         >>> h.norm()
-        4
+        Fraction(4, 1)
 
         """
         minval, maxval = self.bounds()
@@ -188,7 +188,7 @@ class Gamble(RatValFunc, Hashable):
 
         >>> h = Gamble({'a': 1, 'b': 3, 'c': 4})
         >>> h.normalized()
-        Gamble({'a': 0.25, 'c': 1.0, 'b': 0.75})
+        Gamble({'a': Fraction(1, 4), 'c': Fraction(1, 1), 'b': Fraction(3, 4)})
 
         .. note::
 
