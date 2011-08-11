@@ -1,9 +1,9 @@
-from collections import Hashable
 from itertools import repeat
-from murasyp import _make_rational, RatValFunc
+from murasyp import _make_rational
+from murasyp.vectors import Vector
 from murasyp.events import Event
 
-class Gamble(RatValFunc, Hashable):
+class Gamble(Vector):
     """Gambles are immutable, hashable rational-valued functions
 
       :param: a mapping (such as a :class:`dict`) to Rational values,
@@ -13,53 +13,22 @@ class Gamble(RatValFunc, Hashable):
           :class:`str`-representation.
       :type: :class:`~collections.Mapping`
 
-    This class derives from :class:`~murasyp.RatValFunc`, so its methods
-    apply here as well. This class's members are also hashable, which means
-    they can be used as keys (in :class:`~collections.Set` and
-    :class:`~collections.Mapping`, and their built-in variants :class:`set`
-    and :class:`dict`). What has changed:
+    This class derives from :class:`~murasyp.vectors.Vector`, so its methods
+    apply here as well. What has changed:
 
     * pointwise multiplication and scalar addition & subtraction
-      has been added;
-    * how domains are combined under pointwise operations;
-    * unspecified values are assumed to be zero.
+      have been added;
+    * a gamble's domain can be cylindrically extended to the cartesian product
+      of its domain and a specified :class:`~murasyp.events.Event`.
 
     >>> f = Gamble({'a': 1.1, 'b': '-1/2','c': 0})
-    >>> f['d']
-    0
-    >>> f
-    Gamble({'a': Fraction(11, 10), 'c': Fraction(0, 1), 'b': Fraction(-1, 2)})
     >>> g = Gamble({'b': '.6', 'c': -2, 'd': 0.0})
-    >>> g
-    Gamble({'c': Fraction(-2, 1), 'b': Fraction(3, 5), 'd': Fraction(0, 1)})
-    >>> (.3 * f - g) / 2
-    Gamble({'a': Fraction(33, 200), 'c': Fraction(1, 1), 'b': Fraction(-3, 8), 'd': Fraction(0, 1)})
     >>> f * g
     Gamble({'a': Fraction(0, 1), 'c': Fraction(0, 1), 'b': Fraction(-3, 10), 'd': Fraction(0, 1)})
     >>> -3 - f
     Gamble({'a': Fraction(-41, 10), 'c': Fraction(-3, 1), 'b': Fraction(-5, 2)})
-
-    .. note::
-
-      Notice that the domain of results of sums and differences is the
-      union of the respective domains.
-
-    Furthermore, gambles can be combined with events:
-
-    * for restriction and extension of their domain;
-    * for cylindrical extension to a cartesian-product domain.
-
-    >>> f = Gamble({'a': 1.1, 'b': '-1/2','c': 0})
-    >>> f | Event({'a', 'b'})
-    Gamble({'a': Fraction(11, 10), 'b': Fraction(-1, 2)})
-    >>> f | Event({'a', 'd'})
-    Gamble({'a': Fraction(11, 10), 'd': Fraction(0, 1)})
     >>> f ^ Event({'e', 'f'})
     Gamble({('c', 'f'): Fraction(0, 1), ('a', 'f'): Fraction(11, 10), ('a', 'e'): Fraction(11, 10), ('b', 'f'): Fraction(-1, 2), ('b', 'e'): Fraction(-1, 2), ('c', 'e'): Fraction(0, 1)})
-
-    Additionally, gambles' properties and related gambles are computed by
-    calling the appropriate methods. Their possibility spaces coincide with
-    their domain.
 
     """
 
@@ -67,15 +36,12 @@ class Gamble(RatValFunc, Hashable):
         """Create a gamble"""
         if isinstance(data, Event):
             data = dict(zip(data, repeat(1)))
-        RatValFunc.__init__(self, data)
-
-    __getitem__ = lambda self, x: self._mapping[x] if x in self else 0
-    __hash__ = lambda self: hash(self._mapping)
+        Vector.__init__(self, data)
 
     def __add__(self, other):
         """Also allow addition of rational-valued functions and scalars"""
         if isinstance(other, Gamble):
-            return RatValFunc.__add__(self, other)
+            return Vector.__add__(self, other)
         else:
             other = _make_rational(other)
             return type(self)(dict((arg, value + other) for arg, value
@@ -90,22 +56,7 @@ class Gamble(RatValFunc, Hashable):
             return type(self)(dict((x, self[x] * other[x])
                                    for x in self._domain_joiner(other)))
         else:
-            return RatValFunc.__mul__(self, other)
-
-    def _domain_joiner(self, other):
-        if type(self) == type(other):
-            return iter(self.domain() | other.domain())
-        else:
-            raise TypeError("cannot combine domains of objects with different"
-                            "types: '" + type(self).__name__ + "' and '"
-                                       + type(other).__name__ + "'")
-
-    def __or__(self, other):
-        """Restriction or extension with zero"""
-        if isinstance(other, Event):
-            return type(self)(dict((x, self[x]) for x in other))
-        else:
-            raise("the argument must be an Event")
+            return Vector.__mul__(self, other)
 
     def __xor__(self, other):
         """Cylindrical extension"""

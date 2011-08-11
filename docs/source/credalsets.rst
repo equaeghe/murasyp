@@ -2,11 +2,11 @@
 
   from murasyp.events import Event
   from murasyp.gambles import Gamble
-  from murasyp.massfuncs import *
+  from murasyp.credalsets import *
 
-Mass Functions
-==============
+Credal Sets
+===========
 
-.. automodule:: murasyp.massfuncs
+.. automodule:: murasyp.credalsets
    :members:
    :undoc-members:

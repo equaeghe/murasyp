@@ -1,7 +1,7 @@
 from collections import Set, MutableSet
 from murasyp.events import Event
 from murasyp.gambles import Gamble
-from murasyp.massfuncs import MassFunc
+from murasyp.massassignments import MassAssignment
 
 class MassFuncSet(MutableSet):
     """A mutable set of mass functions"""

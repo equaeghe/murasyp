@@ -11,10 +11,12 @@ Contents:
 .. toctree::
   :maxdepth: 2
 
-  ratvalfuncs
+  functions
+  events
+  vectors
   gambles
-  massfuncs
-  massfuncsets
+  massassignments
+  credalsets
 
 Indices and tables
 ==================

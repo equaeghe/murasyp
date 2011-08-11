@@ -1,11 +1,11 @@
 .. testsetup::
 
   from fractions import Fraction
-  from murasyp import *
+  from murasyp.functions import *
 
 Rational-Valued Functions
 =========================
 
-.. automodule:: murasyp
+.. automodule:: murasyp.functions
   :members:
   :undoc-members:
