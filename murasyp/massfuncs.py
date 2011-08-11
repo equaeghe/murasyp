@@ -19,10 +19,6 @@ class MassFunc(RatValFunc, Hashable):
     __getitem__ = lambda self, x: self._mapping[x] if x in self else 0
     __hash__ = lambda self: hash(self._mapping)
 
-    def pspace(self):
-        """The mass function's possibility space"""
-        return self.domain()
-
     def total_mass(self):
         """The total mass of the mass function
 

@@ -72,19 +72,6 @@ class Gamble(RatValFunc, Hashable):
     __getitem__ = lambda self, x: self._mapping[x] if x in self else 0
     __hash__ = lambda self: hash(self._mapping)
 
-    def pspace(self):
-        """The gamble's possibility space
-
-          :returns: the gamble's possibility space
-          :rtype: :class:`frozenset`
-
-        >>> h = Gamble({'a': 1, 'b': 3, 'c': 4})
-        >>> h.pspace()
-        frozenset(['a', 'c', 'b'])
-
-        """
-        return self.domain()
-
     def __add__(self, other):
         """Also allow addition of rational-valued functions and scalars"""
         if isinstance(other, Gamble):
