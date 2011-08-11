@@ -1,26 +1,26 @@
 from collections import Hashable
 from itertools import repeat
-from murasyp import _make_real, RealValFunc
+from murasyp import _make_rational, RatValFunc
 from murasyp.events import Event
 
-class Gamble(RealValFunc, Hashable):
-    """Gambles are immutable, hashable real-valued functions
+class Gamble(RatValFunc, Hashable):
+    """Gambles are immutable, hashable rational-valued functions
 
-      :param: a mapping (such as a :class:`dict`) to real values,
-          i.e., :class:`~numbers.Real`, which includes the built-in types
-          :class:`float` and :class:`int`, but also
-          :class:`~fractions.Fraction`, which can be used for exact
-          arithmetic. The fractions may be given in their
+      :param: a mapping (such as a :class:`dict`) to Rational values,
+          i.e., :class:`~numbers.Rational`, which includes the built-in type
+          :class:`int`, but also :class:`~fractions.Fraction`. The fractions
+          may be given as a :class:`float` or in their
           :class:`str`-representation.
       :type: :class:`~collections.Mapping`
 
-    This class derives from :class:`~murasyp.RealValFunc`, so its methods
+    This class derives from :class:`~murasyp.RatValFunc`, so its methods
     apply here as well. This class's members are also hashable, which means
     they can be used as keys (in :class:`~collections.Set` and
     :class:`~collections.Mapping`, and their built-in variants :class:`set`
     and :class:`dict`). What has changed:
 
-    * pointwise multiplication and scalar addition & subtraction has been added;
+    * pointwise multiplication and scalar addition & subtraction
+      has been added;
     * how domains are combined under pointwise operations;
     * unspecified values are assumed to be zero.
 
@@ -55,9 +55,7 @@ class Gamble(RealValFunc, Hashable):
     >>> f | Event({'a', 'd'})
     Gamble({'a': 1.1, 'd': 0})
     >>> f ^ Event({'e', 'f'})
-    Gamble({('c', 'f'): 0, ('a', 'f'): 1.1, ('a', 'e'): 1.1,
-    ...     ('b', 'f'): Fraction(-1, 2), ('b', 'e'): Fraction(-1, 2),
-    ...     ('c', 'e'): 0})
+    Gamble({('c', 'f'): 0, ('a', 'f'): 1.1, ('a', 'e'): 1.1, ('b', 'f'): Fraction(-1, 2), ('b', 'e'): Fraction(-1, 2), ('c', 'e'): 0})
 
     Additionally, gambles' properties and related gambles are computed by
     calling the appropriate methods. Their possibility spaces coincide with
@@ -69,7 +67,7 @@ class Gamble(RealValFunc, Hashable):
         """Create a gamble"""
         if isinstance(data, Event):
             data = dict(zip(data, repeat(1)))
-        RealValFunc.__init__(self, data)
+        RatValFunc.__init__(self, data)
 
     __getitem__ = lambda self, x: self._mapping[x] if x in self else 0
     __hash__ = lambda self: hash(self._mapping)
@@ -82,17 +80,17 @@ class Gamble(RealValFunc, Hashable):
 
         >>> h = Gamble({'a': 1, 'b': 3, 'c': 4})
         >>> h.pspace()
-        frozenset({'a', 'c', 'b'})
+        frozenset(['a', 'c', 'b'])
 
         """
         return self.domain()
 
     def __add__(self, other):
-        """Also allow addition of real-valued functions and scalars"""
+        """Also allow addition of rational-valued functions and scalars"""
         if isinstance(other, Gamble):
-            return RealValFunc.__add__(self, other)
+            return RatValFunc.__add__(self, other)
         else:
-            other = _make_real(other)
+            other = _make_rational(other)
             return type(self)(dict((arg, value + other) for arg, value
                                                         in self.items()))
 
@@ -100,12 +98,12 @@ class Gamble(RealValFunc, Hashable):
     __rsub__ = lambda self, other: -(self - other)
 
     def __mul__(self, other):
-        """Pointwise multiplication of real-valued functions"""
+        """Pointwise multiplication of rational-valued functions"""
         if isinstance(other, Gamble):
             return type(self)(dict((x, self[x] * other[x])
                                    for x in self._domain_joiner(other)))
         else:
-            return RealValFunc.__mul__(self, other)
+            return RatValFunc.__mul__(self, other)
 
     def _domain_joiner(self, other):
         if type(self) == type(other):
@@ -134,7 +132,7 @@ class Gamble(RealValFunc, Hashable):
         """The minimum and maximum values of the gamble
 
           :returns: the minimum and maximum values of the gamble
-          :rtype: a pair (:class:`tuple`) of :class:`~numbers.Real`
+          :rtype: a pair (:class:`tuple`) of :class:`~numbers.Rational`
 
         >>> h = Gamble({'a': 1, 'b': 3, 'c': 4})
         >>> h.bounds()
@@ -147,7 +145,7 @@ class Gamble(RealValFunc, Hashable):
     def scaled_shifted(self):
         """Shifted and scaled version of the gamble
 
-          :returns: a scaled and shifted version 
+          :returns: a scaled and shifted version
                     :math:`(f-\min f)/(\max f-\min f)` of the gamble :math:`f`
           :rtype: :class:`~murasyp.Gamble`
 
@@ -171,7 +169,7 @@ class Gamble(RealValFunc, Hashable):
           :returns: the max-norm
                     :math:`\|f\|_\infty=\max_{x\in\mathcal{X}}|f(x)|` of the
                     gamble :math:`f`
-          :rtype: :class:`~numbers.Real`
+          :rtype: :class:`~numbers.Rational`
 
         >>> h = Gamble({'a': 1, 'b': 3, 'c': 4})
         >>> h.norm()

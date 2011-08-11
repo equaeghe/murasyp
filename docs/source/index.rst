@@ -11,7 +11,7 @@ Contents:
 .. toctree::
   :maxdepth: 2
 
-  realvalfuncs
+  ratvalfuncs
   gambles
   massfuncs
   massfuncsets

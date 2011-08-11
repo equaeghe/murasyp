@@ -1,18 +1,19 @@
 from collections import Hashable
 from itertools import repeat
-from murasyp import RealValFunc
+from murasyp import RatValFunc
 from murasyp.events import Event
 from murasyp.gambles import Gamble
 
-class MassFunc(RealValFunc, Hashable):
-    """An immutable, hashable real-valued function"""
+class MassFunc(RatValFunc, Hashable):
+    """An immutable, hashable rational-valued function"""
 
     def __init__(self, data):
         """Create a mass function"""
         if isinstance(data, Event):
             data = dict(zip(data, repeat(1 / len(data))))
-        RealValFunc.__init__(self, data)
+        RatValFunc.__init__(self, data)
         if sum(self._mapping.values()) == 0:
+            print(self._mapping.values())
             raise ValueError("mass functions must have a nonzero total mass")
 
     __getitem__ = lambda self, x: self._mapping[x] if x in self else 0
@@ -45,20 +46,17 @@ class MassFunc(RealValFunc, Hashable):
 
     def _weighted_sum(self, other):
         """Calculates the self-weighted sum of other"""
-        if not isinstance(other, (Event, Gamble)):
-            raise TypeError("the argument must be an Event or a Gamble")
-        else:
-            if self.number_type != other.number_type:
-                raise ValueError("number type mismatch")
+        if isinstance(other, (Event, Gamble)):
+            if other.pspace() >= self.pspace():
+                return sum(self[x] * other[x] for x in self)
             else:
-                if other.pspace() >= self.pspace():
-                    return sum(self[x] * other[x] for x in self)
+                mf = self | other.pspace()
+                if mf == None:
+                    None
                 else:
-                    mf = self | other.pspace()
-                    if mf == None:
-                        None
-                    else:
-                        return sum(mf[x] * other[x] for x in mf)
+                    return sum(mf[x] * other[x] for x in mf)
+        else:
+            raise TypeError("the argument must be an Event or a Gamble")
 
     def __lshift__(self, other):
         r = self._weighted_sum(other)
@@ -75,8 +73,7 @@ class MassFunc(RealValFunc, Hashable):
 
         >>> mf = MassFunc({'a': 2, 'b': 4, 'c': 8})
         >>> mf.normalized()
-        (MassFunc({'a': Fraction(1, 7), 'c': Fraction(4, 7),
-        ...        'b': Fraction(2, 7)}), Fraction(14, 1))
+        MassFunc({'a': Fraction(1, 7), 'c': Fraction(4, 7), 'b': Fraction(2, 7)})
 
         """
         return self / self.total_mass()
