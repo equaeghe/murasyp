@@ -14,6 +14,7 @@ Contents:
   functions
   vectors
   gambles
+  rays
   massassignments
   probmassfuncs
   credalsets

@@ -131,3 +131,7 @@ class Gamble(Vector):
         """
         norm = self.norm()
         return self if norm == 0 else self / norm
+
+    def is_ray(self):
+        """Checks whether the gamble is a ray"""
+        return self.norm() == 1
