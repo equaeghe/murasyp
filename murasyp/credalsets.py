@@ -13,7 +13,7 @@ class CredalSet(MutableSet):
       :type: :class:`~collections.MutableSet`
 
     Members behave like any :class:`set`, Moreover, they can be conditioned
-    just as :class:`murasyp.probmassfuncs.ProbMassFuncs` are and lower and
+    just as :class:`~murasyp.probmassfuncs.ProbMassFunc` are and lower and
     upper expectations can be calculated, using the ``*`` and ``**`` operators,
     respectively.
 
