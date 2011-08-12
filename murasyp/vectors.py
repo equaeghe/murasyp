@@ -1,5 +1,4 @@
-from collections import Hashable
-from murasyp import Event
+from collections import Set, Hashable
 from murasyp.functions import Function
 
 class Vector(Function, Hashable):
@@ -20,7 +19,7 @@ class Vector(Function, Hashable):
     * unspecified values are assumed to be zero;
     * the union of domains is used under pointwise operations;
     * a vector's domain can be restricted/extended to a specified
-      :class:`~murasyp.Event`.
+      :class:`~collections.Set`.
 
     >>> f = Vector({'a': 1.1, 'b': '-1/2','c': 0})
     >>> f
@@ -30,9 +29,9 @@ class Vector(Function, Hashable):
     >>> g = Vector({'b': '.6', 'c': -2, 'd': 0.0})
     >>> (.3 * f - g) / 2
     Vector({'a': Fraction(33, 200), 'c': Fraction(1, 1), 'b': Fraction(-3, 8), 'd': Fraction(0, 1)})
-    >>> f | Event('ab')
+    >>> f | {'a','b'}
     Vector({'a': Fraction(11, 10), 'b': Fraction(-1, 2)})
-    >>> f | Event('ad')
+    >>> f | {'a','d'}
     Vector({'a': Fraction(11, 10), 'd': Fraction(0, 1)})
 
     """
@@ -51,10 +50,10 @@ class Vector(Function, Hashable):
 
     def __or__(self, other):
         """Restriction or extension with zero"""
-        if isinstance(other, Event):
-            return type(self)(dict((x, self[x]) for x in other))
+        if isinstance(other, Set):
+            return type(self)({x: self[x] for x in other})
         else:
-            raise("the argument must be an Event")
+            raise("the argument must be a Set")
 
     def mass(self):
         """Sum of the values of the vector

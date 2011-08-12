@@ -1,5 +1,6 @@
 from itertools import repeat
-from murasyp import _make_rational, Event
+from collections import Set
+from murasyp import _make_rational
 from murasyp.vectors import Vector
 
 class Gamble(Vector):
@@ -17,7 +18,7 @@ class Gamble(Vector):
     * pointwise multiplication and scalar addition & subtraction
       have been added;
     * a gamble's domain can be cylindrically extended to the cartesian product
-      of its domain and a specified :class:`~murasyp.Event`.
+      of its domain and a specified :class:`~collections.Set`.
 
     >>> f = Gamble({'a': 1.1, 'b': '-1/2','c': 0})
     >>> g = Gamble({'b': '.6', 'c': -2, 'd': 0.0})
@@ -25,14 +26,14 @@ class Gamble(Vector):
     Gamble({'a': Fraction(0, 1), 'c': Fraction(0, 1), 'b': Fraction(-3, 10), 'd': Fraction(0, 1)})
     >>> -3 - f
     Gamble({'a': Fraction(-41, 10), 'c': Fraction(-3, 1), 'b': Fraction(-5, 2)})
-    >>> f ^ Event('ef')
+    >>> f ^ {'e','f'}
     Gamble({('c', 'f'): Fraction(0, 1), ('a', 'f'): Fraction(11, 10), ('a', 'e'): Fraction(11, 10), ('b', 'f'): Fraction(-1, 2), ('b', 'e'): Fraction(-1, 2), ('c', 'e'): Fraction(0, 1)})
 
     """
 
     def __init__(self, data):
         """Create a gamble"""
-        if isinstance(data, Event):
+        if isinstance(data, Set):
             data = dict(zip(data, repeat(1)))
         Vector.__init__(self, data)
 
@@ -42,8 +43,8 @@ class Gamble(Vector):
             return Vector.__add__(self, other)
         else:
             other = _make_rational(other)
-            return type(self)(dict((arg, value + other) for arg, value
-                                                        in self.items()))
+            return type(self)({arg: value + other
+                               for arg, value in self.items()})
 
     __radd__ = __add__
     __rsub__ = lambda self, other: -(self - other)
@@ -51,18 +52,17 @@ class Gamble(Vector):
     def __mul__(self, other):
         """Pointwise multiplication of gambles"""
         if isinstance(other, Gamble):
-            return type(self)(dict((x, self[x] * other[x])
-                                   for x in self._domain_joiner(other)))
+            return type(self)({x: self[x] * other[x]
+                               for x in self._domain_joiner(other)})
         else:
             return Vector.__mul__(self, other)
 
     def __xor__(self, other):
         """Cylindrical extension"""
-        if isinstance(other, Event):
-            return type(self)(dict(((x, y), self[x])
-                                   for x in self for y in other))
+        if isinstance(other, Set):
+            return type(self)({(x, y): self[x] for x in self for y in other})
         else:
-            raise TypeError("the argument must be an Event")
+            raise TypeError("the argument must be a Set")
 
     def bounds(self):
         """The minimum and maximum values of the gamble

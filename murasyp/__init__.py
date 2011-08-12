@@ -8,5 +8,3 @@ def _make_rational(value):
         return Fraction(str(value))
     except:
         print(repr(value) + " is not a Rational number")
-
-Event = frozenset

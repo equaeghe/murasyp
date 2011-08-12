@@ -1,11 +1,10 @@
 .. testsetup::
 
-  from murasyp.events import Event
   from murasyp.gambles import Gamble
   from murasyp.probmassfuncs import *
 
-Mass Assignments
-================
+Probability Mass Functions
+==========================
 
 .. automodule:: murasyp.probmassfuncs
    :members:

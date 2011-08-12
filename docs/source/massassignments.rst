@@ -1,6 +1,5 @@
 .. testsetup::
 
-  from murasyp.events import Event
   from murasyp.gambles import Gamble
   from murasyp.massassignments import *
 

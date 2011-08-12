@@ -1,5 +1,5 @@
 from itertools import repeat
-from murasyp import Event
+from collections import Set
 from murasyp.vectors import Vector
 
 class MassAssignment(Vector):
@@ -24,7 +24,7 @@ class MassAssignment(Vector):
     >>> m = MassAssignment({'a': -.3, 'b': .6, 'c': .7, 'd': 0})
     >>> m
     MassAssignment({'a': Fraction(-3, 10), 'c': Fraction(7, 10), 'b': Fraction(3, 5)})
-    >>> m | Event('abd')
+    >>> m | {'a','b','d'}
     MassAssignment({'a': Fraction(-1, 1), 'b': Fraction(2, 1)})
 
     Furthermore, mass assignments can be used to to express weighted sums
@@ -39,7 +39,7 @@ class MassAssignment(Vector):
 
     def __init__(self, data):
         """Create a mass assignment"""
-        if isinstance(data, Event): # uniform distribution
+        if isinstance(data, Set): # uniform distribution
             data = dict(zip(data, repeat(1 / len(data))))
         m = Vector(data)
         if m.mass() != 1:

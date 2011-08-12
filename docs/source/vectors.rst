@@ -1,6 +1,5 @@
 .. testsetup::
 
-  from murasyp.events import Event
   from murasyp.vectors import *
 
 Vectors

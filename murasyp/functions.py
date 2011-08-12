@@ -1,4 +1,4 @@
-from murasyp import _make_rational, Event
+from murasyp import _make_rational
 from collections import Mapping
 
 class Function(Mapping):
@@ -51,44 +51,45 @@ class Function(Mapping):
 
           :returns: the domain of the function, i.e., those values for which the
                     function is defined
-          :rtype: :class:`~murasyp.Event`
+          :rtype: :class:`frozenset`
 
         >>> Function({'a': 1, 'b': -1, 'c': 0}).domain()
-        Event(['a', 'c', 'b'])
+        frozenset(['a', 'c', 'b'])
 
         """
-        return Event(self.keys())
+        return frozenset(self.keys())
 
     def range(self):
         """Range of the function
 
           :returns: the range of the function, i.e., the set of all values
                     returned by the function
-          :rtype: :class:`~murasyp.Event`
+          :rtype: :class:`frozenset`
 
         >>> Function({'a': 1, 'b': -1, 'c': 0}).range()
-        Event([Fraction(0, 1), Fraction(1, 1), Fraction(-1, 1)])
+        frozenset([Fraction(0, 1), Fraction(1, 1), Fraction(-1, 1)])
 
         """
-        return Event(self.values())
+        return frozenset(self.values())
 
     def support(self):
         """Support of the function
 
           :returns: the support of the function, i.e., that part of the domain
                     for which the function is nonzero
-          :rtype: :class:`~murasyp.Event`
+          :rtype: :class:`frozenset`
 
         >>> Function({'a': 1, 'b': -1, 'c': 0}).support()
-        Event(['a', 'b'])
+        frozenset(['a', 'b'])
 
         """
-        return Event(element for element, value in self.items() if value != 0)
+        return frozenset(element for element, value in self.items()
+                                                    if value != 0)
 
     def __add__(self, other):
         """Pointwise addition of rational-valued functions"""
-        return type(self)(dict((x, self[x] + other[x])
-                               for x in self._domain_joiner(other)))
+        return type(self)({x: self[x] + other[x]
+                           for x in self._domain_joiner(other)})
 
     def _domain_joiner(self, other):
         if type(self) == type(other):
@@ -101,14 +102,12 @@ class Function(Mapping):
     def __mul__(self, other):
         """Scalar multiplication of rational-valued functions"""
         other = _make_rational(other)
-        return type(self)(dict((arg, value * other) for arg, value
-                                                    in self.items()))
+        return type(self)({arg: value * other for arg, value in self.items()})
 
     def __div__(self, other):
         """Scalar division of rational-valued functions"""
         other = _make_rational(other)
-        return type(self)(dict((arg, value / other) for arg, value
-                                                    in self.items()))
+        return type(self)({arg: value / other for arg, value in self.items()})
 
     __rmul__ = __mul__
     __neg__ = lambda self: self * (-1)

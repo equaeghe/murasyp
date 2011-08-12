@@ -1,5 +1,4 @@
 from collections import Set, MutableSet
-from murasyp import Event
 from murasyp.probmassfuncs import ProbMassFunc
 from murasyp.gambles import Gamble
 
@@ -8,7 +7,7 @@ class CredalSet(MutableSet):
 
       :param: a :class:`~collections.Set` of
           :class:`~murasyp.probmassfuncs.ProbMassFunc` or an
-          :class:`~murasyp.Event` (such as a :class:`dict`);
+          :class:`~collections.Set` (such as a :class:`dict`);
           in the latter case, a relative vacuous credal set is generated.
       :type: :class:`~collections.MutableSet`
 
@@ -19,15 +18,15 @@ class CredalSet(MutableSet):
 
     >>> p = ProbMassFunc({'a': .03, 'b': .07, 'c': .9})
     >>> q = ProbMassFunc({'a': .07, 'b': .03, 'c': .9})
-    >>> K = CredalSet(set([p, q]))
+    >>> K = CredalSet({p, q})
     >>> K
-    CredalSet(set([ProbMassFunc({'a': Fraction(3, 100), 'c': Fraction(9, 10), 'b': Fraction(7, 100)}), ProbMassFunc({'a': Fraction(7, 100), 'c': Fraction(9, 10), 'b': Fraction(3, 100)})]))
+    CredalSet(set([ProbMassFunc({'a': Fraction(7, 100), 'c': Fraction(9, 10), 'b': Fraction(3, 100)}), ProbMassFunc({'a': Fraction(3, 100), 'c': Fraction(9, 10), 'b': Fraction(7, 100)})]))
     >>> f = Gamble({'a': -1, 'b': 1})
     >>> K * f
     Fraction(-1, 25)
     >>> K ** f
     Fraction(1, 25)
-    >>> A = Event('ab')
+    >>> A = {'a','b'}
     >>> (K | A) * f
     Fraction(-2, 5)
     >>> (K | A) ** f
@@ -37,11 +36,11 @@ class CredalSet(MutableSet):
 
     def __init__(self, data=set([])):
         """Create a credal set"""
-        if isinstance(data, Event):
-            self._set = set(ProbMassFunc(Event(x)) for x in data) # vacuous
-        elif isinstance(data, Set) and all(isinstance(p, ProbMassFunc)
-                                           for p in data):
-            self._set = set(data)
+        if isinstance(data, Set):
+            if all(isinstance(p, ProbMassFunc) for p in data):
+                self._set = set(data)
+            else:
+                self._set = set(ProbMassFunc({x}) for x in data) # vacuous
         else:
             raise TypeError("specify an event or a set "
                             + "of probability mass functions")
@@ -71,10 +70,10 @@ class CredalSet(MutableSet):
     def discard(self, p):
         """Remove a probability mass function from the credal set
 
-        >>> K = CredalSet(Event('ab'))
+        >>> K = CredalSet({'a','b'})
         >>> K
         CredalSet(set([ProbMassFunc({'a': Fraction(1, 1)}), ProbMassFunc({'b': Fraction(1, 1)})]))
-        >>> K.discard(ProbMassFunc(Event('a')))
+        >>> K.discard(ProbMassFunc({'a'}))
         >>> K
         CredalSet(set([ProbMassFunc({'b': Fraction(1, 1)})]))
 
@@ -83,12 +82,12 @@ class CredalSet(MutableSet):
 
     def __or__(self, other):
         """Credal set conditional on the given event"""
-        if not isinstance(other, Event):
-            raise TypeError(str(other) + " is not an Event")
+        if not isinstance(other, Set):
+            raise TypeError(str(other) + " is not an Set")
         else:
-            K = set(p | other for p in self)
+            K = {p | other for p in self}
             if any(p == None for p in K):
-                return type(self)(set(ProbMassFunc(Event(x)) for x in other))
+                return type(self)({ProbMassFunc({x}) for x in other})
             else:
                 return type(self)(K)
 
