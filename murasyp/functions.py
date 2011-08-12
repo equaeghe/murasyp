@@ -11,7 +11,7 @@ class Function(Mapping):
       :type: :class:`~collections.Mapping`
 
     Members behave like typical rational-valued functions: their domain, range,
-    support, and individual values are accessible. Morover, they form a vector
+    support, and individual values are accessible. Moreover, they form a vector
     space; i.e., scalar multiplication (and division) as well as pointwise
     addition and subtraction is possible.
 

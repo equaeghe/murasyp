@@ -18,13 +18,14 @@ class MassAssignment(Vector):
 
     * its total mass, i.e., sum of values, has to be nonzero;
     * restriction becomes conditioning, i.e., it includes renormalization and
-      may be impossible if the conditioning event has zero net mass assigned.
+      may be impossible if the conditioning event has zero net mass assigned;
+    * the support becomes the domain.
 
-    >>> m = MassAssignment({'a': -.3, 'b': .6, 'c': .7})
+    >>> m = MassAssignment({'a': -.3, 'b': .6, 'c': .7, 'd': 0})
     >>> m
     MassAssignment({'a': Fraction(-3, 10), 'c': Fraction(7, 10), 'b': Fraction(3, 5)})
-    >>> m | Event('ab')
-    Vector({'a': Fraction(-1, 1), 'b': Fraction(2, 1)})
+    >>> m | Event('abd')
+    MassAssignment({'a': Fraction(-1, 1), 'b': Fraction(2, 1)})
 
     Furthermore, mass assignments can be used to to express weighted sums
     of vector values using standard product notation.
@@ -37,16 +38,17 @@ class MassAssignment(Vector):
     """
 
     def __init__(self, data):
-        """Create a mass function"""
+        """Create a mass assignment"""
         if isinstance(data, Event): # uniform distribution
             data = dict(zip(data, repeat(1 / len(data))))
-        Vector.__init__(self, data)
-        if self.mass() != 1:
+        m = Vector(data)
+        if m.mass() != 1:
             raise ValueError("mass assignment must have a total mass of 1")
+        Vector.__init__(self, m | m.support())
 
     def __or__(self, other):
         """Mass function conditional on the given event"""
-        return (Vector(self) | other).sum_normalized()
+        return type(self)((Vector(self) | other).sum_normalized())
 
     def __mul__(self, other):
         """Weighted sum of mass assignment and vector"""

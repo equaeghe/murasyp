@@ -38,7 +38,8 @@ class Vector(Function, Hashable):
     """
 
     __getitem__ = lambda self, x: self._mapping[x] if x in self else 0
-    __hash__ = lambda self: hash(self._mapping)
+    __hash__ = lambda self: hash(tuple(item for item
+                                            in self._mapping.iteritems()))
 
     def _domain_joiner(self, other):
         if type(self) == type(other):

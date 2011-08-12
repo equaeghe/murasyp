@@ -16,6 +16,7 @@ Contents:
   vectors
   gambles
   massassignments
+  probmassfuncs
   credalsets
 
 Indices and tables
