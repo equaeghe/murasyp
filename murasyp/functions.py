@@ -1,4 +1,4 @@
-from murasyp import _make_rational
+from murasyp import _make_rational, Event
 from collections import Mapping
 
 class Function(Mapping):
@@ -51,40 +51,39 @@ class Function(Mapping):
 
           :returns: the domain of the function, i.e., those values for which the
                     function is defined
-          :rtype: :class:`frozenset`
+          :rtype: :class:`~murasyp.Event`
 
         >>> Function({'a': 1, 'b': -1, 'c': 0}).domain()
-        frozenset(['a', 'c', 'b'])
+        Event(['a', 'c', 'b'])
 
         """
-        return frozenset(self.keys())
+        return Event(self.keys())
 
     def range(self):
         """Range of the function
 
           :returns: the range of the function, i.e., the set of all values
                     returned by the function
-          :rtype: :class:`frozenset`
+          :rtype: :class:`~murasyp.Event`
 
         >>> Function({'a': 1, 'b': -1, 'c': 0}).range()
-        frozenset([Fraction(0, 1), Fraction(1, 1), Fraction(-1, 1)])
+        Event([Fraction(0, 1), Fraction(1, 1), Fraction(-1, 1)])
 
         """
-        return frozenset(self.values())
+        return Event(self.values())
 
     def support(self):
         """Support of the function
 
           :returns: the support of the function, i.e., that part of the domain
                     for which the function is nonzero
-          :rtype: :class:`frozenset`
+          :rtype: :class:`~murasyp.Event`
 
         >>> Function({'a': 1, 'b': -1, 'c': 0}).support()
-        frozenset(['a', 'b'])
+        Event(['a', 'b'])
 
         """
-        return frozenset(element for element, value
-                                 in self.items() if value != 0)
+        return Event(element for element, value in self.items() if value != 0)
 
     def __add__(self, other):
         """Pointwise addition of rational-valued functions"""

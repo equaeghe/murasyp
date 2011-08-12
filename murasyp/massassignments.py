@@ -1,6 +1,6 @@
 from itertools import repeat
+from murasyp import Event
 from murasyp.vectors import Vector
-from murasyp.events import Event
 
 class MassAssignment(Vector):
     """(Unit) mass assignments are immutable, hashable rational-valued

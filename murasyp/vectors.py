@@ -1,6 +1,6 @@
 from collections import Hashable
+from murasyp import Event
 from murasyp.functions import Function
-from murasyp.events import Event
 
 class Vector(Function, Hashable):
     """Vectors are immutable, hashable rational-valued functions
@@ -20,7 +20,7 @@ class Vector(Function, Hashable):
     * unspecified values are assumed to be zero;
     * the union of domains is used under pointwise operations;
     * a vector's domain can be restricted/extended to a specified
-      :class:`~murasyp.events.Event`.
+      :class:`~murasyp.Event`.
 
     >>> f = Vector({'a': 1.1, 'b': '-1/2','c': 0})
     >>> f
@@ -30,9 +30,9 @@ class Vector(Function, Hashable):
     >>> g = Vector({'b': '.6', 'c': -2, 'd': 0.0})
     >>> (.3 * f - g) / 2
     Vector({'a': Fraction(33, 200), 'c': Fraction(1, 1), 'b': Fraction(-3, 8), 'd': Fraction(0, 1)})
-    >>> f | Event({'a', 'b'})
+    >>> f | Event('ab')
     Vector({'a': Fraction(11, 10), 'b': Fraction(-1, 2)})
-    >>> f | Event({'a', 'd'})
+    >>> f | Event('ad')
     Vector({'a': Fraction(11, 10), 'd': Fraction(0, 1)})
 
     """

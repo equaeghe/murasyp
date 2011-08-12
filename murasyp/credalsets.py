@@ -1,6 +1,6 @@
 from collections import Set, MutableSet
+from murasyp import Event
 from murasyp.probmassfuncs import ProbMassFunc
-from murasyp.events import Event
 from murasyp.gambles import Gamble
 
 class CredalSet(MutableSet):
@@ -8,7 +8,7 @@ class CredalSet(MutableSet):
 
       :param: a :class:`~collections.Set` of
           :class:`~murasyp.probmassfuncs.ProbMassFunc` or an
-          :class:`~murasyp.events.Event`(such as a :class:`dict`);
+          :class:`~murasyp.Event` (such as a :class:`dict`);
           in the latter case, a relative vacuous credal set is generated.
       :type: :class:`~collections.MutableSet`
 

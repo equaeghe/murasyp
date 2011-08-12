@@ -1,7 +1,6 @@
 from itertools import repeat
-from murasyp import _make_rational
+from murasyp import _make_rational, Event
 from murasyp.vectors import Vector
-from murasyp.events import Event
 
 class Gamble(Vector):
     """Gambles are immutable, hashable rational-valued functions
@@ -18,7 +17,7 @@ class Gamble(Vector):
     * pointwise multiplication and scalar addition & subtraction
       have been added;
     * a gamble's domain can be cylindrically extended to the cartesian product
-      of its domain and a specified :class:`~murasyp.events.Event`.
+      of its domain and a specified :class:`~murasyp.Event`.
 
     >>> f = Gamble({'a': 1.1, 'b': '-1/2','c': 0})
     >>> g = Gamble({'b': '.6', 'c': -2, 'd': 0.0})
@@ -26,7 +25,7 @@ class Gamble(Vector):
     Gamble({'a': Fraction(0, 1), 'c': Fraction(0, 1), 'b': Fraction(-3, 10), 'd': Fraction(0, 1)})
     >>> -3 - f
     Gamble({'a': Fraction(-41, 10), 'c': Fraction(-3, 1), 'b': Fraction(-5, 2)})
-    >>> f ^ Event({'e', 'f'})
+    >>> f ^ Event('ef')
     Gamble({('c', 'f'): Fraction(0, 1), ('a', 'f'): Fraction(11, 10), ('a', 'e'): Fraction(11, 10), ('b', 'f'): Fraction(-1, 2), ('b', 'e'): Fraction(-1, 2), ('c', 'e'): Fraction(0, 1)})
 
     """
