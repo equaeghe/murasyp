@@ -33,7 +33,7 @@ class Gamble(Vector):
 
     def __init__(self, data):
         """Create a gamble"""
-        if isinstance(data, Set):
+        if isinstance(data, Set): # indicators
             data = dict(zip(data, repeat(1)))
         Vector.__init__(self, data)
 
