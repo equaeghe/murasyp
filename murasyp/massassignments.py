@@ -1,6 +1,7 @@
 from itertools import repeat
 from collections import Set
 from murasyp.vectors import Vector
+from murasyp.gambles import Gamble
 
 class MassAssignment(Vector):
     """(Unit) mass assignments are immutable, hashable rational-valued
@@ -51,9 +52,9 @@ class MassAssignment(Vector):
         return type(self)((Vector(self) | other).sum_normalized())
 
     def __mul__(self, other):
-        """Weighted sum of mass assignment and vector"""
-        if isinstance(other, Vector):
-            return sum(self[x] * other[x] for x in self.support())
+        """'Expectation' of a gamble"""
+        if isinstance(other, Gamble):
+            return sum(self[x] * other[x] for x in self)
         else:
             return Vector.__mul__(self, other)
 
