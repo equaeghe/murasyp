@@ -16,6 +16,9 @@ class Ray(Gamble):
     * its max-norm has to be one;
     * the support becomes the domain.
 
+    >>> Ray(Gamble({'a': 5, 'b': -1, 'c': 0}))
+    Ray({'a': Fraction(1, 1), 'b': Fraction(-1, 5)})
+
     """
 
     def __init__(self, data):
