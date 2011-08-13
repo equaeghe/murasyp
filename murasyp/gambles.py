@@ -44,7 +44,7 @@ class Gamble(Vector):
         else:
             other = _make_rational(other)
             return type(self)({arg: value + other
-                               for arg, value in self.items()})
+                               for arg, value in self.iteritems()})
 
     __radd__ = __add__
     __rsub__ = lambda self, other: -(self - other)

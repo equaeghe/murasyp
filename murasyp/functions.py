@@ -34,8 +34,8 @@ class Function(Mapping):
     def __init__(self, mapping):
         """Create a rational-valued function"""
         if isinstance(mapping, Mapping):
-            self._mapping = dict((element, _make_rational(value))
-                                 for element, value in mapping.items())
+            self._mapping = {arg: _make_rational(value)
+                             for arg, value in mapping.iteritems()}
         else:
             raise TypeError("specify a mapping")
 
@@ -57,7 +57,7 @@ class Function(Mapping):
         frozenset(['a', 'c', 'b'])
 
         """
-        return frozenset(self.keys())
+        return frozenset(self.iterkeys())
 
     def range(self):
         """Range of the function
@@ -70,7 +70,7 @@ class Function(Mapping):
         frozenset([Fraction(0, 1), Fraction(1, 1), Fraction(-1, 1)])
 
         """
-        return frozenset(self.values())
+        return frozenset(self.itervalues())
 
     def support(self):
         """Support of the function
@@ -83,13 +83,12 @@ class Function(Mapping):
         frozenset(['a', 'b'])
 
         """
-        return frozenset(element for element, value in self.items()
-                                                    if value != 0)
+        return frozenset(arg for arg, value in self.iteritems() if value != 0)
 
     def __add__(self, other):
         """Pointwise addition of rational-valued functions"""
-        return type(self)({x: self[x] + other[x]
-                           for x in self._domain_joiner(other)})
+        return type(self)({arg: self[arg] + other[arg]
+                           for arg in self._domain_joiner(other)})
 
     def _domain_joiner(self, other):
         if type(self) == type(other):
@@ -102,12 +101,14 @@ class Function(Mapping):
     def __mul__(self, other):
         """Scalar multiplication of rational-valued functions"""
         other = _make_rational(other)
-        return type(self)({arg: value * other for arg, value in self.items()})
+        return type(self)({arg: value * other
+                           for arg, value in self.iteritems()})
 
     def __div__(self, other):
         """Scalar division of rational-valued functions"""
         other = _make_rational(other)
-        return type(self)({arg: value / other for arg, value in self.items()})
+        return type(self)({arg: value / other
+                           for arg, value in self.iteritems()})
 
     __rmul__ = __mul__
     __neg__ = lambda self: self * (-1)
