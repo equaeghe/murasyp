@@ -1,5 +1,6 @@
 from itertools import repeat
 from collections import Set
+from murasyp import _make_rational
 from murasyp.vectors import Vector
 from murasyp.gambles import Gamble
 
@@ -36,6 +37,16 @@ class MassAssignment(Vector):
     >>> m * f
     Fraction(113, 5)
 
+    Also, arithmetic with mass assignment results in vectors, which may be
+    converted to a mass assignment in case it satisfies the conditions.
+
+    >>> m = MassAssignment({'a': 1.7, 'b': -.7})
+    >>> n = MassAssignment({'a': .5, 'b': .5})
+    >>> m + n
+    Vector({'a': Fraction(11, 5), 'b': Fraction(-1, 5)})
+    >>> MassAssignment(.5 * m + .5 * n)
+    MassAssignment({'a': Fraction(11, 10), 'b': Fraction(-1, 10)})
+
     """
 
     def __init__(self, data):
@@ -68,3 +79,23 @@ class MassAssignment(Vector):
 
         """
         return all(val >= 0 for val in self._mapping.itervalues())
+
+    def __add__(self, other):
+        """Pointwise addition of mass assignments and vectors"""
+        if isinstance(other, Vector):
+            return Vector(self) + Vector(other)
+        else:
+            raise TypeError("can only add a vector to a mass assignment, not '"
+                             + type(other).__name__ + "'")
+
+    def __mul__(self, other):
+        """Scalar multiplication of mass assignments"""
+        other = _make_rational(other)
+        return Vector(self) * other
+
+    def __div__(self, other):
+        """Scalar division of mass assignments"""
+        other = _make_rational(other)
+        return Vector(self) / other
+
+    __rmul__ = __mul__
