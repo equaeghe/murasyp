@@ -44,7 +44,7 @@ class MassAssignment(Vector):
     >>> n = MassAssignment({'a': .5, 'b': .5})
     >>> m + n
     Vector({'a': Fraction(11, 5), 'b': Fraction(-1, 5)})
-    >>> MassAssignment(.5 * m + .5 * n)
+    >>> MassAssignment(.5 * m + n / 2)
     MassAssignment({'a': Fraction(11, 10), 'b': Fraction(-1, 10)})
 
     """
@@ -67,7 +67,7 @@ class MassAssignment(Vector):
         if isinstance(other, Gamble):
             return sum(self[x] * other[x] for x in self)
         else:
-            return Vector.__mul__(self, other)
+            return Vector(self) * other
 
     def is_pmf(self):
         """Checks whether the mass assignment is a probability mass function
@@ -87,11 +87,6 @@ class MassAssignment(Vector):
         else:
             raise TypeError("can only add a vector to a mass assignment, not '"
                              + type(other).__name__ + "'")
-
-    def __mul__(self, other):
-        """Scalar multiplication of mass assignments"""
-        other = _make_rational(other)
-        return Vector(self) * other
 
     def __div__(self, other):
         """Scalar division of mass assignments"""

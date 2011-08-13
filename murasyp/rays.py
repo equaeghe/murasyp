@@ -1,3 +1,4 @@
+from murasyp import _make_rational
 from murasyp.gambles import Gamble
 
 class Ray(Gamble):
@@ -19,9 +20,32 @@ class Ray(Gamble):
     >>> Ray(Gamble({'a': 5, 'b': -1, 'c': 0}))
     Ray({'a': Fraction(1, 1), 'b': Fraction(-1, 5)})
 
+    Also, arithmetic with rays results in gambles, which may be converted to a
+    ray.
+
+    >>> r = Ray({'a': 1,'b': -2})
+    >>> r / 2
+    Gamble({'a': Fraction(1, 4), 'b': Fraction(-1, 2)})
+    >>> Ray(r * r)
+    Ray({'a': Fraction(1, 4), 'b': Fraction(1, 1)})
+
     """
 
     def __init__(self, data):
         """Create a ray"""
         f = Gamble(data).normalized()
         Gamble.__init__(self, f | f.support())
+
+    def __mul__(self, other):
+        """Multiplication of rays (and other types)"""
+        self = Gamble(self)
+        if isinstance(other, Ray):
+            other = Gamble(other)
+        return self * other
+
+    def __div__(self, other):
+        """Scalar division of rays"""
+        other = _make_rational(other)
+        return Gamble(self) / other
+
+    __rmul__ = __mul__
