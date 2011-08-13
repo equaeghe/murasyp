@@ -94,7 +94,7 @@ class Function(Mapping):
         if type(self) == type(other):
             return iter(self.domain() & other.domain())
         else:
-            raise TypeError("cannot combine domains of objects with different"
+            raise TypeError("cannot combine domains of objects with different "
                             "types: '" + type(self).__name__ + "' and '"
                                        + type(other).__name__ + "'")
 
