@@ -6,6 +6,15 @@
 Mass Assignments
 ================
 
+Subclasses
+----------
+
+.. toctree::
+  :maxdepth: 1
+
+  probmassfuncs
+
+Class definition & methods
+--------------------------
+
 .. automodule:: murasyp.massassignments
-   :members:
-   :undoc-members:

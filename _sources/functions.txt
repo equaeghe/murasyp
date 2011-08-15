@@ -6,6 +6,15 @@
 Rational-Valued Functions
 =========================
 
+Subclasses
+----------
+
+.. toctree::
+  :maxdepth: 1
+
+  vectors
+
+Class definition & methods
+--------------------------
+
 .. automodule:: murasyp.functions
-  :members:
-  :undoc-members:

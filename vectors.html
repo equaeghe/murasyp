@@ -23,6 +23,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="murasyp v(git) documentation" href="index.html" />
+    <link rel="up" title="Rational-Valued Functions" href="functions.html" />
     <link rel="next" title="Gambles" href="gambles.html" />
     <link rel="prev" title="Rational-Valued Functions" href="functions.html" /> 
   </head>
@@ -42,7 +43,8 @@
         <li class="right" >
           <a href="functions.html" title="Rational-Valued Functions"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">murasyp v(git) documentation</a> &raquo;</li> 
+        <li><a href="index.html">murasyp v(git) documentation</a> &raquo;</li>
+          <li><a href="functions.html" accesskey="U">Rational-Valued Functions</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -51,8 +53,19 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="module-murasyp.vectors">
-<span id="vectors"></span><h1>Vectors<a class="headerlink" href="#module-murasyp.vectors" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="vectors">
+<h1>Vectors<a class="headerlink" href="#vectors" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subclasses">
+<h2>Subclasses<a class="headerlink" href="#subclasses" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="gambles.html">Gambles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="massassignments.html">Mass Assignments</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="module-murasyp.vectors">
+<span id="class-definition-methods"></span><h2>Class definition &amp; methods<a class="headerlink" href="#module-murasyp.vectors" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="murasyp.vectors.Vector">
 <em class="property">class </em><tt class="descclassname">murasyp.vectors.</tt><tt class="descname">Vector</tt><big>(</big><em>mapping</em><big>)</big><a class="reference internal" href="_modules/murasyp/vectors.html#Vector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#murasyp.vectors.Vector" title="Permalink to this definition">¶</a></dt>
@@ -97,30 +110,6 @@ and <a class="reference external" href="http://docs.python.org/library/stdtypes.
 <span class="go">Vector({&#39;a&#39;: &#39;11/10&#39;, &#39;d&#39;: 0})</span>
 </pre></div>
 </div>
-<dl class="method">
-<dt id="murasyp.vectors.Vector.is_nonnegative">
-<tt class="descname">is_nonnegative</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/murasyp/vectors.html#Vector.is_nonnegative"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#murasyp.vectors.Vector.is_nonnegative" title="Permalink to this definition">¶</a></dt>
-<dd><p>Checks whether all values are nonnegative</p>
-<blockquote>
-<div><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field"><th class="field-name">returns:</th><td class="field-body">the truth value of the statement</td>
-</tr>
-<tr class="field"><th class="field-name">rtype:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">bool</span></tt></td>
-</tr>
-</tbody>
-</table>
-</div></blockquote>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Vector</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="mf">1.6</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="o">-.</span><span class="mi">6</span><span class="p">})</span><span class="o">.</span><span class="n">is_nonnegative</span><span class="p">()</span>
-<span class="go">False</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">Vector</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="o">.</span><span class="mi">4</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="o">.</span><span class="mi">6</span><span class="p">})</span><span class="o">.</span><span class="n">is_nonnegative</span><span class="p">()</span>
-<span class="go">True</span>
-</pre></div>
-</div>
-</dd></dl>
-
 <dl class="method">
 <dt id="murasyp.vectors.Vector.mass">
 <tt class="descname">mass</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/murasyp/vectors.html#Vector.mass"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#murasyp.vectors.Vector.mass" title="Permalink to this definition">¶</a></dt>
@@ -173,8 +162,33 @@ zero.</p>
 </div>
 </dd></dl>
 
+<dl class="method">
+<dt id="murasyp.vectors.Vector.is_nonnegative">
+<tt class="descname">is_nonnegative</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/murasyp/vectors.html#Vector.is_nonnegative"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#murasyp.vectors.Vector.is_nonnegative" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks whether all values are nonnegative</p>
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">returns:</th><td class="field-body">the truth value of the statement</td>
+</tr>
+<tr class="field"><th class="field-name">rtype:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">bool</span></tt></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Vector</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="mf">1.6</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="o">-.</span><span class="mi">6</span><span class="p">})</span><span class="o">.</span><span class="n">is_nonnegative</span><span class="p">()</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Vector</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="o">.</span><span class="mi">4</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="o">.</span><span class="mi">6</span><span class="p">})</span><span class="o">.</span><span class="n">is_nonnegative</span><span class="p">()</span>
+<span class="go">True</span>
+</pre></div>
+</div>
 </dd></dl>
 
+</dd></dl>
+
+</div>
 </div>
 
 
@@ -183,6 +197,17 @@ zero.</p>
       </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Vectors</a><ul>
+<li><a class="reference internal" href="#subclasses">Subclasses</a><ul>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-murasyp.vectors">Class definition &amp; methods</a></li>
+</ul>
+</li>
+</ul>
+
   <h4>Previous topic</h4>
   <p class="topless"><a href="functions.html"
                         title="previous chapter">Rational-Valued Functions</a></p>
@@ -226,7 +251,8 @@ zero.</p>
         <li class="right" >
           <a href="functions.html" title="Rational-Valued Functions"
              >previous</a> |</li>
-        <li><a href="index.html">murasyp v(git) documentation</a> &raquo;</li> 
+        <li><a href="index.html">murasyp v(git) documentation</a> &raquo;</li>
+          <li><a href="functions.html" >Rational-Valued Functions</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

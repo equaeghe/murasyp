@@ -23,6 +23,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="murasyp v(git) documentation" href="index.html" />
+    <link rel="up" title="Vectors" href="vectors.html" />
     <link rel="next" title="Rays" href="rays.html" />
     <link rel="prev" title="Vectors" href="vectors.html" /> 
   </head>
@@ -42,7 +43,9 @@
         <li class="right" >
           <a href="vectors.html" title="Vectors"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">murasyp v(git) documentation</a> &raquo;</li> 
+        <li><a href="index.html">murasyp v(git) documentation</a> &raquo;</li>
+          <li><a href="functions.html" >Rational-Valued Functions</a> &raquo;</li>
+          <li><a href="vectors.html" accesskey="U">Vectors</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -51,8 +54,18 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="module-murasyp.gambles">
-<span id="gambles"></span><h1>Gambles<a class="headerlink" href="#module-murasyp.gambles" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="gambles">
+<h1>Gambles<a class="headerlink" href="#gambles" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subclasses">
+<h2>Subclasses<a class="headerlink" href="#subclasses" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="rays.html">Rays</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="module-murasyp.gambles">
+<span id="class-definition-methods"></span><h2>Class definition &amp; methods<a class="headerlink" href="#module-murasyp.gambles" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="murasyp.gambles.Gamble">
 <em class="property">class </em><tt class="descclassname">murasyp.gambles.</tt><tt class="descname">Gamble</tt><big>(</big><em>data</em><big>)</big><a class="reference internal" href="_modules/murasyp/gambles.html#Gamble"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#murasyp.gambles.Gamble" title="Permalink to this definition">¶</a></dt>
@@ -113,6 +126,33 @@ of its domain and a specified <a class="reference external" href="http://docs.py
 </dd></dl>
 
 <dl class="method">
+<dt id="murasyp.gambles.Gamble.scaled_shifted">
+<tt class="descname">scaled_shifted</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/murasyp/gambles.html#Gamble.scaled_shifted"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#murasyp.gambles.Gamble.scaled_shifted" title="Permalink to this definition">¶</a></dt>
+<dd><p>Shifted and scaled version of the gamble</p>
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">returns:</th><td class="field-body">a scaled and shifted version
+<img class="math" src="_images/math/f060589e13bb4ebb1c0480188ccc0f443c1025b9.png" alt="(f-\min f)/(\max f-\min f)"/> of the gamble <img class="math" src="_images/math/bb2c93730dbb48558bb3c4738c956c4e8f816437.png" alt="f"/></td>
+</tr>
+<tr class="field"><th class="field-name">rtype:</th><td class="field-body"><a class="reference internal" href="#murasyp.gambles.Gamble" title="murasyp.gambles.Gamble"><tt class="xref py py-class docutils literal"><span class="pre">Gamble</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Gamble</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">})</span><span class="o">.</span><span class="n">scaled_shifted</span><span class="p">()</span>
+<span class="go">Gamble({&#39;a&#39;: 0, &#39;c&#39;: 1, &#39;b&#39;: &#39;2/3&#39;})</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The zero gamble is returned in case the gamble is constant.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
 <dt id="murasyp.gambles.Gamble.norm">
 <tt class="descname">norm</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/murasyp/gambles.html#Gamble.norm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#murasyp.gambles.Gamble.norm" title="Permalink to this definition">¶</a></dt>
 <dd><p>The max-norm of the gamble</p>
@@ -165,35 +205,9 @@ gamble <img class="math" src="_images/math/bb2c93730dbb48558bb3c4738c956c4e8f816
 </div>
 </dd></dl>
 
-<dl class="method">
-<dt id="murasyp.gambles.Gamble.scaled_shifted">
-<tt class="descname">scaled_shifted</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/murasyp/gambles.html#Gamble.scaled_shifted"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#murasyp.gambles.Gamble.scaled_shifted" title="Permalink to this definition">¶</a></dt>
-<dd><p>Shifted and scaled version of the gamble</p>
-<blockquote>
-<div><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field"><th class="field-name">returns:</th><td class="field-body">a scaled and shifted version
-<img class="math" src="_images/math/f060589e13bb4ebb1c0480188ccc0f443c1025b9.png" alt="(f-\min f)/(\max f-\min f)"/> of the gamble <img class="math" src="_images/math/bb2c93730dbb48558bb3c4738c956c4e8f816437.png" alt="f"/></td>
-</tr>
-<tr class="field"><th class="field-name">rtype:</th><td class="field-body"><a class="reference internal" href="#murasyp.gambles.Gamble" title="murasyp.gambles.Gamble"><tt class="xref py py-class docutils literal"><span class="pre">Gamble</span></tt></a></td>
-</tr>
-</tbody>
-</table>
-</div></blockquote>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Gamble</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">})</span><span class="o">.</span><span class="n">scaled_shifted</span><span class="p">()</span>
-<span class="go">Gamble({&#39;a&#39;: 0, &#39;c&#39;: 1, &#39;b&#39;: &#39;2/3&#39;})</span>
-</pre></div>
-</div>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">The zero gamble is returned in case the gamble is constant.</p>
-</div>
 </dd></dl>
 
-</dd></dl>
-
+</div>
 </div>
 
 
@@ -202,6 +216,17 @@ gamble <img class="math" src="_images/math/bb2c93730dbb48558bb3c4738c956c4e8f816
       </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Gambles</a><ul>
+<li><a class="reference internal" href="#subclasses">Subclasses</a><ul>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-murasyp.gambles">Class definition &amp; methods</a></li>
+</ul>
+</li>
+</ul>
+
   <h4>Previous topic</h4>
   <p class="topless"><a href="vectors.html"
                         title="previous chapter">Vectors</a></p>
@@ -245,7 +270,9 @@ gamble <img class="math" src="_images/math/bb2c93730dbb48558bb3c4738c956c4e8f816
         <li class="right" >
           <a href="vectors.html" title="Vectors"
              >previous</a> |</li>
-        <li><a href="index.html">murasyp v(git) documentation</a> &raquo;</li> 
+        <li><a href="index.html">murasyp v(git) documentation</a> &raquo;</li>
+          <li><a href="functions.html" >Rational-Valued Functions</a> &raquo;</li>
+          <li><a href="vectors.html" >Vectors</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

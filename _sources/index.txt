@@ -6,21 +6,20 @@
 Welcome to murasyp's documentation!
 ===================================
 
-Contents:
+:Release: |release|
+:Date:    |today|
+
+Main classes
+------------
 
 .. toctree::
-  :maxdepth: 2
+  :maxdepth: 1
 
   functions
-  vectors
-  gambles
-  rays
-  massassignments
-  probmassfuncs
   credalsets
 
 Indices and tables
-==================
+------------------
 
 * :ref:`genindex`
 * :ref:`modindex`
