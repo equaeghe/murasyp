@@ -91,6 +91,9 @@ pygments_style = 'sphinx'
 # A list of ignored prefixes for module index sorting.
 #modindex_common_prefix = []
 
+# -- Autodoc options -----------------------------------------------------------
+autodoc_member_order = 'bysource'
+autodoc_default_flags = ['members', 'undoc-members']
 
 # -- Options for HTML output ---------------------------------------------------
 

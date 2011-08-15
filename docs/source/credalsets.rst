@@ -6,6 +6,7 @@
 Credal Sets
 ===========
 
+Class definition & methods
+--------------------------
+
 .. automodule:: murasyp.credalsets
-   :members:
-   :undoc-members:

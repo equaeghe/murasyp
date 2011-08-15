@@ -6,6 +6,7 @@
 Probability Mass Functions
 ==========================
 
+Class definition & methods
+--------------------------
+
 .. automodule:: murasyp.probmassfuncs
-   :members:
-   :undoc-members:

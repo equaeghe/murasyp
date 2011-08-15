@@ -5,7 +5,7 @@
 Rays
 ====
 
-.. automodule:: murasyp.rays
-   :members:
-   :undoc-members:
+Class definition & methods
+--------------------------
 
+.. automodule:: murasyp.rays

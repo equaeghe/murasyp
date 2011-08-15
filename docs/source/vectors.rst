@@ -5,6 +5,16 @@
 Vectors
 =======
 
+Subclasses
+----------
+
+.. toctree::
+  :maxdepth: 1
+
+  gambles
+  massassignments
+
+Class definition & methods
+--------------------------
+
 .. automodule:: murasyp.vectors
-   :members:
-   :undoc-members:
