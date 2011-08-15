@@ -1,0 +1,127 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>murasyp.probmassfuncs &mdash; murasyp v(git) documentation</title>
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '(git)',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="murasyp v(git) documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">murasyp v(git) documentation</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for murasyp.probmassfuncs</h1><div class="highlight"><pre>
+<span class="kn">from</span> <span class="nn">murasyp.massassignments</span> <span class="kn">import</span> <span class="n">MassAssignment</span>
+
+<div class="viewcode-block" id="ProbMassFunc"><a class="viewcode-back" href="../../probmassfuncs.html#murasyp.probmassfuncs.ProbMassFunc">[docs]</a><span class="k">class</span> <span class="nc">ProbMassFunc</span><span class="p">(</span><span class="n">MassAssignment</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Probability mass functions are immutable, hashable rational-valued</span>
+<span class="sd">    functions with values that are nonnegative and sum to one.</span>
+
+<span class="sd">      :param: a mapping (such as a :class:`dict`) to Rational values,</span>
+<span class="sd">          i.e., :class:`~fractions.Fraction`. The fractions</span>
+<span class="sd">          may be specified by giving an :class:`int`, a :class:`float` or in</span>
+<span class="sd">          their :class:`str`-representation.</span>
+<span class="sd">          The sum of the values must be nonzero.</span>
+<span class="sd">      :type: :class:`~collections.Mapping`</span>
+
+<span class="sd">    This class derives from :class:`~murasyp.massassignments.MassAssignment`,</span>
+<span class="sd">    so its methods apply here as well. What has changed:</span>
+
+<span class="sd">    * its values have to be nonnegative.</span>
+
+<span class="sd">    &gt;&gt;&gt; p = ProbMassFunc({&#39;a&#39;: .03, &#39;b&#39;: .07, &#39;c&#39;: .9})</span>
+<span class="sd">    &gt;&gt;&gt; p</span>
+<span class="sd">    ProbMassFunc({&#39;a&#39;: &#39;3/100&#39;, &#39;c&#39;: &#39;9/10&#39;, &#39;b&#39;: &#39;7/100&#39;})</span>
+<span class="sd">    &gt;&gt;&gt; p | {&#39;a&#39;,&#39;b&#39;}</span>
+<span class="sd">    ProbMassFunc({&#39;a&#39;: &#39;3/10&#39;, &#39;b&#39;: &#39;7/10&#39;})</span>
+<span class="sd">    &gt;&gt;&gt; ProbMassFunc({&#39;a&#39;: -1, &#39;b&#39;: 2})</span>
+<span class="sd">    Traceback (most recent call last):</span>
+<span class="sd">    ...</span>
+<span class="sd">    ValueError: probability mass functions must have nonnegative values</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create a probability mass function&quot;&quot;&quot;</span>
+        <span class="n">MassAssignment</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_nonnegative</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;probability mass functions &quot;</span>
+                             <span class="o">+</span> <span class="s">&quot;must have nonnegative values&quot;</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">murasyp v(git) documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011, Erik Quaeghebeur.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>

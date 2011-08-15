@@ -1,0 +1,224 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>murasyp.gambles &mdash; murasyp v(git) documentation</title>
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '(git)',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="murasyp v(git) documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">murasyp v(git) documentation</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for murasyp.gambles</h1><div class="highlight"><pre>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">repeat</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Set</span>
+<span class="kn">from</span> <span class="nn">murasyp</span> <span class="kn">import</span> <span class="n">_make_rational</span>
+<span class="kn">from</span> <span class="nn">murasyp.vectors</span> <span class="kn">import</span> <span class="n">Vector</span>
+
+<div class="viewcode-block" id="Gamble"><a class="viewcode-back" href="../../gambles.html#murasyp.gambles.Gamble">[docs]</a><span class="k">class</span> <span class="nc">Gamble</span><span class="p">(</span><span class="n">Vector</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Gambles are immutable, hashable rational-valued functions</span>
+
+<span class="sd">      :param: a mapping (such as a :class:`dict`) to Rational values,</span>
+<span class="sd">          i.e., :class:`~fractions.Fraction`. The fractions</span>
+<span class="sd">          may be specified by giving an :class:`int`, a :class:`float` or in</span>
+<span class="sd">          their :class:`str`-representation.</span>
+<span class="sd">      :type: :class:`~collections.Mapping`</span>
+
+<span class="sd">    This class derives from :class:`~murasyp.vectors.Vector`, so its methods</span>
+<span class="sd">    apply here as well. What has changed:</span>
+
+<span class="sd">    * pointwise multiplication and scalar addition &amp; subtraction</span>
+<span class="sd">      have been added;</span>
+<span class="sd">    * a gamble&#39;s domain can be cylindrically extended to the cartesian product</span>
+<span class="sd">      of its domain and a specified :class:`~collections.Set`.</span>
+
+<span class="sd">    &gt;&gt;&gt; f = Gamble({&#39;a&#39;: 1.1, &#39;b&#39;: &#39;-1/2&#39;,&#39;c&#39;: 0})</span>
+<span class="sd">    &gt;&gt;&gt; g = Gamble({&#39;b&#39;: &#39;.6&#39;, &#39;c&#39;: -2, &#39;d&#39;: 0.0})</span>
+<span class="sd">    &gt;&gt;&gt; f * g</span>
+<span class="sd">    Gamble({&#39;a&#39;: 0, &#39;c&#39;: 0, &#39;b&#39;: &#39;-3/10&#39;, &#39;d&#39;: 0})</span>
+<span class="sd">    &gt;&gt;&gt; -3 - f</span>
+<span class="sd">    Gamble({&#39;a&#39;: &#39;-41/10&#39;, &#39;c&#39;: -3, &#39;b&#39;: &#39;-5/2&#39;})</span>
+<span class="sd">    &gt;&gt;&gt; f ^ {&#39;e&#39;,&#39;f&#39;}</span>
+<span class="sd">    Gamble({(&#39;c&#39;, &#39;f&#39;): 0, (&#39;a&#39;, &#39;f&#39;): &#39;11/10&#39;, (&#39;a&#39;, &#39;e&#39;): &#39;11/10&#39;, (&#39;b&#39;, &#39;f&#39;): &#39;-1/2&#39;, (&#39;b&#39;, &#39;e&#39;): &#39;-1/2&#39;, (&#39;c&#39;, &#39;e&#39;): 0})</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create a gamble&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">Set</span><span class="p">):</span> <span class="c"># indicators</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">repeat</span><span class="p">(</span><span class="mi">1</span><span class="p">)))</span>
+        <span class="n">Vector</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Also allow addition of gambles and scalars&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Gamble</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">Vector</span><span class="o">.</span><span class="n">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">other</span> <span class="o">=</span> <span class="n">_make_rational</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)({</span><span class="n">arg</span><span class="p">:</span> <span class="n">value</span> <span class="o">+</span> <span class="n">other</span>
+                               <span class="k">for</span> <span class="n">arg</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">iteritems</span><span class="p">()})</span>
+
+    <span class="n">__radd__</span> <span class="o">=</span> <span class="n">__add__</span>
+    <span class="n">__rsub__</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="o">-</span><span class="p">(</span><span class="bp">self</span> <span class="o">-</span> <span class="n">other</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Pointwise multiplication of gambles&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Gamble</span><span class="p">):</span>
+            <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)({</span><span class="n">x</span><span class="p">:</span> <span class="bp">self</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">*</span> <span class="n">other</span><span class="p">[</span><span class="n">x</span><span class="p">]</span>
+                               <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_domain_joiner</span><span class="p">(</span><span class="n">other</span><span class="p">)})</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">Vector</span><span class="o">.</span><span class="n">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__xor__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Cylindrical extension&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Set</span><span class="p">):</span>
+            <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)({(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span> <span class="bp">self</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">other</span><span class="p">})</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s">&quot;the argument must be a Set&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Gamble.bounds"><a class="viewcode-back" href="../../gambles.html#murasyp.gambles.Gamble.bounds">[docs]</a>    <span class="k">def</span> <span class="nf">bounds</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;The minimum and maximum values of the gamble</span>
+
+<span class="sd">          :returns: the minimum and maximum values of the gamble</span>
+<span class="sd">          :rtype: a pair (:class:`tuple`) of :class:`~fractions.Fraction`</span>
+
+<span class="sd">        &gt;&gt;&gt; Gamble({&#39;a&#39;: 1, &#39;b&#39;: 3, &#39;c&#39;: 4}).bounds()</span>
+<span class="sd">        (Fraction(1, 1), Fraction(4, 1))</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">range</span><span class="p">()</span>
+        <span class="k">return</span> <span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">values</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">values</span><span class="p">))</span>
+</div>
+<div class="viewcode-block" id="Gamble.scaled_shifted"><a class="viewcode-back" href="../../gambles.html#murasyp.gambles.Gamble.scaled_shifted">[docs]</a>    <span class="k">def</span> <span class="nf">scaled_shifted</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Shifted and scaled version of the gamble</span>
+
+<span class="sd">          :returns: a scaled and shifted version</span>
+<span class="sd">                    :math:`(f-\min f)/(\max f-\min f)` of the gamble :math:`f`</span>
+<span class="sd">          :rtype: :class:`~murasyp.gambles.Gamble`</span>
+
+<span class="sd">        &gt;&gt;&gt; Gamble({&#39;a&#39;: 1, &#39;b&#39;: 3, &#39;c&#39;: 4}).scaled_shifted()</span>
+<span class="sd">        Gamble({&#39;a&#39;: 0, &#39;c&#39;: 1, &#39;b&#39;: &#39;2/3&#39;})</span>
+
+<span class="sd">        .. note::</span>
+
+<span class="sd">          The zero gamble is returned in case the gamble is constant.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">minval</span><span class="p">,</span> <span class="n">maxval</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bounds</span><span class="p">()</span>
+        <span class="n">shift</span> <span class="o">=</span> <span class="n">minval</span>
+        <span class="n">scale</span> <span class="o">=</span> <span class="n">maxval</span> <span class="o">-</span> <span class="n">minval</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span> <span class="o">-</span> <span class="n">shift</span><span class="p">)</span> <span class="k">if</span> <span class="n">scale</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="p">(</span><span class="bp">self</span> <span class="o">-</span> <span class="n">shift</span><span class="p">)</span> <span class="o">/</span> <span class="n">scale</span>
+</div>
+<div class="viewcode-block" id="Gamble.norm"><a class="viewcode-back" href="../../gambles.html#murasyp.gambles.Gamble.norm">[docs]</a>    <span class="k">def</span> <span class="nf">norm</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;The max-norm of the gamble</span>
+
+<span class="sd">          :returns: the max-norm</span>
+<span class="sd">                    :math:`\|f\|_\infty=\max_{x\in\mathcal{X}}|f(x)|` of the</span>
+<span class="sd">                    gamble :math:`f`</span>
+<span class="sd">          :rtype: :class:`~fractions.Fraction`</span>
+
+<span class="sd">        &gt;&gt;&gt; Gamble({&#39;a&#39;: 1, &#39;b&#39;: 3, &#39;c&#39;: 4}).norm()</span>
+<span class="sd">        Fraction(4, 1)</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">minval</span><span class="p">,</span> <span class="n">maxval</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bounds</span><span class="p">()</span>
+        <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="o">-</span><span class="n">minval</span><span class="p">,</span> <span class="n">maxval</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Gamble.normalized"><a class="viewcode-back" href="../../gambles.html#murasyp.gambles.Gamble.normalized">[docs]</a>    <span class="k">def</span> <span class="nf">normalized</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Max-norm normalized version of the gamble</span>
+
+<span class="sd">          :returns: a normalized version :math:`f/\|f\|_\infty` of the gamble</span>
+<span class="sd">                    :math:`f`</span>
+<span class="sd">          :rtype: :class:`~murasyp.gambles.Gamble`</span>
+
+<span class="sd">        &gt;&gt;&gt; Gamble({&#39;a&#39;: 1, &#39;b&#39;: 3, &#39;c&#39;: 4}).normalized()</span>
+<span class="sd">        Gamble({&#39;a&#39;: &#39;1/4&#39;, &#39;c&#39;: 1, &#39;b&#39;: &#39;3/4&#39;})</span>
+<span class="sd">        &gt;&gt;&gt; Gamble({&#39;a&#39;: 0}).normalized() == None</span>
+<span class="sd">        True</span>
+
+<span class="sd">        .. note::</span>
+
+<span class="sd">          ``None`` is returned in case the the gamble&#39;s norm is zero.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">norm</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">norm</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">None</span> <span class="k">if</span> <span class="n">norm</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="bp">self</span> <span class="o">/</span> <span class="n">norm</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">murasyp v(git) documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011, Erik Quaeghebeur.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,256 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Gambles &mdash; murasyp v(git) documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '(git)',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="murasyp v(git) documentation" href="index.html" />
+    <link rel="next" title="Rays" href="rays.html" />
+    <link rel="prev" title="Vectors" href="vectors.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="rays.html" title="Rays"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="vectors.html" title="Vectors"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">murasyp v(git) documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-murasyp.gambles">
+<span id="gambles"></span><h1>Gambles<a class="headerlink" href="#module-murasyp.gambles" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="murasyp.gambles.Gamble">
+<em class="property">class </em><tt class="descclassname">murasyp.gambles.</tt><tt class="descname">Gamble</tt><big>(</big><em>data</em><big>)</big><a class="reference internal" href="_modules/murasyp/gambles.html#Gamble"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#murasyp.gambles.Gamble" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gambles are immutable, hashable rational-valued functions</p>
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">param:</th><td class="field-body">a mapping (such as a <a class="reference external" href="http://docs.python.org/library/stdtypes.html#dict" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">dict</span></tt></a>) to Rational values,
+i.e., <a class="reference external" href="http://docs.python.org/library/fractions.html#fractions.Fraction" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">Fraction</span></tt></a>. The fractions
+may be specified by giving an <tt class="xref py py-class docutils literal"><span class="pre">int</span></tt>, a <tt class="xref py py-class docutils literal"><span class="pre">float</span></tt> or in
+their <tt class="xref py py-class docutils literal"><span class="pre">str</span></tt>-representation.</td>
+</tr>
+<tr class="field"><th class="field-name">type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/library/collections.html#collections.Mapping" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">Mapping</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>This class derives from <a class="reference internal" href="vectors.html#murasyp.vectors.Vector" title="murasyp.vectors.Vector"><tt class="xref py py-class docutils literal"><span class="pre">Vector</span></tt></a>, so its methods
+apply here as well. What has changed:</p>
+<ul class="simple">
+<li>pointwise multiplication and scalar addition &amp; subtraction
+have been added;</li>
+<li>a gamble&#8217;s domain can be cylindrically extended to the cartesian product
+of its domain and a specified <a class="reference external" href="http://docs.python.org/library/collections.html#collections.Set" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">Set</span></tt></a>.</li>
+</ul>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">Gamble</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="mf">1.1</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="s">&#39;-1/2&#39;</span><span class="p">,</span><span class="s">&#39;c&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">g</span> <span class="o">=</span> <span class="n">Gamble</span><span class="p">({</span><span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="s">&#39;.6&#39;</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="s">&#39;d&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">*</span> <span class="n">g</span>
+<span class="go">Gamble({&#39;a&#39;: 0, &#39;c&#39;: 0, &#39;b&#39;: &#39;-3/10&#39;, &#39;d&#39;: 0})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="o">-</span><span class="mi">3</span> <span class="o">-</span> <span class="n">f</span>
+<span class="go">Gamble({&#39;a&#39;: &#39;-41/10&#39;, &#39;c&#39;: -3, &#39;b&#39;: &#39;-5/2&#39;})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">^</span> <span class="p">{</span><span class="s">&#39;e&#39;</span><span class="p">,</span><span class="s">&#39;f&#39;</span><span class="p">}</span>
+<span class="go">Gamble({(&#39;c&#39;, &#39;f&#39;): 0, (&#39;a&#39;, &#39;f&#39;): &#39;11/10&#39;, (&#39;a&#39;, &#39;e&#39;): &#39;11/10&#39;, (&#39;b&#39;, &#39;f&#39;): &#39;-1/2&#39;, (&#39;b&#39;, &#39;e&#39;): &#39;-1/2&#39;, (&#39;c&#39;, &#39;e&#39;): 0})</span>
+</pre></div>
+</div>
+<dl class="method">
+<dt id="murasyp.gambles.Gamble.bounds">
+<tt class="descname">bounds</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/murasyp/gambles.html#Gamble.bounds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#murasyp.gambles.Gamble.bounds" title="Permalink to this definition">¶</a></dt>
+<dd><p>The minimum and maximum values of the gamble</p>
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">returns:</th><td class="field-body">the minimum and maximum values of the gamble</td>
+</tr>
+<tr class="field"><th class="field-name">rtype:</th><td class="field-body">a pair (<tt class="xref py py-class docutils literal"><span class="pre">tuple</span></tt>) of <a class="reference external" href="http://docs.python.org/library/fractions.html#fractions.Fraction" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">Fraction</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Gamble</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">})</span><span class="o">.</span><span class="n">bounds</span><span class="p">()</span>
+<span class="go">(Fraction(1, 1), Fraction(4, 1))</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="murasyp.gambles.Gamble.norm">
+<tt class="descname">norm</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/murasyp/gambles.html#Gamble.norm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#murasyp.gambles.Gamble.norm" title="Permalink to this definition">¶</a></dt>
+<dd><p>The max-norm of the gamble</p>
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">returns:</th><td class="field-body">the max-norm
+<img class="math" src="_images/math/38554bce9b044a75dd5c02c6572fd67a236cd896.png" alt="\|f\|_\infty=\max_{x\in\mathcal{X}}|f(x)|"/> of the
+gamble <img class="math" src="_images/math/bb2c93730dbb48558bb3c4738c956c4e8f816437.png" alt="f"/></td>
+</tr>
+<tr class="field"><th class="field-name">rtype:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/library/fractions.html#fractions.Fraction" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">Fraction</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Gamble</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">})</span><span class="o">.</span><span class="n">norm</span><span class="p">()</span>
+<span class="go">Fraction(4, 1)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="murasyp.gambles.Gamble.normalized">
+<tt class="descname">normalized</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/murasyp/gambles.html#Gamble.normalized"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#murasyp.gambles.Gamble.normalized" title="Permalink to this definition">¶</a></dt>
+<dd><p>Max-norm normalized version of the gamble</p>
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">returns:</th><td class="field-body">a normalized version <img class="math" src="_images/math/af92e639fad4bc371e6574e3cdb7cce9d7263a29.png" alt="f/\|f\|_\infty"/> of the gamble
+<img class="math" src="_images/math/bb2c93730dbb48558bb3c4738c956c4e8f816437.png" alt="f"/></td>
+</tr>
+<tr class="field"><th class="field-name">rtype:</th><td class="field-body"><a class="reference internal" href="#murasyp.gambles.Gamble" title="murasyp.gambles.Gamble"><tt class="xref py py-class docutils literal"><span class="pre">Gamble</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Gamble</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">})</span><span class="o">.</span><span class="n">normalized</span><span class="p">()</span>
+<span class="go">Gamble({&#39;a&#39;: &#39;1/4&#39;, &#39;c&#39;: 1, &#39;b&#39;: &#39;3/4&#39;})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Gamble</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">})</span><span class="o">.</span><span class="n">normalized</span><span class="p">()</span> <span class="o">==</span> <span class="bp">None</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last"><tt class="xref docutils literal"><span class="pre">None</span></tt> is returned in case the the gamble&#8217;s norm is zero.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="murasyp.gambles.Gamble.scaled_shifted">
+<tt class="descname">scaled_shifted</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/murasyp/gambles.html#Gamble.scaled_shifted"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#murasyp.gambles.Gamble.scaled_shifted" title="Permalink to this definition">¶</a></dt>
+<dd><p>Shifted and scaled version of the gamble</p>
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">returns:</th><td class="field-body">a scaled and shifted version
+<img class="math" src="_images/math/f060589e13bb4ebb1c0480188ccc0f443c1025b9.png" alt="(f-\min f)/(\max f-\min f)"/> of the gamble <img class="math" src="_images/math/bb2c93730dbb48558bb3c4738c956c4e8f816437.png" alt="f"/></td>
+</tr>
+<tr class="field"><th class="field-name">rtype:</th><td class="field-body"><a class="reference internal" href="#murasyp.gambles.Gamble" title="murasyp.gambles.Gamble"><tt class="xref py py-class docutils literal"><span class="pre">Gamble</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Gamble</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">})</span><span class="o">.</span><span class="n">scaled_shifted</span><span class="p">()</span>
+<span class="go">Gamble({&#39;a&#39;: 0, &#39;c&#39;: 1, &#39;b&#39;: &#39;2/3&#39;})</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The zero gamble is returned in case the gamble is constant.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="vectors.html"
+                        title="previous chapter">Vectors</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="rays.html"
+                        title="next chapter">Rays</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/gambles.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="rays.html" title="Rays"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="vectors.html" title="Vectors"
+             >previous</a> |</li>
+        <li><a href="index.html">murasyp v(git) documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011, Erik Quaeghebeur.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>

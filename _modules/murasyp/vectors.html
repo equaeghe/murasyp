@@ -1,0 +1,194 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>murasyp.vectors &mdash; murasyp v(git) documentation</title>
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '(git)',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="murasyp v(git) documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">murasyp v(git) documentation</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for murasyp.vectors</h1><div class="highlight"><pre>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Set</span><span class="p">,</span> <span class="n">Hashable</span>
+<span class="kn">from</span> <span class="nn">murasyp.functions</span> <span class="kn">import</span> <span class="n">Function</span>
+
+<div class="viewcode-block" id="Vector"><a class="viewcode-back" href="../../vectors.html#murasyp.vectors.Vector">[docs]</a><span class="k">class</span> <span class="nc">Vector</span><span class="p">(</span><span class="n">Function</span><span class="p">,</span> <span class="n">Hashable</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Vectors are immutable, hashable rational-valued functions</span>
+
+<span class="sd">      :param: a mapping (such as a :class:`dict`) to Rational values,</span>
+<span class="sd">          i.e., :class:`~fractions.Fraction`. The fractions</span>
+<span class="sd">          may be specified by giving an :class:`int`, a :class:`float` or in</span>
+<span class="sd">          their :class:`str`-representation.</span>
+<span class="sd">      :type: :class:`~collections.Mapping`</span>
+
+<span class="sd">    This class derives from :class:`~murasyp.functions.Function`, so its</span>
+<span class="sd">    methods apply here as well. This class&#39;s members are also hashable, which</span>
+<span class="sd">    means they can be used as keys (in :class:`~collections.Set` and</span>
+<span class="sd">    :class:`~collections.Mapping`, and their built-in variants :class:`set`</span>
+<span class="sd">    and :class:`dict`). What has changed:</span>
+
+<span class="sd">    * unspecified values are assumed to be zero;</span>
+<span class="sd">    * the union of domains is used under pointwise operations;</span>
+<span class="sd">    * a vector&#39;s domain can be restricted/extended to a specified</span>
+<span class="sd">      :class:`~collections.Set`.</span>
+
+<span class="sd">    &gt;&gt;&gt; f = Vector({&#39;a&#39;: 1.1, &#39;b&#39;: &#39;-1/2&#39;,&#39;c&#39;: 0})</span>
+<span class="sd">    &gt;&gt;&gt; f</span>
+<span class="sd">    Vector({&#39;a&#39;: &#39;11/10&#39;, &#39;c&#39;: 0, &#39;b&#39;: &#39;-1/2&#39;})</span>
+<span class="sd">    &gt;&gt;&gt; f[&#39;d&#39;]</span>
+<span class="sd">    0</span>
+<span class="sd">    &gt;&gt;&gt; g = Vector({&#39;b&#39;: &#39;.6&#39;, &#39;c&#39;: -2, &#39;d&#39;: 0.0})</span>
+<span class="sd">    &gt;&gt;&gt; (.3 * f - g) / 2</span>
+<span class="sd">    Vector({&#39;a&#39;: &#39;33/200&#39;, &#39;c&#39;: 1, &#39;b&#39;: &#39;-3/8&#39;, &#39;d&#39;: 0})</span>
+<span class="sd">    &gt;&gt;&gt; f | {&#39;a&#39;,&#39;b&#39;}</span>
+<span class="sd">    Vector({&#39;a&#39;: &#39;11/10&#39;, &#39;b&#39;: &#39;-1/2&#39;})</span>
+<span class="sd">    &gt;&gt;&gt; f | {&#39;a&#39;,&#39;d&#39;}</span>
+<span class="sd">    Vector({&#39;a&#39;: &#39;11/10&#39;, &#39;d&#39;: 0})</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">__getitem__</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mapping</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span> <span class="k">else</span> <span class="mi">0</span>
+    <span class="n">__hash__</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">:</span> <span class="nb">hash</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">item</span> <span class="k">for</span> <span class="n">item</span>
+                                            <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mapping</span><span class="o">.</span><span class="n">iteritems</span><span class="p">()))</span>
+
+    <span class="k">def</span> <span class="nf">_domain_joiner</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">==</span> <span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">):</span>
+            <span class="k">return</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">()</span> <span class="o">|</span> <span class="n">other</span><span class="o">.</span><span class="n">domain</span><span class="p">())</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s">&quot;cannot combine domains of objects with different&quot;</span>
+                            <span class="s">&quot;types: &#39;&quot;</span> <span class="o">+</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__name__</span> <span class="o">+</span> <span class="s">&quot;&#39; and &#39;&quot;</span>
+                                       <span class="o">+</span> <span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">)</span><span class="o">.</span><span class="n">__name__</span> <span class="o">+</span> <span class="s">&quot;&#39;&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__or__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Restriction or extension with zero&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Set</span><span class="p">):</span>
+            <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)({</span><span class="n">x</span><span class="p">:</span> <span class="bp">self</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">other</span><span class="p">})</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span><span class="p">(</span><span class="s">&quot;the argument must be a Set&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Vector.mass"><a class="viewcode-back" href="../../vectors.html#murasyp.vectors.Vector.mass">[docs]</a>    <span class="k">def</span> <span class="nf">mass</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Sum of the values of the vector</span>
+
+<span class="sd">          :returns: the sum of all values of the function</span>
+<span class="sd">          :rtype: :class:`~fractions.Fraction`</span>
+
+<span class="sd">        &gt;&gt;&gt; Vector({&#39;a&#39;: 1, &#39;b&#39;: &#39;-1/2&#39;,&#39;c&#39;: 0}).mass()</span>
+<span class="sd">        Fraction(1, 2)</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_mapping</span><span class="o">.</span><span class="n">itervalues</span><span class="p">())</span>
+</div>
+<div class="viewcode-block" id="Vector.sum_normalized"><a class="viewcode-back" href="../../vectors.html#murasyp.vectors.Vector.sum_normalized">[docs]</a>    <span class="k">def</span> <span class="nf">sum_normalized</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;&#39;Sum-of-values&#39;-normalized version of the vector</span>
+
+<span class="sd">          :returns: the gamble, but with its values divided by the sum of the</span>
+<span class="sd">                    vector&#39;s values</span>
+<span class="sd">          :rtype: :class:`~murasyp.vectors.Vector`</span>
+
+<span class="sd">        &gt;&gt;&gt; Vector({&#39;a&#39;: 1, &#39;b&#39;: &#39;-1/2&#39;,&#39;c&#39;: 0}).sum_normalized()</span>
+<span class="sd">        Vector({&#39;a&#39;: 2, &#39;c&#39;: 0, &#39;b&#39;: -1})</span>
+<span class="sd">        &gt;&gt;&gt; Vector({&#39;a&#39;: 1, &#39;b&#39;: -1,&#39;c&#39;: 0}).sum_normalized() == None</span>
+<span class="sd">        True</span>
+
+<span class="sd">        .. note::</span>
+
+<span class="sd">          ``None`` is returned in case the the sum of the vector&#39;s values is</span>
+<span class="sd">          zero.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">mass</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mass</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">None</span> <span class="k">if</span> <span class="n">mass</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="bp">self</span> <span class="o">/</span> <span class="n">mass</span>
+</div>
+<div class="viewcode-block" id="Vector.is_nonnegative"><a class="viewcode-back" href="../../vectors.html#murasyp.vectors.Vector.is_nonnegative">[docs]</a>    <span class="k">def</span> <span class="nf">is_nonnegative</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Checks whether all values are nonnegative</span>
+
+<span class="sd">          :returns: the truth value of the statement</span>
+<span class="sd">          :rtype: :class:`~bool`</span>
+
+<span class="sd">        &gt;&gt;&gt; Vector({&#39;a&#39;: 1.6, &#39;b&#39;: -.6}).is_nonnegative()</span>
+<span class="sd">        False</span>
+<span class="sd">        &gt;&gt;&gt; Vector({&#39;a&#39;: .4, &#39;b&#39;: .6}).is_nonnegative()</span>
+<span class="sd">        True</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">all</span><span class="p">(</span><span class="n">val</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mapping</span><span class="o">.</span><span class="n">itervalues</span><span class="p">())</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">murasyp v(git) documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011, Erik Quaeghebeur.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>

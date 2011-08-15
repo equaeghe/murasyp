@@ -1,0 +1,224 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Rational-Valued Functions &mdash; murasyp v(git) documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '(git)',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="murasyp v(git) documentation" href="index.html" />
+    <link rel="next" title="Vectors" href="vectors.html" />
+    <link rel="prev" title="Welcome to murasyp’s documentation!" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="vectors.html" title="Vectors"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to murasyp’s documentation!"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">murasyp v(git) documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-murasyp.functions">
+<span id="rational-valued-functions"></span><h1>Rational-Valued Functions<a class="headerlink" href="#module-murasyp.functions" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="murasyp.functions.Function">
+<em class="property">class </em><tt class="descclassname">murasyp.functions.</tt><tt class="descname">Function</tt><big>(</big><em>mapping</em><big>)</big><a class="reference internal" href="_modules/murasyp/functions.html#Function"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#murasyp.functions.Function" title="Permalink to this definition">¶</a></dt>
+<dd><p>Immutable rational-valued functions</p>
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">param:</th><td class="field-body">a mapping (such as a <a class="reference external" href="http://docs.python.org/library/stdtypes.html#dict" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">dict</span></tt></a>) to Rational values,
+i.e., <a class="reference external" href="http://docs.python.org/library/fractions.html#fractions.Fraction" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">Fraction</span></tt></a>. The fractions
+may be specified by giving an <tt class="xref py py-class docutils literal"><span class="pre">int</span></tt>, a <tt class="xref py py-class docutils literal"><span class="pre">float</span></tt> or in
+their <tt class="xref py py-class docutils literal"><span class="pre">str</span></tt>-representation.</td>
+</tr>
+<tr class="field"><th class="field-name">type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/library/collections.html#collections.Mapping" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">Mapping</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>Members behave like typical rational-valued functions: their domain, range,
+support, and individual values are accessible. Moreover, they form a vector
+space; i.e., scalar multiplication (and division) as well as pointwise
+addition and subtraction is possible.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">Function</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="mf">1.1</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="s">&#39;-1/2&#39;</span><span class="p">,</span><span class="s">&#39;c&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span>
+<span class="go">Function({&#39;a&#39;: &#39;11/10&#39;, &#39;c&#39;: 0, &#39;b&#39;: &#39;-1/2&#39;})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="p">[</span><span class="s">&#39;a&#39;</span><span class="p">]</span>
+<span class="go">Fraction(11, 10)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">g</span> <span class="o">=</span> <span class="n">Function</span><span class="p">({</span><span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="s">&#39;.6&#39;</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="s">&#39;d&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">(</span><span class="o">.</span><span class="mi">3</span> <span class="o">*</span> <span class="n">f</span> <span class="o">-</span> <span class="n">g</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+<span class="go">Function({&#39;c&#39;: 1, &#39;b&#39;: &#39;-3/8&#39;})</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Notice that the domain of results of sums and differences is the
+intersection of the respective domains.</p>
+</div>
+<dl class="method">
+<dt id="murasyp.functions.Function.domain">
+<tt class="descname">domain</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/murasyp/functions.html#Function.domain"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#murasyp.functions.Function.domain" title="Permalink to this definition">¶</a></dt>
+<dd><p>Domain of the function</p>
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">returns:</th><td class="field-body">the domain of the function, i.e., those values for which the
+function is defined</td>
+</tr>
+<tr class="field"><th class="field-name">rtype:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/library/stdtypes.html#frozenset" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">frozenset</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Function</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">})</span><span class="o">.</span><span class="n">domain</span><span class="p">()</span>
+<span class="go">frozenset([&#39;a&#39;, &#39;c&#39;, &#39;b&#39;])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="murasyp.functions.Function.range">
+<tt class="descname">range</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/murasyp/functions.html#Function.range"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#murasyp.functions.Function.range" title="Permalink to this definition">¶</a></dt>
+<dd><p>Range of the function</p>
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">returns:</th><td class="field-body">the range of the function, i.e., the set of all values
+returned by the function</td>
+</tr>
+<tr class="field"><th class="field-name">rtype:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/library/stdtypes.html#frozenset" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">frozenset</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Function</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">})</span><span class="o">.</span><span class="n">range</span><span class="p">()</span>
+<span class="go">frozenset([Fraction(0, 1), Fraction(1, 1), Fraction(-1, 1)])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="murasyp.functions.Function.support">
+<tt class="descname">support</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/murasyp/functions.html#Function.support"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#murasyp.functions.Function.support" title="Permalink to this definition">¶</a></dt>
+<dd><p>Support of the function</p>
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">returns:</th><td class="field-body">the support of the function, i.e., that part of the domain
+for which the function is nonzero</td>
+</tr>
+<tr class="field"><th class="field-name">rtype:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/library/stdtypes.html#frozenset" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">frozenset</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Function</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">})</span><span class="o">.</span><span class="n">support</span><span class="p">()</span>
+<span class="go">frozenset([&#39;a&#39;, &#39;b&#39;])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Welcome to murasyp&#8217;s documentation!</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="vectors.html"
+                        title="next chapter">Vectors</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/functions.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="vectors.html" title="Vectors"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to murasyp’s documentation!"
+             >previous</a> |</li>
+        <li><a href="index.html">murasyp v(git) documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011, Erik Quaeghebeur.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>
