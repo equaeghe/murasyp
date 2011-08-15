@@ -23,11 +23,11 @@ class Gamble(Vector):
     >>> f = Gamble({'a': 1.1, 'b': '-1/2','c': 0})
     >>> g = Gamble({'b': '.6', 'c': -2, 'd': 0.0})
     >>> f * g
-    Gamble({'a': Fraction(0, 1), 'c': Fraction(0, 1), 'b': Fraction(-3, 10), 'd': Fraction(0, 1)})
+    Gamble({'a': 0, 'c': 0, 'b': '-3/10', 'd': 0})
     >>> -3 - f
-    Gamble({'a': Fraction(-41, 10), 'c': Fraction(-3, 1), 'b': Fraction(-5, 2)})
+    Gamble({'a': '-41/10', 'c': -3, 'b': '-5/2'})
     >>> f ^ {'e','f'}
-    Gamble({('c', 'f'): Fraction(0, 1), ('a', 'f'): Fraction(11, 10), ('a', 'e'): Fraction(11, 10), ('b', 'f'): Fraction(-1, 2), ('b', 'e'): Fraction(-1, 2), ('c', 'e'): Fraction(0, 1)})
+    Gamble({('c', 'f'): 0, ('a', 'f'): '11/10', ('a', 'e'): '11/10', ('b', 'f'): '-1/2', ('b', 'e'): '-1/2', ('c', 'e'): 0})
 
     """
 
@@ -85,7 +85,7 @@ class Gamble(Vector):
           :rtype: :class:`~murasyp.gambles.Gamble`
 
         >>> Gamble({'a': 1, 'b': 3, 'c': 4}).scaled_shifted()
-        Gamble({'a': Fraction(0, 1), 'c': Fraction(1, 1), 'b': Fraction(2, 3)})
+        Gamble({'a': 0, 'c': 1, 'b': '2/3'})
 
         .. note::
 
@@ -105,8 +105,7 @@ class Gamble(Vector):
                     gamble :math:`f`
           :rtype: :class:`~fractions.Fraction`
 
-        >>> h = Gamble({'a': 1, 'b': 3, 'c': 4})
-        >>> h.norm()
+        >>> Gamble({'a': 1, 'b': 3, 'c': 4}).norm()
         Fraction(4, 1)
 
         """
@@ -120,9 +119,8 @@ class Gamble(Vector):
                     :math:`f`
           :rtype: :class:`~murasyp.gambles.Gamble`
 
-        >>> h = Gamble({'a': 1, 'b': 3, 'c': 4})
-        >>> h.normalized()
-        Gamble({'a': Fraction(1, 4), 'c': Fraction(1, 1), 'b': Fraction(3, 4)})
+        >>> Gamble({'a': 1, 'b': 3, 'c': 4}).normalized()
+        Gamble({'a': '1/4', 'c': 1, 'b': '3/4'})
         >>> Gamble({'a': 0}).normalized() == None
         True
 

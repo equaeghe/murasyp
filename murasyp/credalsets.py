@@ -20,7 +20,7 @@ class CredalSet(MutableSet):
     >>> q = ProbMassFunc({'a': .07, 'b': .03, 'c': .9})
     >>> K = CredalSet({p, q})
     >>> K
-    CredalSet(set([ProbMassFunc({'a': Fraction(7, 100), 'c': Fraction(9, 10), 'b': Fraction(3, 100)}), ProbMassFunc({'a': Fraction(3, 100), 'c': Fraction(9, 10), 'b': Fraction(7, 100)})]))
+    CredalSet(set([ProbMassFunc({'a': '7/100', 'c': '9/10', 'b': '3/100'}), ProbMassFunc({'a': '3/100', 'c': '9/10', 'b': '7/100'})]))
     >>> f = Gamble({'a': -1, 'b': 1})
     >>> K * f
     Fraction(-1, 25)
@@ -65,7 +65,7 @@ class CredalSet(MutableSet):
         >>> p = ProbMassFunc({'a': .06, 'b': .14, 'c': 1.8, 'd': 0})
         >>> K.add(p)
         >>> K
-        CredalSet(set([ProbMassFunc({'a': Fraction(3, 100), 'c': Fraction(9, 10), 'b': Fraction(7, 100)})]))
+        CredalSet(set([ProbMassFunc({'a': '3/100', 'c': '9/10', 'b': '7/100'})]))
 
         """
         self._set.add(ProbMassFunc(p))
@@ -78,10 +78,10 @@ class CredalSet(MutableSet):
 
         >>> K = CredalSet({'a','b'})
         >>> K
-        CredalSet(set([ProbMassFunc({'a': Fraction(1, 1)}), ProbMassFunc({'b': Fraction(1, 1)})]))
+        CredalSet(set([ProbMassFunc({'a': 1}), ProbMassFunc({'b': 1})]))
         >>> K.discard(ProbMassFunc({'a'}))
         >>> K
-        CredalSet(set([ProbMassFunc({'b': Fraction(1, 1)})]))
+        CredalSet(set([ProbMassFunc({'b': 1})]))
 
         """
         return self._set.discard(p)

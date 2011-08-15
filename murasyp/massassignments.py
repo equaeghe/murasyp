@@ -25,9 +25,9 @@ class MassAssignment(Vector):
 
     >>> m = MassAssignment({'a': -.6, 'b': 1.2, 'c': 1.4, 'd': 0})
     >>> m
-    MassAssignment({'a': Fraction(-3, 10), 'c': Fraction(7, 10), 'b': Fraction(3, 5)})
+    MassAssignment({'a': '-3/10', 'c': '7/10', 'b': '3/5'})
     >>> m | {'a','b','d'}
-    MassAssignment({'a': Fraction(-1, 1), 'b': Fraction(2, 1)})
+    MassAssignment({'a': -1, 'b': 2})
 
     Furthermore, mass assignments can be used to to express weighted sums
     of vector values using standard product notation.
@@ -43,9 +43,9 @@ class MassAssignment(Vector):
     >>> m = MassAssignment({'a': 1.7, 'b': -.7})
     >>> n = MassAssignment({'a': .5, 'b': .5})
     >>> m + n
-    Vector({'a': Fraction(11, 5), 'b': Fraction(-1, 5)})
+    Vector({'a': '11/5', 'b': '-1/5'})
     >>> MassAssignment(.5 * m + n / 2)
-    MassAssignment({'a': Fraction(11, 10), 'b': Fraction(-1, 10)})
+    MassAssignment({'a': '11/10', 'b': '-1/10'})
 
     """
 

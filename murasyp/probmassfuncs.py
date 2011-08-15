@@ -18,9 +18,9 @@ class ProbMassFunc(MassAssignment):
 
     >>> p = ProbMassFunc({'a': .03, 'b': .07, 'c': .9})
     >>> p
-    ProbMassFunc({'a': Fraction(3, 100), 'c': Fraction(9, 10), 'b': Fraction(7, 100)})
+    ProbMassFunc({'a': '3/100', 'c': '9/10', 'b': '7/100'})
     >>> p | {'a','b'}
-    ProbMassFunc({'a': Fraction(3, 10), 'b': Fraction(7, 10)})
+    ProbMassFunc({'a': '3/10', 'b': '7/10'})
     >>> ProbMassFunc({'a': -1, 'b': 2})
     Traceback (most recent call last):
     ...

@@ -17,12 +17,12 @@ class Function(Mapping):
 
     >>> f = Function({'a': 1.1, 'b': '-1/2','c': 0})
     >>> f
-    Function({'a': Fraction(11, 10), 'c': Fraction(0, 1), 'b': Fraction(-1, 2)})
+    Function({'a': '11/10', 'c': 0, 'b': '-1/2'})
     >>> f['a']
     Fraction(11, 10)
     >>> g = Function({'b': '.6', 'c': -2, 'd': 0.0})
     >>> (.3 * f - g) / 2
-    Function({'c': Fraction(1, 1), 'b': Fraction(-3, 8)})
+    Function({'c': 1, 'b': '-3/8'})
 
     .. note::
 
@@ -43,7 +43,15 @@ class Function(Mapping):
     __iter__ = lambda self: iter(self._mapping)
     __contains__ = lambda self, element: element in self._mapping
     __getitem__ = lambda self, element: self._mapping[element]
-    __repr__ = lambda self: type(self).__name__ + '(' + repr(self._mapping) + ')'
+
+    def __repr__(self):
+        """Return a readable string representation"""
+        return (type(self).__name__ + '({'
+                + ', '.join(repr(arg) + ': '
+                         + (repr(str(val)) if '/' in str(val) else str(val))
+                         for arg, val in self._mapping.iteritems())
+                + '})')
+
     __str__ = lambda self: str(self._mapping)
 
     def domain(self):

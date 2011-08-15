@@ -23,16 +23,16 @@ class Vector(Function, Hashable):
 
     >>> f = Vector({'a': 1.1, 'b': '-1/2','c': 0})
     >>> f
-    Vector({'a': Fraction(11, 10), 'c': Fraction(0, 1), 'b': Fraction(-1, 2)})
+    Vector({'a': '11/10', 'c': 0, 'b': '-1/2'})
     >>> f['d']
     0
     >>> g = Vector({'b': '.6', 'c': -2, 'd': 0.0})
     >>> (.3 * f - g) / 2
-    Vector({'a': Fraction(33, 200), 'c': Fraction(1, 1), 'b': Fraction(-3, 8), 'd': Fraction(0, 1)})
+    Vector({'a': '33/200', 'c': 1, 'b': '-3/8', 'd': 0})
     >>> f | {'a','b'}
-    Vector({'a': Fraction(11, 10), 'b': Fraction(-1, 2)})
+    Vector({'a': '11/10', 'b': '-1/2'})
     >>> f | {'a','d'}
-    Vector({'a': Fraction(11, 10), 'd': Fraction(0, 1)})
+    Vector({'a': '11/10', 'd': 0})
 
     """
 
@@ -75,7 +75,7 @@ class Vector(Function, Hashable):
           :rtype: :class:`~murasyp.vectors.Vector`
 
         >>> Vector({'a': 1, 'b': '-1/2','c': 0}).sum_normalized()
-        Vector({'a': Fraction(2, 1), 'c': Fraction(0, 1), 'b': Fraction(-1, 1)})
+        Vector({'a': 2, 'c': 0, 'b': -1})
         >>> Vector({'a': 1, 'b': -1,'c': 0}).sum_normalized() == None
         True
 

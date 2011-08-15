@@ -18,16 +18,16 @@ class Ray(Gamble):
     * the support becomes the domain.
 
     >>> Ray(Gamble({'a': 5, 'b': -1, 'c': 0}))
-    Ray({'a': Fraction(1, 1), 'b': Fraction(-1, 5)})
+    Ray({'a': 1, 'b': '-1/5'})
 
     Also, arithmetic with rays results in gambles (which can of course be
     converted to rays).
 
     >>> r = Ray({'a': 1,'b': -2})
     >>> r / 2
-    Gamble({'a': Fraction(1, 4), 'b': Fraction(-1, 2)})
+    Gamble({'a': '1/4', 'b': '-1/2'})
     >>> Ray(r * r)
-    Ray({'a': Fraction(1, 4), 'b': Fraction(1, 1)})
+    Ray({'a': '1/4', 'b': 1})
 
     """
 
