@@ -8,7 +8,7 @@ class Ray(Gamble):
           i.e., :class:`~fractions.Fraction`. The fractions
           may be specified by giving an :class:`int`, a :class:`float` or in
           their :class:`str`-representation.
-          The sum of the values must be nonzero.
+          Not all values may be zero.
       :type: :class:`~collections.Mapping`
 
     This class derives from :class:`~murasyp.gambles.Gamble`, so its methods
