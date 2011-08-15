@@ -14,14 +14,14 @@ class Ray(Gamble):
     This class derives from :class:`~murasyp.gambles.Gamble`, so its methods
     apply here as well. What has changed:
 
-    * its max-norm has to be one;
+    * the max-norm is one;
     * the support becomes the domain.
 
     >>> Ray(Gamble({'a': 5, 'b': -1, 'c': 0}))
     Ray({'a': Fraction(1, 1), 'b': Fraction(-1, 5)})
 
-    Also, arithmetic with rays results in gambles, which may be converted to a
-    ray.
+    Also, arithmetic with rays results in gambles (which can of course be
+    converted to rays).
 
     >>> r = Ray({'a': 1,'b': -2})
     >>> r / 2
@@ -34,6 +34,8 @@ class Ray(Gamble):
     def __init__(self, data):
         """Create a ray"""
         f = Gamble(data).normalized()
+        if f == None:
+            raise ValueError("rays cannot be identically zero")
         Gamble.__init__(self, f | f.support())
 
     def __mul__(self, other):

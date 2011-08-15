@@ -53,22 +53,28 @@ class CredalSet(MutableSet):
     def add(self, p):
         """Add a probability mass function to the credal set
 
+          :param: a mapping (such as a :class:`dict`) to *nonnegative* Rational
+              values, i.e., :class:`~fractions.Fraction`. The fractions
+              may be specified by giving an :class:`int`, a :class:`float` or in
+              their :class:`str`-representation. Sum-normalization is applied.
+          :type: :class:`~collections.Mapping`
+
         >>> K = CredalSet()
         >>> K
         CredalSet(set([]))
-        >>> p = ProbMassFunc({'a': .03, 'b': .07, 'c': .9})
+        >>> p = ProbMassFunc({'a': .06, 'b': .14, 'c': 1.8, 'd': 0})
         >>> K.add(p)
         >>> K
         CredalSet(set([ProbMassFunc({'a': Fraction(3, 100), 'c': Fraction(9, 10), 'b': Fraction(7, 100)})]))
 
         """
-        if isinstance(p, ProbMassFunc) and p.is_pmf():
-            self._set.add(p)
-        else:
-            raise TypeError(str(p) + " is not a probability mass function")
+        self._set.add(ProbMassFunc(p))
 
     def discard(self, p):
         """Remove a probability mass function from the credal set
+
+          :param: a probability mass function
+          :type: :class:`~murasyp.ProbMassFunc`
 
         >>> K = CredalSet({'a','b'})
         >>> K

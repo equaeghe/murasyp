@@ -18,12 +18,12 @@ class MassAssignment(Vector):
     This class derives from :class:`~murasyp.vectors.Vector`, so its methods
     apply here as well. What has changed:
 
-    * its total mass, i.e., sum of values, has to be nonzero;
+    * its total mass, i.e., sum of values, is one;
     * restriction becomes conditioning, i.e., it includes renormalization and
       may be impossible if the conditioning event has zero net mass assigned;
     * the support becomes the domain.
 
-    >>> m = MassAssignment({'a': -.3, 'b': .6, 'c': .7, 'd': 0})
+    >>> m = MassAssignment({'a': -.6, 'b': 1.2, 'c': 1.4, 'd': 0})
     >>> m
     MassAssignment({'a': Fraction(-3, 10), 'c': Fraction(7, 10), 'b': Fraction(3, 5)})
     >>> m | {'a','b','d'}
@@ -53,9 +53,9 @@ class MassAssignment(Vector):
         """Create a mass assignment"""
         if isinstance(data, Set): # uniform distribution
             data = dict(zip(data, repeat(1 / len(data))))
-        m = Vector(data)
-        if m.mass() != 1:
-            raise ValueError("mass assignment must have a total mass of 1")
+        m = Vector(data).sum_normalized()
+        if m == None:
+            raise ValueError("mass assignment must have a total mass of one")
         Vector.__init__(self, m | m.support())
 
     def __or__(self, other):
@@ -68,17 +68,6 @@ class MassAssignment(Vector):
             return sum(self[x] * other[x] for x in self)
         else:
             return Vector(self) * other
-
-    def is_pmf(self):
-        """Checks whether the mass assignment is a probability mass function
-
-        >>> MassAssignment({'a': 1.6, 'b': -.6}).is_pmf()
-        False
-        >>> MassAssignment({'a': .4, 'b': .6}).is_pmf()
-        True
-
-        """
-        return all(val >= 0 for val in self._mapping.itervalues())
 
     def __add__(self, other):
         """Pointwise addition of mass assignments and vectors"""

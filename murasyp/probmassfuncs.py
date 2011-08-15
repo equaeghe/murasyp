@@ -14,7 +14,7 @@ class ProbMassFunc(MassAssignment):
     This class derives from :class:`~murasyp.massassignments.MassAssignment`,
     so its methods apply here as well. What has changed:
 
-    * its values have to be positive.
+    * its values have to be nonnegative.
 
     >>> p = ProbMassFunc({'a': .03, 'b': .07, 'c': .9})
     >>> p
@@ -31,6 +31,6 @@ class ProbMassFunc(MassAssignment):
     def __init__(self, data):
         """Create a probability mass function"""
         MassAssignment.__init__(self, data)
-        if not self.is_pmf():
+        if not self.is_nonnegative():
             raise ValueError("probability mass functions "
                              + "must have nonnegative values")

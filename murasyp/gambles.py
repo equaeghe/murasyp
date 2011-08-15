@@ -123,15 +123,13 @@ class Gamble(Vector):
         >>> h = Gamble({'a': 1, 'b': 3, 'c': 4})
         >>> h.normalized()
         Gamble({'a': Fraction(1, 4), 'c': Fraction(1, 1), 'b': Fraction(3, 4)})
+        >>> Gamble({'a': 0}).normalized() == None
+        True
 
         .. note::
 
-          The gamble itself is returned in case it is identically zero.
+          ``None`` is returned in case the the gamble's norm is zero.
 
         """
         norm = self.norm()
-        return self if norm == 0 else self / norm
-
-    def is_ray(self):
-        """Checks whether the gamble is a ray"""
-        return self.norm() == 1
+        return None if norm == 0 else self / norm

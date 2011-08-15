@@ -87,3 +87,17 @@ class Vector(Function, Hashable):
         """
         mass = self.mass()
         return None if mass == 0 else self / mass
+
+    def is_nonnegative(self):
+        """Checks whether all values are nonnegative
+
+          :returns: the truth value of the statement
+          :rtype: :class:`~bool`
+
+        >>> Vector({'a': 1.6, 'b': -.6}).is_nonnegative()
+        False
+        >>> Vector({'a': .4, 'b': .6}).is_nonnegative()
+        True
+
+        """
+        return all(val >= 0 for val in self._mapping.itervalues())
