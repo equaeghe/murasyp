@@ -1,4 +1,5 @@
 *~
-build/
+doctrees/
+doctest/
 *.pyc
 *.kate-swp
