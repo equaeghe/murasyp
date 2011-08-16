@@ -1,4 +1,5 @@
 from collections import Set, MutableSet
+from cdd import Matrix, RepType
 from murasyp.probmassfuncs import ProbMassFunc
 from murasyp.gambles import Gamble
 
@@ -84,7 +85,7 @@ class CredalSet(MutableSet):
         CredalSet(set([ProbMassFunc({'b': 1})]))
 
         """
-        return self._set.discard(p)
+        self._set.discard(p)
 
     def __or__(self, other):
         """Credal set conditional on the given event"""
@@ -116,3 +117,41 @@ class CredalSet(MutableSet):
                 return max(p * other for p in self)
         else:
             raise TypeError(str(other) + " is not a gamble")
+
+    def pspace(self):
+        """The possibility space of the credal set
+
+        >>> p = ProbMassFunc({'a': .03, 'b': .07})
+        >>> q = ProbMassFunc({'a': .07, 'c': .03})
+        >>> K = CredalSet({p, q})
+        >>> K.pspace()
+        frozenset(['a', 'c', 'b'])
+
+        """
+        return frozenset.union(*(p.domain() for p in self))
+
+    def discard_redundant(self):
+        """Remove redundant elements of the credal set
+
+        Redundant elements are those that do not belong to the set of vertices
+        of the convex hull of the credal set.
+
+        >>> K = CredalSet(set('abc'))
+        >>> K
+        CredalSet(set([ProbMassFunc({'a': 1}), ProbMassFunc({'b': 1}), ProbMassFunc({'c': 1})]))
+        >>> K.add({'a': '1/3', 'b': '1/3', 'c': '1/3'})
+        >>> K
+        CredalSet(set([ProbMassFunc({'a': 1}), ProbMassFunc({'b': 1}), ProbMassFunc({'c': 1}), ProbMassFunc({'a': '1/3', 'c': '1/3', 'b': '1/3'})]))
+        >>> K.discard_redundant()
+        >>> K
+        CredalSet(set([ProbMassFunc({'a': 1}), ProbMassFunc({'b': 1}), ProbMassFunc({'c': 1})]))
+
+        """
+        pspace = list(self.pspace())
+        K = list(self)
+        mat = Matrix(list(list(p[x] for x in pspace) for p in K),
+                     number_type='fraction')
+        mat.rep_type = RepType.GENERATOR
+        lin, red = mat.canonicalize()
+        for i in red:
+            self.discard(K[i])
