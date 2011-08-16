@@ -1,3 +1,5 @@
+.. module:: murasyp.gambles
+
 .. testsetup::
 
   from murasyp.gambles import *
@@ -5,15 +7,9 @@
 Gambles
 =======
 
-Subclasses
-----------
+.. autoclass:: Gamble
 
-.. toctree::
-  :maxdepth: 1
+Rays
+====
 
-  rays
-
-Class definition & methods
---------------------------
-
-.. automodule:: murasyp.gambles
+.. autoclass:: Ray

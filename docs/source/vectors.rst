@@ -12,7 +12,7 @@ Subclasses
   :maxdepth: 1
 
   gambles
-  massassignments
+  massfuncs
 
 Class definition & methods
 --------------------------
