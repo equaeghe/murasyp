@@ -4,12 +4,15 @@
 
   from murasyp.gambles import *
 
+Gambles & Rays
+==============
+
 Gambles
-=======
+-------
 
 .. autoclass:: Gamble
 
 Rays
-====
+----
 
 .. autoclass:: Ray

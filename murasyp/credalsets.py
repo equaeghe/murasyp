@@ -1,4 +1,4 @@
-from collections import Set, MutableSet
+from collections import Set, MutableSet, Mapping
 from cdd import Matrix, RepType
 from murasyp.massfuncs import PMFunc
 from murasyp.gambles import Gamble
@@ -6,45 +6,76 @@ from murasyp.gambles import Gamble
 class CredalSet(MutableSet):
     """A mutable set of probability mass functions
 
-      :param: a :class:`~collections.Set` of
-          :class:`~murasyp.probmassfuncs.PMFunc` or a
-          :class:`~collections.Set`; in the latter case, a relative vacuous
-          credal set is generated.
-      :type: :class:`~collections.MutableSet`
+      :param: a :class:`~collections.Set` of :class:`~collections.Mapping`,
+          each of which can be sum-normalized to a
+          :class:`~murasyp.massfuncs.PMFunc`, i.e., it must be nonnegative and
+          have nonzero total mass.
+      :type: :class:`~collections.Set`
 
-    Members behave like any :class:`set`, Moreover, they can be conditioned
-    just as :class:`~murasyp.probmassfuncs.PMFunc` are and lower and
-    upper expectations can be calculated, using the ``*`` and ``**`` operators,
-    respectively.
+    Features:
 
-    >>> p = PMFunc({'a': .03, 'b': .07, 'c': .9})
-    >>> q = PMFunc({'a': .07, 'b': .03, 'c': .9})
-    >>> K = CredalSet({p, q})
-    >>> K
-    CredalSet(set([PMFunc({'a': '7/100', 'c': '9/10', 'b': '3/100'}), PMFunc({'a': '3/100', 'c': '9/10', 'b': '7/100'})]))
-    >>> f = Gamble({'a': -1, 'b': 1})
-    >>> K * f
-    Fraction(-1, 25)
-    >>> K ** f
-    Fraction(1, 25)
-    >>> A = {'a','b'}
-    >>> (K | A) * f
-    Fraction(-2, 5)
-    >>> (K | A) ** f
-    Fraction(2, 5)
+    * There is an alternate constructor. If `data` is a
+      :class:`~collections.Set` without :class:`~collections.Mapping`-members
+      then a relative vacuous credal set is generated.
+
+      >>> CredalSet(set('abc'))
+      CredalSet(set([PMFunc({'a': 1}), PMFunc({'b': 1}), PMFunc({'c': 1})]))
+
+    * Lower and upper expectations can be calculated, using the ``*`` and ``**``
+      operators, respectively.
+
+      >>> p = PMFunc({'a': .03, 'b': .07, 'c': .9})
+      >>> q = PMFunc({'a': .07, 'b': .03, 'c': .9})
+      >>> K = CredalSet({p, q})
+      >>> f = Gamble({'a': -1, 'b': 1, 'c': 0})
+      >>> K * f
+      Fraction(-1, 25)
+      >>> K ** f
+      Fraction(1, 25)
+      >>> K * (f | f.support())
+      Fraction(-2, 5)
+      >>> K ** (f | f.support())
+      Fraction(2, 5)
+
+    * They can be conditioned (each element :class:`~murasyp.massfuncs.PMFunc`
+      is).
+
+      >>> p = PMFunc({'a': .03, 'b': .07, 'c': .9})
+      >>> q = PMFunc({'a': .07, 'b': .03, 'c': .9})
+      >>> K = CredalSet({p, q})
+      >>> f = Gamble({'a': -1, 'b': 1})
+      >>> A = {'a','b'}
+      >>> (K | A) * f
+      Fraction(-2, 5)
+      >>> (K | A) ** f
+      Fraction(2, 5)
+
+      This does not impede the classical union of sets.
+
+      >>> CredalSet(set('a')) | CredalSet(set('b'))
+      CredalSet(set([PMFunc({'a': 1}), PMFunc({'b': 1})]))
+
+      .. warning::
+
+        Most (all?) other set-operations are still broken.
 
     """
 
     def __init__(self, data=set([])):
         """Create a credal set"""
         if isinstance(data, Set):
-            if all(isinstance(p, PMFunc) for p in data):
+            are_mappings = [isinstance(elem, Mapping) for elem in data]
+            if all(are_mappings):
                 self._set = set(data)
-            else:
+            elif not any(are_mappings):
                 self._set = set(PMFunc({x}) for x in data) # vacuous
+            else:
+                raise TypeError("either all or none of the elements of the "
+                                + "specified Set " + str(data) + "must be "
+                                + "Mappings")
         else:
-            raise TypeError("specify an event or a set "
-                            + "of probability mass functions")
+            raise TypeError("specify a Set instead of a "
+                            + type(data).__name__)
 
     __len__ = lambda self: self._set.__len__()
     __iter__ = lambda self: self._set.__iter__()
@@ -54,10 +85,9 @@ class CredalSet(MutableSet):
     def add(self, p):
         """Add a probability mass function to the credal set
 
-          :param: a mapping (such as a :class:`dict`) to *nonnegative* Rational
-              values, i.e., :class:`~fractions.Fraction`. The fractions
-              may be specified by giving an :class:`int`, a :class:`float` or in
-              their :class:`str`-representation. Sum-normalization is applied.
+          :param: a mapping that can be sum-normalized to a
+              :class:`~murasyp.massfuncs.PMFunc`, i.e., it must be nonnegative
+              and have nonzero total mass.
           :type: :class:`~collections.Mapping`
 
         >>> K = CredalSet()
@@ -75,7 +105,7 @@ class CredalSet(MutableSet):
         """Remove a probability mass function from the credal set
 
           :param: a probability mass function
-          :type: :class:`~murasyp.PMFunc`
+          :type: :class:`~murasyp.massfuncs.PMFunc`
 
         >>> K = CredalSet({'a','b'})
         >>> K
@@ -91,6 +121,8 @@ class CredalSet(MutableSet):
         """Credal set conditional on the given event"""
         if not isinstance(other, Set):
             raise TypeError(str(other) + " is not an Set")
+        elif isinstance(other, CredalSet):
+            return CredalSet(self._set | other._set)
         else:
             K = {p | other for p in self}
             if any(p == None for p in K):
@@ -137,11 +169,9 @@ class CredalSet(MutableSet):
         convex hull.
 
         >>> K = CredalSet(set('abc'))
+        >>> K.add({'a': 1, 'b': 1, 'c': 1})
         >>> K
-        CredalSet(set([PMFunc({'a': 1}), PMFunc({'b': 1}), PMFunc({'c': 1})]))
-        >>> K.add({'a': '1/3', 'b': '1/3', 'c': '1/3'})
-        >>> K
-        CredalSet(set([PMFunc({'a': 1}), PMFunc({'b': 1}), PMFunc({'c': 1}), PMFunc({'a': '1/3', 'c': '1/3', 'b': '1/3'})]))
+        CredalSet(set([..., PMFunc({'a': '1/3', 'c': '1/3', 'b': '1/3'})]))
         >>> K.discard_redundant()
         >>> K
         CredalSet(set([PMFunc({'a': 1}), PMFunc({'b': 1}), PMFunc({'c': 1})]))

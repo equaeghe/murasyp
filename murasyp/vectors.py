@@ -2,37 +2,47 @@ from collections import Set, Hashable
 from murasyp.functions import Function
 
 class Vector(Function, Hashable):
-    """Vectors are immutable, hashable rational-valued functions
-
-      :param: a mapping (such as a :class:`dict`) to Rational values,
-          i.e., :class:`~fractions.Fraction`. The fractions
-          may be specified by giving an :class:`int`, a :class:`float` or in
-          their :class:`str`-representation.
-      :type: :class:`~collections.Mapping`
+    """Vectors map arguments to zero or a specified rational value
 
     This class derives from :class:`~murasyp.functions.Function`, so its
-    methods apply here as well. This class's members are also hashable, which
-    means they can be used as keys (in :class:`~collections.Set` and
-    :class:`~collections.Mapping`, and their built-in variants :class:`set`
-    and :class:`dict`). What has changed:
+    methods apply here as well.
 
-    * unspecified values are assumed to be zero;
-    * the union of domains is used under pointwise operations;
-    * a vector's domain can be restricted/extended to a specified
+    What has changed:
+
+    * This class's members are also hashable, which means they can be used as
+      keys (in :class:`~collections.Set` and :class:`~collections.Mapping`, and
+      their built-in variants :class:`set` and :class:`dict`).
+
+      >>> {Function({})}
+      Traceback (most recent call last):
+        ...
+      TypeError: unhashable type: 'Function'
+      >>> {Vector({})}
+      set([Vector({})])
+
+    * Unspecified values are assumed to be zero.
+
+      >>> f = Vector({'a': 1.1, 'b': '-1/2','c': 0})
+      >>> f
+      Vector({'a': '11/10', 'c': 0, 'b': '-1/2'})
+      >>> f['d']
+      0
+
+    * The union of domains is used under pointwise operations.
+
+      >>> f = Vector({'a': 1.1, 'b': '-1/2','c': 0})
+      >>> g = Vector({'b': '.6', 'c': -2, 'd': 0.0})
+      >>> (.3 * f - g) / 2
+      Vector({'a': '33/200', 'c': 1, 'b': '-3/8', 'd': 0})
+
+    * A vector's domain can be restricted/extended to a specified
       :class:`~collections.Set`.
 
-    >>> f = Vector({'a': 1.1, 'b': '-1/2','c': 0})
-    >>> f
-    Vector({'a': '11/10', 'c': 0, 'b': '-1/2'})
-    >>> f['d']
-    0
-    >>> g = Vector({'b': '.6', 'c': -2, 'd': 0.0})
-    >>> (.3 * f - g) / 2
-    Vector({'a': '33/200', 'c': 1, 'b': '-3/8', 'd': 0})
-    >>> f | {'a','b'}
-    Vector({'a': '11/10', 'b': '-1/2'})
-    >>> f | {'a','d'}
-    Vector({'a': '11/10', 'd': 0})
+      >>> f = Vector({'a': 1.1, 'b': '-1/2','c': 0})
+      >>> f | {'a','b'}
+      Vector({'a': '11/10', 'b': '-1/2'})
+      >>> f | {'a','d'}
+      Vector({'a': '11/10', 'd': 0})
 
     """
 
@@ -58,7 +68,7 @@ class Vector(Function, Hashable):
     def mass(self):
         """Sum of the values of the vector
 
-          :returns: the sum of all values of the function
+          :returns: the sum of all values of the vector
           :rtype: :class:`~fractions.Fraction`
 
         >>> Vector({'a': 1, 'b': '-1/2','c': 0}).mass()

@@ -130,7 +130,7 @@ class Gamble(Vector):
 
         .. note::
 
-          `None` is returned in case the the gamble's norm is zero.
+          ``None`` is returned in case the the gamble's norm is zero.
 
         """
         norm = self.norm()

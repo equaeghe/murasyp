@@ -2,32 +2,41 @@ from murasyp import _make_rational
 from collections import Mapping
 
 class Function(Mapping):
-    """Immutable rational-valued functions
+    """Rational-valued functions
 
-      :param: a mapping (such as a :class:`dict`) to Rational values,
-          i.e., :class:`~fractions.Fraction`. The fractions
-          may be specified by giving an :class:`int`, a :class:`float` or in
-          their :class:`str`-representation.
+      :param: a mapping (such as a :class:`dict`) to (a representation of)
+          :class:`~numbers.Real`.
       :type: :class:`~collections.Mapping`
 
-    Members behave like typical rational-valued functions: their domain, range,
-    support, and individual values are accessible. Moreover, they form a vector
-    space; i.e., scalar multiplication (and division) as well as pointwise
-    addition and subtraction is possible.
+    Features:
 
-    >>> f = Function({'a': 1.1, 'b': '-1/2','c': 0})
-    >>> f
-    Function({'a': '11/10', 'c': 0, 'b': '-1/2'})
-    >>> f['a']
-    Fraction(11, 10)
-    >>> g = Function({'b': '.6', 'c': -2, 'd': 0.0})
-    >>> (.3 * f - g) / 2
-    Function({'c': 1, 'b': '-3/8'})
+    * Values may be specified as :class:`int`, :class:`float`, or
+      :class:`~fractions.Fraction`, whose :class:`str`-representation is then
+      especially convenient.
 
-    .. note::
+      >>> f = Function({'a': 1.1, 'b': '-1/2','c': 0})
+      >>> f
+      Function({'a': '11/10', 'c': 0, 'b': '-1/2'})
+      >>> f['a']
+      Fraction(11, 10)
 
-      Notice that the domain of results of sums and differences is the
-      intersection of the respective domains.
+      .. note::
+
+        No floats are ever really used; they are immediately converted to
+        fractions and should be seen as just a convenient input representation.
+
+    * Scalar multiplication (and division) as well as pointwise addition and
+      subtraction is possible.
+
+      >>> f = Function({'a': 1.1, 'b': '-1/2','c': 0})
+      >>> g = Function({'b': '.6', 'c': -2, 'd': 0.0})
+      >>> (.3 * f - g) / 2
+      Function({'c': 1, 'b': '-3/8'})
+
+      .. note::
+
+        The domain of results of sums and differences is the intersection of
+        the respective domains.
 
     """
 

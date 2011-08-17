@@ -1,3 +1,5 @@
+.. module:: murasyp.functions
+
 .. testsetup::
 
   from fractions import Fraction
@@ -6,15 +8,4 @@
 Rational-Valued Functions
 =========================
 
-Subclasses
-----------
-
-.. toctree::
-  :maxdepth: 1
-
-  vectors
-
-Class definition & methods
---------------------------
-
-.. automodule:: murasyp.functions
+.. autoclass:: Function

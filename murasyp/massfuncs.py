@@ -24,28 +24,42 @@ class UMFunc(Vector):
 
       >>> UMFunc({'a': -.6, 'b': 1.2, 'c': 1.4, 'd': 0})
       UMFunc({'a': '-3/10', 'c': '7/10', 'b': '3/5'})
-      >>> UMFunc({'a': -.6, 'b': 1.2, 'd': '-.6'})
+      >>> UMFunc({'a': -1, 'b': 1})
       Traceback (most recent call last):
         ...
-      ValueError: no UMFunc can be constructed from a Mapping {'a': -0.6, 'b': 1.2, 'd': '-.6'} with a total mass of zero
+      ValueError: no UMFunc can be constructed from a Mapping {'a': -1, 'b': 1} with ...
 
     * Restriction becomes conditioning, i.e., it includes renormalization and
       may be impossible if the conditioning event has zero net mass assigned.
 
       >>> UMFunc({'a': -.6, 'b': 1.2, 'c': 1.4}) | {'a', 'b', 'd'}
       UMFunc({'a': -1, 'b': 2})
-      >>> UMFunc({'a': -.6, 'b': 1.2, 'd': .6}) | {'a', 'c', 'd'}
+      >>> UMFunc({'a': -1, 'b': 1, 'd': 1}) | {'a', 'c', 'd'}
       Traceback (most recent call last):
         ...
-      ValueError: no UMFunc can be constructed from a Mapping {'a': Fraction(-1, 2), 'c': Fraction(0, 1), 'd': Fraction(1, 2)} with a total mass of zero
+      ValueError: ...
 
-    * Mass assignments can be used to to express weighted sums of vector values
-      using standard product notation.
+    * Mass functions can be used to to express weighted sums of
+      :class:`~murasyp.gambles.Gamble` values using standard product notation
+      (think 'expectation' if the mass function is a
+      :class:`~murasyp.massfuncs.PMFunc`).
 
       >>> m = UMFunc({'a': 1.6, 'b': -.6})
       >>> f = Gamble({'a': 13, 'b': -3})
       >>> m * f
       Fraction(113, 5)
+
+      Take note, however, that the domain of the gamble acts as a conditioning event (so one can calculate conditional expectations without explicitly
+      calculating conditional mass functions).
+
+      >>> m = UMFunc({'a': '1/3', 'b': '1/6', 'c': '1/2'})
+      >>> f = Gamble({'a': 1, 'b': -1, 'c': 0})
+      >>> m * f
+      Fraction(1, 6)
+      >>> m * (f | f.support())
+      Fraction(1, 3)
+      >>> (m | f.support()) * f
+      Fraction(1, 3)
 
     * Arithmetic with unit mass functions results in vectors, which may be
       converted to a unit mass functions in case it satisfies the conditions.
@@ -76,7 +90,8 @@ class UMFunc(Vector):
     def __mul__(self, other):
         """'Expectation' of a gamble"""
         if isinstance(other, Gamble):
-            return sum(self[x] * other[x] for x in self)
+            pspace = self.domain() & other.domain()
+            return sum((self | pspace)[x] * other[x] for x in pspace)
         else:
             return Vector(self) * other
 
@@ -109,7 +124,7 @@ class PMFunc(UMFunc):
       >>> PMFunc({'a': -1, 'b': 2})
       Traceback (most recent call last):
       ...
-      ValueError: no PMFunc can be constructed from a Mapping {'a': -1, 'b': 2} with negative values
+      ValueError: no PMFunc can be constructed from a Mapping {'a': -1, 'b': 2} with ...
 
     """
 

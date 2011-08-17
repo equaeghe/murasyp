@@ -13,9 +13,12 @@ Main classes
 ------------
 
 .. toctree::
-  :maxdepth: 1
+  :maxdepth: 2
 
   functions
+  vectors
+  gambles
+  massfuncs
   credalsets
 
 Indices and tables
