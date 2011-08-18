@@ -20,6 +20,7 @@ Main classes
   gambles
   massfuncs
   credalsets
+  almostdesirs
 
 Indices and tables
 ------------------

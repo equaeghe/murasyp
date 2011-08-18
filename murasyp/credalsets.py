@@ -66,7 +66,7 @@ class CredalSet(MutableSet):
         if isinstance(data, Set):
             are_mappings = [isinstance(elem, Mapping) for elem in data]
             if all(are_mappings):
-                self._set = set(data)
+                self._set = set(PMFunc(mapping) for mapping in data)
             elif not any(are_mappings):
                 self._set = set(PMFunc({x}) for x in data) # vacuous
             else:
@@ -82,7 +82,7 @@ class CredalSet(MutableSet):
     __contains__ = lambda self: self._set.__contains__()
     __repr__ = lambda self: type(self).__name__ + '(' + repr(self._set) + ')'
 
-    def add(self, p):
+    def add(self, mapping):
         """Add a probability mass function to the credal set
 
           :param: a mapping that can be sum-normalized to a
@@ -93,19 +93,20 @@ class CredalSet(MutableSet):
         >>> K = CredalSet()
         >>> K
         CredalSet(set([]))
-        >>> p = PMFunc({'a': .06, 'b': .14, 'c': 1.8, 'd': 0})
-        >>> K.add(p)
+        >>> K.add({'a': .06, 'b': .14, 'c': 1.8, 'd': 0})
         >>> K
         CredalSet(set([PMFunc({'a': '3/100', 'c': '9/10', 'b': '7/100'})]))
 
         """
-        self._set.add(PMFunc(p))
+        self._set.add(PMFunc(mapping))
 
-    def discard(self, p):
+    def discard(self, mapping):
         """Remove a probability mass function from the credal set
 
-          :param: a probability mass function
-          :type: :class:`~murasyp.massfuncs.PMFunc`
+          :param: a mapping that can be sum-normalized to a
+              :class:`~murasyp.massfuncs.PMFunc`, i.e., it must be nonnegative
+              and have nonzero total mass.
+          :type: :class:`~collections.Mapping`
 
         >>> K = CredalSet({'a','b'})
         >>> K
@@ -115,7 +116,7 @@ class CredalSet(MutableSet):
         CredalSet(set([PMFunc({'b': 1})]))
 
         """
-        self._set.discard(p)
+        self._set.discard(PMFunc(mapping))
 
     def __or__(self, other):
         """Credal set conditional on the given event"""
@@ -179,7 +180,7 @@ class CredalSet(MutableSet):
         """
         pspace = list(self.pspace())
         K = list(self)
-        mat = Matrix(list(list(p[x] for x in pspace) for p in K),
+        mat = Matrix(list([1] + list(p[x] for x in pspace) for p in K),
                      number_type='fraction')
         mat.rep_type = RepType.GENERATOR
         lin, red = mat.canonicalize()
