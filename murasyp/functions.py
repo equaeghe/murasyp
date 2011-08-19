@@ -1,12 +1,11 @@
-from murasyp import _make_rational
 from collections import Mapping
+from murasyp import _make_rational
 
 class Function(Mapping):
     """Rational-valued functions
 
-      :param: a mapping (such as a :class:`dict`) to (a representation of)
-          :class:`~numbers.Real`.
-      :type: :class:`~collections.Mapping`
+      :type mapping: :class:`~collections.Mapping` (such as a :class:`dict`)
+        to a representation of :class:`~numbers.Real`
 
     Features:
 

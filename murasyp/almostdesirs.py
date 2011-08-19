@@ -1,14 +1,14 @@
 from collections import Set, MutableSet, Mapping
 from cdd import Matrix, RepType
+from murasyp import _make_rational
 from murasyp.gambles import Gamble, Ray
 
 class ADesirSet(MutableSet):
     """A mutable set of rays
 
-      :param: a :class:`~collections.Set` of :class:`~collections.Mapping`,
+      :type data: a :class:`~collections.Set` of :class:`~collections.Mapping`,
           each of which can be normalized to a :class:`~murasyp.gambles.Ray`,
           i.e., it must be nonconstant.
-      :type: :class:`~collections.Set`
 
     Features:
 
@@ -36,12 +36,11 @@ class ADesirSet(MutableSet):
             raise TypeError("specify a Set instead of a "
                             + type(data).__name__)
 
-    def add(self, mapping):
+    def add(self, data):
         """Add a ray to the set of almost desirable gambles
 
-          :param: a mapping that can be normalized to a
-              :class:`~murasyp.gambles.Ray`, i.e., it must be nonconstant.
-          :type: :class:`~collections.Mapping`
+          :type data: arguments accepted by the :class:`~murasyp.gambles.Ray`
+            constructor
 
         >>> D = ADesirSet()
         >>> D
@@ -51,14 +50,13 @@ class ADesirSet(MutableSet):
         ADesirSet(set([Ray({'a': '-1/30', 'c': 1, 'b': '7/90'})]))
 
         """
-        self._set.add(Ray(mapping))
+        self._set.add(Ray(data))
 
-    def discard(self, mapping):
+    def discard(self, data):
         """Remove a ray from the credal set
 
-          :param: a mapping that can be normalized to a
-              :class:`~murasyp.gambles.Ray`, i.e., it must be nonconstant.
-          :type: :class:`~collections.Mapping`
+          :type data: arguments accepted by the :class:`~murasyp.gambles.Ray`
+            constructor
 
         >>> D = ADesirSet({'a','b'})
         >>> D
@@ -68,7 +66,7 @@ class ADesirSet(MutableSet):
         ADesirSet(set([Ray({'b': 1})]))
 
         """
-        self._set.discard(Ray(mapping))
+        self._set.discard(Ray(data))
 
     __len__ = lambda self: self._set.__len__()
     __iter__ = lambda self: self._set.__iter__()
@@ -77,6 +75,11 @@ class ADesirSet(MutableSet):
 
     def pspace(self):
         """The possibility space of the set of desirable gambles
+
+          :returns: the possibility space of the set of desirable gambles, i.e.,
+            the union of the domains of the probability mass functions it
+            contains
+          :rtype: :class:`frozenset`
 
         >>> r = Ray({'a': .03, 'b': -.07})
         >>> s = Ray({'a': .07, 'c': -.03})
@@ -110,3 +113,76 @@ class ADesirSet(MutableSet):
         lin, red = mat.canonicalize()
         for i in red:
             self.discard(D[i])
+
+    def set_lower_pr(self, data, val):
+        """Set the lower probability/prevision (expectation) of an event/gamble
+
+          :arg data: the gamble for which a probability/prevision value is given
+          :type data: arguments accepted by the :class:`~murasyp.gambles.Ray`
+            constructor
+          :arg val: the probability/prevision value
+          :type val: a representation of :class:`~numbers.Real`
+
+        The marginal gamble corresponing to the prevision specification is
+        calculated and added to the set of almost desirable gambles.
+
+        >>> D = ADesirSet()
+        >>> D.set_lower_pr(Gamble({'a', 'b'}) | {'a', 'b', 'c'}, .4)
+        >>> D
+        ADesirSet(set([Ray({'a': 1, 'c': '-2/3', 'b': 1})]))
+
+        .. note::
+
+          The domain of the input gamble determines the conditioning event.
+
+        """
+        self.add(Gamble(data) - _make_rational(val))
+
+    def set_upper_pr(self, data, val):
+        """Set the upper probability/prevision (expectation) of an event/gamble
+
+          :arg data: the gamble for which a probability/prevision value is given
+          :type data: arguments accepted by the :class:`~murasyp.gambles.Ray`
+            constructor
+          :arg val: the probability/prevision value
+          :type val: a representation of :class:`~numbers.Real`
+
+        The marginal gamble corresponing to the prevision specification is
+        calculated and added to the set of almost desirable gambles.
+
+        >>> D = ADesirSet()
+        >>> D.set_upper_pr(Gamble({'a', 'b'}) | {'a', 'b', 'c'}, .4)
+        >>> D
+        ADesirSet(set([Ray({'a': -1, 'c': '2/3', 'b': -1})]))
+
+        .. note::
+
+          The domain of the input gamble determines the conditioning event.
+
+        """
+        self.add(_make_rational(val) - Gamble(data))
+
+    def set_pr(self, data, val):
+        """Set the probability/prevision (expectation) of an event/gamble
+
+          :arg data: the gamble for which a probability/prevision value is given
+          :type data: arguments accepted by the :class:`~murasyp.gambles.Ray`
+            constructor
+          :arg val: the probability/prevision value
+          :type val: a representation of :class:`~numbers.Real`
+
+        This is identical to setting the lower and upper prevision to the same
+        value.
+
+        >>> D = ADesirSet()
+        >>> D.set_pr(Gamble({'a', 'b'}) | {'a', 'b', 'c'}, .4)
+        >>> D
+        ADesirSet(set([Ray({'a': -1, 'c': '2/3', 'b': -1}), Ray({'a': 1, 'c': '-2/3', 'b': 1})]))
+
+        .. note::
+
+          The domain of the input gamble determines the conditioning event.
+
+        """
+        self.set_lower_pr(data, val)
+        self.set_upper_pr(data, val)
