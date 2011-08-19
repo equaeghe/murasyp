@@ -1,7 +1,8 @@
 from collections import Set, MutableSet, Mapping
-from cdd import Matrix, RepType
+from cdd import Matrix, RepType, Polyhedron
 from murasyp import _make_rational
 from murasyp.gambles import Gamble, Ray
+from murasyp.massfuncs import PMFunc
 
 class ADesirSet(MutableSet):
     """A mutable set of rays
@@ -13,7 +14,7 @@ class ADesirSet(MutableSet):
     Features:
 
     * There is an alternate constructor. If `data` is a
-      :class:`~collections.Set` without :class:`~collections.Mapping`-members
+      :class:`~collections.Set` without :class:`~collections.Mapping`-members,
       then a relative set of almost desirable gambles is generated.
 
       >>> ADesirSet(set('abc'))
@@ -186,3 +187,31 @@ class ADesirSet(MutableSet):
         """
         self.set_lower_pr(data, val)
         self.set_upper_pr(data, val)
+
+    def get_credal(self):
+        """Generate the equivalent credal set
+
+          :returns: the credal set that is equivalent as an uncertainty model
+          :rtype: :class:`~murasyp.credalsets.CredalSet`
+
+        >>> D = ADesirSet(set('abc'))
+        >>> D.set_lower_pr({'a': 1, 'b': 0, 'c': 1}, .5)
+        >>> D.get_credal()
+        CredalSet(set([PMFunc({'a': '1/2', 'b': '1/2'}), PMFunc({'c': '1/2', 'b': '1/2'}), PMFunc({'a': 1}), PMFunc({'c': 1})]))
+
+        """
+        pspace = list(self.pspace())
+        D = list(self)
+        mat = Matrix(list([0] + list(ray[x] for x in pspace) for ray in D),
+                     number_type='fraction')
+        mat.rep_type = RepType.INEQUALITY
+        poly = Polyhedron(mat)
+        ext = poly.get_generators()
+        return CredalSet(set([PMFunc({pspace[j-1]: ext[i][j]
+                                     for j in range(1, ext.col_size)})
+                              for i in range(0, ext.row_size)] +
+                             [PMFunc({pspace[j-1]: -ext[i][j]
+                                     for j in range(1, ext.col_size)})
+                              for i in ext.lin_set]))
+
+from murasyp.credalsets import CredalSet # avoid circular-dependency

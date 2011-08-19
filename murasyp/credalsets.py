@@ -1,7 +1,7 @@
 from collections import Set, MutableSet, Mapping
-from cdd import Matrix, RepType
+from cdd import Matrix, RepType, Polyhedron
 from murasyp.massfuncs import PMFunc
-from murasyp.gambles import Gamble
+from murasyp.gambles import Gamble, Ray
 
 class CredalSet(MutableSet):
     """A mutable set of probability mass functions
@@ -13,7 +13,7 @@ class CredalSet(MutableSet):
     Features:
 
     * There is an alternate constructor. If `data` is a
-      :class:`~collections.Set` without :class:`~collections.Mapping`-members
+      :class:`~collections.Set` without :class:`~collections.Mapping`-members,
       then a relative vacuous credal set is generated.
 
       >>> CredalSet(set('abc'))
@@ -184,3 +184,30 @@ class CredalSet(MutableSet):
         lin, red = mat.canonicalize()
         for i in red:
             self.discard(K[i])
+
+    def get_adesir(self):
+        """Generate the equivalent set of almost desirable gambles
+
+          :returns: the set of almost desirable gambles that is equivalent as an
+            uncertainty model
+          :rtype: :class:`~murasyp.almostdesirs.ADesirSet`
+
+        >>> CredalSet(set([PMFunc({'a', 'b'}), PMFunc({'c', 'b'}), PMFunc({'a'}), PMFunc({'c'})])).get_adesir()
+        ADesirSet(set([Ray({'a': 1}), Ray({'b': 1}), Ray({'c': 1}), Ray({'a': 1, 'c': 1, 'b': -1})]))
+
+        """
+        pspace = list(self.pspace())
+        K = list(self)
+        mat = Matrix(list([0] + list(pmf[x] for x in pspace) for pmf in K),
+                     number_type='fraction')
+        mat.rep_type = RepType.INEQUALITY
+        poly = Polyhedron(mat)
+        ext = poly.get_generators()
+        return ADesirSet(set([Ray({pspace[j-1]: ext[i][j]
+                                   for j in range(1, ext.col_size)})
+                              for i in range(0, ext.row_size)] +
+                             [Ray({pspace[j-1]: -ext[i][j]
+                                   for j in range(1, ext.col_size)})
+                              for i in ext.lin_set]))
+
+from murasyp.almostdesirs import ADesirSet # avoid circular-dependency
