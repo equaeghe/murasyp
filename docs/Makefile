@@ -39,7 +39,11 @@ clean:
 # that contains the docs we are going to publish via gh-pages
 # (the html directory contains gh-pages as a git submodule)
 # [we are using GNU find; others may not contain the -delete action]
-	find $(BUILDDIR)/ -mindepth 1 -not -name html -delete
+	find $(BUILDDIR)/ -mindepth 1 \
+			  -not -path '$(BUILDDIR)/html/.git*' \
+			  -not -path '$(BUILDDIR)/html/.nojekyll' \
+			  -not -path '$(BUILDDIR)/html' \
+			-delete
 
 html:
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
