@@ -1,3 +1,5 @@
+.. module:: murasyp.credalsets
+
 .. testsetup::
 
   from murasyp.gambles import Gamble
@@ -6,7 +8,4 @@
 Credal Sets
 ===========
 
-Class definition & methods
---------------------------
-
-.. automodule:: murasyp.credalsets
+.. autoclass:: CredalSet

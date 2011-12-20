@@ -50,37 +50,47 @@
 <span class="kn">from</span> <span class="nn">murasyp.functions</span> <span class="kn">import</span> <span class="n">Function</span>
 
 <div class="viewcode-block" id="Vector"><a class="viewcode-back" href="../../vectors.html#murasyp.vectors.Vector">[docs]</a><span class="k">class</span> <span class="nc">Vector</span><span class="p">(</span><span class="n">Function</span><span class="p">,</span> <span class="n">Hashable</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Vectors are immutable, hashable rational-valued functions</span>
-
-<span class="sd">      :param: a mapping (such as a :class:`dict`) to Rational values,</span>
-<span class="sd">          i.e., :class:`~fractions.Fraction`. The fractions</span>
-<span class="sd">          may be specified by giving an :class:`int`, a :class:`float` or in</span>
-<span class="sd">          their :class:`str`-representation.</span>
-<span class="sd">      :type: :class:`~collections.Mapping`</span>
+    <span class="sd">&quot;&quot;&quot;Vectors map arguments to zero or a specified rational value</span>
 
 <span class="sd">    This class derives from :class:`~murasyp.functions.Function`, so its</span>
-<span class="sd">    methods apply here as well. This class&#39;s members are also hashable, which</span>
-<span class="sd">    means they can be used as keys (in :class:`~collections.Set` and</span>
-<span class="sd">    :class:`~collections.Mapping`, and their built-in variants :class:`set`</span>
-<span class="sd">    and :class:`dict`). What has changed:</span>
+<span class="sd">    methods apply here as well.</span>
 
-<span class="sd">    * unspecified values are assumed to be zero;</span>
-<span class="sd">    * the union of domains is used under pointwise operations;</span>
-<span class="sd">    * a vector&#39;s domain can be restricted/extended to a specified</span>
+<span class="sd">    What has changed:</span>
+
+<span class="sd">    * This class&#39;s members are also hashable, which means they can be used as</span>
+<span class="sd">      keys (in :class:`~collections.Set` and :class:`~collections.Mapping`, and</span>
+<span class="sd">      their built-in variants :class:`set` and :class:`dict`).</span>
+
+<span class="sd">      &gt;&gt;&gt; {Function({})}</span>
+<span class="sd">      Traceback (most recent call last):</span>
+<span class="sd">        ...</span>
+<span class="sd">      TypeError: unhashable type: &#39;Function&#39;</span>
+<span class="sd">      &gt;&gt;&gt; {Vector({})}</span>
+<span class="sd">      set([Vector({})])</span>
+
+<span class="sd">    * Unspecified values are assumed to be zero.</span>
+
+<span class="sd">      &gt;&gt;&gt; f = Vector({&#39;a&#39;: 1.1, &#39;b&#39;: &#39;-1/2&#39;,&#39;c&#39;: 0})</span>
+<span class="sd">      &gt;&gt;&gt; f</span>
+<span class="sd">      Vector({&#39;a&#39;: &#39;11/10&#39;, &#39;c&#39;: 0, &#39;b&#39;: &#39;-1/2&#39;})</span>
+<span class="sd">      &gt;&gt;&gt; f[&#39;d&#39;]</span>
+<span class="sd">      0</span>
+
+<span class="sd">    * The union of domains is used under pointwise operations.</span>
+
+<span class="sd">      &gt;&gt;&gt; f = Vector({&#39;a&#39;: 1.1, &#39;b&#39;: &#39;-1/2&#39;,&#39;c&#39;: 0})</span>
+<span class="sd">      &gt;&gt;&gt; g = Vector({&#39;b&#39;: &#39;.6&#39;, &#39;c&#39;: -2, &#39;d&#39;: 0.0})</span>
+<span class="sd">      &gt;&gt;&gt; (.3 * f - g) / 2</span>
+<span class="sd">      Vector({&#39;a&#39;: &#39;33/200&#39;, &#39;c&#39;: 1, &#39;b&#39;: &#39;-3/8&#39;, &#39;d&#39;: 0})</span>
+
+<span class="sd">    * A vector&#39;s domain can be restricted/extended to a specified</span>
 <span class="sd">      :class:`~collections.Set`.</span>
 
-<span class="sd">    &gt;&gt;&gt; f = Vector({&#39;a&#39;: 1.1, &#39;b&#39;: &#39;-1/2&#39;,&#39;c&#39;: 0})</span>
-<span class="sd">    &gt;&gt;&gt; f</span>
-<span class="sd">    Vector({&#39;a&#39;: &#39;11/10&#39;, &#39;c&#39;: 0, &#39;b&#39;: &#39;-1/2&#39;})</span>
-<span class="sd">    &gt;&gt;&gt; f[&#39;d&#39;]</span>
-<span class="sd">    0</span>
-<span class="sd">    &gt;&gt;&gt; g = Vector({&#39;b&#39;: &#39;.6&#39;, &#39;c&#39;: -2, &#39;d&#39;: 0.0})</span>
-<span class="sd">    &gt;&gt;&gt; (.3 * f - g) / 2</span>
-<span class="sd">    Vector({&#39;a&#39;: &#39;33/200&#39;, &#39;c&#39;: 1, &#39;b&#39;: &#39;-3/8&#39;, &#39;d&#39;: 0})</span>
-<span class="sd">    &gt;&gt;&gt; f | {&#39;a&#39;,&#39;b&#39;}</span>
-<span class="sd">    Vector({&#39;a&#39;: &#39;11/10&#39;, &#39;b&#39;: &#39;-1/2&#39;})</span>
-<span class="sd">    &gt;&gt;&gt; f | {&#39;a&#39;,&#39;d&#39;}</span>
-<span class="sd">    Vector({&#39;a&#39;: &#39;11/10&#39;, &#39;d&#39;: 0})</span>
+<span class="sd">      &gt;&gt;&gt; f = Vector({&#39;a&#39;: 1.1, &#39;b&#39;: &#39;-1/2&#39;,&#39;c&#39;: 0})</span>
+<span class="sd">      &gt;&gt;&gt; f | {&#39;a&#39;,&#39;b&#39;}</span>
+<span class="sd">      Vector({&#39;a&#39;: &#39;11/10&#39;, &#39;b&#39;: &#39;-1/2&#39;})</span>
+<span class="sd">      &gt;&gt;&gt; f | {&#39;a&#39;,&#39;d&#39;}</span>
+<span class="sd">      Vector({&#39;a&#39;: &#39;11/10&#39;, &#39;d&#39;: 0})</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -106,7 +116,7 @@
 <div class="viewcode-block" id="Vector.mass"><a class="viewcode-back" href="../../vectors.html#murasyp.vectors.Vector.mass">[docs]</a>    <span class="k">def</span> <span class="nf">mass</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Sum of the values of the vector</span>
 
-<span class="sd">          :returns: the sum of all values of the function</span>
+<span class="sd">          :returns: the sum of all values of the vector</span>
 <span class="sd">          :rtype: :class:`~fractions.Fraction`</span>
 
 <span class="sd">        &gt;&gt;&gt; Vector({&#39;a&#39;: 1, &#39;b&#39;: &#39;-1/2&#39;,&#39;c&#39;: 0}).mass()</span>

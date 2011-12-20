@@ -51,46 +51,44 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="rational-valued-functions">
+  <span class="target" id="module-murasyp.functions"></span><div class="section" id="rational-valued-functions">
 <h1>Rational-Valued Functions<a class="headerlink" href="#rational-valued-functions" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="subclasses">
-<h2>Subclasses<a class="headerlink" href="#subclasses" title="Permalink to this headline">¶</a></h2>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="vectors.html">Vectors</a></li>
-</ul>
-</div>
-</div>
-<div class="section" id="module-murasyp.functions">
-<span id="class-definition-methods"></span><h2>Class definition &amp; methods<a class="headerlink" href="#module-murasyp.functions" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="murasyp.functions.Function">
 <em class="property">class </em><tt class="descclassname">murasyp.functions.</tt><tt class="descname">Function</tt><big>(</big><em>mapping</em><big>)</big><a class="reference internal" href="_modules/murasyp/functions.html#Function"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#murasyp.functions.Function" title="Permalink to this definition">¶</a></dt>
-<dd><p>Immutable rational-valued functions</p>
+<dd><p>Rational-valued functions</p>
 <blockquote>
 <div><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">param:</th><td class="field-body">a mapping (such as a <a class="reference external" href="http://docs.python.org/library/stdtypes.html#dict" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">dict</span></tt></a>) to Rational values,
-i.e., <a class="reference external" href="http://docs.python.org/library/fractions.html#fractions.Fraction" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">Fraction</span></tt></a>. The fractions
-may be specified by giving an <tt class="xref py py-class docutils literal"><span class="pre">int</span></tt>, a <tt class="xref py py-class docutils literal"><span class="pre">float</span></tt> or in
-their <tt class="xref py py-class docutils literal"><span class="pre">str</span></tt>-representation.</td>
-</tr>
-<tr class="field"><th class="field-name">type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/library/collections.html#collections.Mapping" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">Mapping</span></tt></a></td>
+<tr class="field"><th class="field-name">type mapping:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/library/collections.html#collections.Mapping" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">Mapping</span></tt></a> (such as a <a class="reference external" href="http://docs.python.org/library/stdtypes.html#dict" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">dict</span></tt></a>)
+to a representation of <a class="reference external" href="http://docs.python.org/library/numbers.html#numbers.Real" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">Real</span></tt></a></td>
 </tr>
 </tbody>
 </table>
 </div></blockquote>
-<p>Members behave like typical rational-valued functions: their domain, range,
-support, and individual values are accessible. Moreover, they form a vector
-space; i.e., scalar multiplication (and division) as well as pointwise
-addition and subtraction is possible.</p>
+<p>Features:</p>
+<ul>
+<li><p class="first">Values may be specified as <tt class="xref py py-class docutils literal"><span class="pre">int</span></tt>, <tt class="xref py py-class docutils literal"><span class="pre">float</span></tt>, or
+<a class="reference external" href="http://docs.python.org/library/fractions.html#fractions.Fraction" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">Fraction</span></tt></a>, whose <tt class="xref py py-class docutils literal"><span class="pre">str</span></tt>-representation is then
+especially convenient.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">Function</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="mf">1.1</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="s">&#39;-1/2&#39;</span><span class="p">,</span><span class="s">&#39;c&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">f</span>
 <span class="go">Function({&#39;a&#39;: &#39;11/10&#39;, &#39;c&#39;: 0, &#39;b&#39;: &#39;-1/2&#39;})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="p">[</span><span class="s">&#39;a&#39;</span><span class="p">]</span>
 <span class="go">Fraction(11, 10)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">No floats are ever really used; they are immediately converted to
+fractions and should be seen as just a convenient input representation.</p>
+</div>
+</li>
+<li><p class="first">Scalar multiplication (and division) as well as pointwise addition and
+subtraction is possible.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">Function</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="mf">1.1</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="s">&#39;-1/2&#39;</span><span class="p">,</span><span class="s">&#39;c&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">g</span> <span class="o">=</span> <span class="n">Function</span><span class="p">({</span><span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="s">&#39;.6&#39;</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="s">&#39;d&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="p">(</span><span class="o">.</span><span class="mi">3</span> <span class="o">*</span> <span class="n">f</span> <span class="o">-</span> <span class="n">g</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
 <span class="go">Function({&#39;c&#39;: 1, &#39;b&#39;: &#39;-3/8&#39;})</span>
@@ -98,9 +96,11 @@ addition and subtraction is possible.</p>
 </div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">Notice that the domain of results of sums and differences is the
-intersection of the respective domains.</p>
+<p class="last">The domain of results of sums and differences is the intersection of
+the respective domains.</p>
 </div>
+</li>
+</ul>
 <dl class="method">
 <dt id="murasyp.functions.Function.domain">
 <tt class="descname">domain</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/murasyp/functions.html#Function.domain"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#murasyp.functions.Function.domain" title="Permalink to this definition">¶</a></dt>
@@ -173,7 +173,6 @@ for which the function is nonzero</td>
 </dd></dl>
 
 </div>
-</div>
 
 
           </div>
@@ -181,17 +180,6 @@ for which the function is nonzero</td>
       </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">Rational-Valued Functions</a><ul>
-<li><a class="reference internal" href="#subclasses">Subclasses</a><ul>
-</ul>
-</li>
-<li><a class="reference internal" href="#module-murasyp.functions">Class definition &amp; methods</a></li>
-</ul>
-</li>
-</ul>
-
   <h4>Previous topic</h4>
   <p class="topless"><a href="index.html"
                         title="previous chapter">Welcome to murasyp&#8217;s documentation!</a></p>

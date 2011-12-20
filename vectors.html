@@ -23,8 +23,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="murasyp v(git) documentation" href="index.html" />
-    <link rel="up" title="Rational-Valued Functions" href="functions.html" />
-    <link rel="next" title="Gambles" href="gambles.html" />
+    <link rel="next" title="Gambles &amp; Rays" href="gambles.html" />
     <link rel="prev" title="Rational-Valued Functions" href="functions.html" /> 
   </head>
   <body>
@@ -38,13 +37,12 @@
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="gambles.html" title="Gambles"
+          <a href="gambles.html" title="Gambles &amp; Rays"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="functions.html" title="Rational-Valued Functions"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">murasyp v(git) documentation</a> &raquo;</li>
-          <li><a href="functions.html" accesskey="U">Rational-Valued Functions</a> &raquo;</li> 
+        <li><a href="index.html">murasyp v(git) documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -53,63 +51,56 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="vectors">
+  <span class="target" id="module-murasyp.vectors"></span><div class="section" id="vectors">
 <h1>Vectors<a class="headerlink" href="#vectors" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="subclasses">
-<h2>Subclasses<a class="headerlink" href="#subclasses" title="Permalink to this headline">¶</a></h2>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="gambles.html">Gambles</a></li>
-<li class="toctree-l1"><a class="reference internal" href="massassignments.html">Mass Assignments</a></li>
-</ul>
-</div>
-</div>
-<div class="section" id="module-murasyp.vectors">
-<span id="class-definition-methods"></span><h2>Class definition &amp; methods<a class="headerlink" href="#module-murasyp.vectors" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="murasyp.vectors.Vector">
 <em class="property">class </em><tt class="descclassname">murasyp.vectors.</tt><tt class="descname">Vector</tt><big>(</big><em>mapping</em><big>)</big><a class="reference internal" href="_modules/murasyp/vectors.html#Vector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#murasyp.vectors.Vector" title="Permalink to this definition">¶</a></dt>
-<dd><p>Vectors are immutable, hashable rational-valued functions</p>
-<blockquote>
-<div><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field"><th class="field-name">param:</th><td class="field-body">a mapping (such as a <a class="reference external" href="http://docs.python.org/library/stdtypes.html#dict" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">dict</span></tt></a>) to Rational values,
-i.e., <a class="reference external" href="http://docs.python.org/library/fractions.html#fractions.Fraction" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">Fraction</span></tt></a>. The fractions
-may be specified by giving an <tt class="xref py py-class docutils literal"><span class="pre">int</span></tt>, a <tt class="xref py py-class docutils literal"><span class="pre">float</span></tt> or in
-their <tt class="xref py py-class docutils literal"><span class="pre">str</span></tt>-representation.</td>
-</tr>
-<tr class="field"><th class="field-name">type:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/library/collections.html#collections.Mapping" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">Mapping</span></tt></a></td>
-</tr>
-</tbody>
-</table>
-</div></blockquote>
+<dd><p>Vectors map arguments to zero or a specified rational value</p>
 <p>This class derives from <a class="reference internal" href="functions.html#murasyp.functions.Function" title="murasyp.functions.Function"><tt class="xref py py-class docutils literal"><span class="pre">Function</span></tt></a>, so its
-methods apply here as well. This class&#8217;s members are also hashable, which
-means they can be used as keys (in <a class="reference external" href="http://docs.python.org/library/collections.html#collections.Set" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">Set</span></tt></a> and
-<a class="reference external" href="http://docs.python.org/library/collections.html#collections.Mapping" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">Mapping</span></tt></a>, and their built-in variants <a class="reference external" href="http://docs.python.org/library/stdtypes.html#set" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">set</span></tt></a>
-and <a class="reference external" href="http://docs.python.org/library/stdtypes.html#dict" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">dict</span></tt></a>). What has changed:</p>
-<ul class="simple">
-<li>unspecified values are assumed to be zero;</li>
-<li>the union of domains is used under pointwise operations;</li>
-<li>a vector&#8217;s domain can be restricted/extended to a specified
-<a class="reference external" href="http://docs.python.org/library/collections.html#collections.Set" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">Set</span></tt></a>.</li>
-</ul>
+methods apply here as well.</p>
+<p>What has changed:</p>
+<ul>
+<li><p class="first">This class&#8217;s members are also hashable, which means they can be used as
+keys (in <a class="reference external" href="http://docs.python.org/library/collections.html#collections.Set" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">Set</span></tt></a> and <a class="reference external" href="http://docs.python.org/library/collections.html#collections.Mapping" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">Mapping</span></tt></a>, and
+their built-in variants <a class="reference external" href="http://docs.python.org/library/stdtypes.html#set" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">set</span></tt></a> and <a class="reference external" href="http://docs.python.org/library/stdtypes.html#dict" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">dict</span></tt></a>).</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="p">{</span><span class="n">Function</span><span class="p">({})}</span>
+<span class="gt">Traceback (most recent call last):</span>
+  <span class="c">...</span>
+<span class="gr">TypeError: unhashable type</span>: <span class="n">&#39;Function&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">{</span><span class="n">Vector</span><span class="p">({})}</span>
+<span class="go">set([Vector({})])</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Unspecified values are assumed to be zero.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="mf">1.1</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="s">&#39;-1/2&#39;</span><span class="p">,</span><span class="s">&#39;c&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">f</span>
 <span class="go">Vector({&#39;a&#39;: &#39;11/10&#39;, &#39;c&#39;: 0, &#39;b&#39;: &#39;-1/2&#39;})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="p">[</span><span class="s">&#39;d&#39;</span><span class="p">]</span>
 <span class="go">0</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">The union of domains is used under pointwise operations.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="mf">1.1</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="s">&#39;-1/2&#39;</span><span class="p">,</span><span class="s">&#39;c&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">g</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">({</span><span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="s">&#39;.6&#39;</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="s">&#39;d&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="p">(</span><span class="o">.</span><span class="mi">3</span> <span class="o">*</span> <span class="n">f</span> <span class="o">-</span> <span class="n">g</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
 <span class="go">Vector({&#39;a&#39;: &#39;33/200&#39;, &#39;c&#39;: 1, &#39;b&#39;: &#39;-3/8&#39;, &#39;d&#39;: 0})</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">A vector&#8217;s domain can be restricted/extended to a specified
+<a class="reference external" href="http://docs.python.org/library/collections.html#collections.Set" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">Set</span></tt></a>.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="mf">1.1</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="s">&#39;-1/2&#39;</span><span class="p">,</span><span class="s">&#39;c&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">|</span> <span class="p">{</span><span class="s">&#39;a&#39;</span><span class="p">,</span><span class="s">&#39;b&#39;</span><span class="p">}</span>
 <span class="go">Vector({&#39;a&#39;: &#39;11/10&#39;, &#39;b&#39;: &#39;-1/2&#39;})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">|</span> <span class="p">{</span><span class="s">&#39;a&#39;</span><span class="p">,</span><span class="s">&#39;d&#39;</span><span class="p">}</span>
 <span class="go">Vector({&#39;a&#39;: &#39;11/10&#39;, &#39;d&#39;: 0})</span>
 </pre></div>
 </div>
+</li>
+</ul>
 <dl class="method">
 <dt id="murasyp.vectors.Vector.mass">
 <tt class="descname">mass</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/murasyp/vectors.html#Vector.mass"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#murasyp.vectors.Vector.mass" title="Permalink to this definition">¶</a></dt>
@@ -119,7 +110,7 @@ and <a class="reference external" href="http://docs.python.org/library/stdtypes.
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">returns:</th><td class="field-body">the sum of all values of the function</td>
+<tr class="field"><th class="field-name">returns:</th><td class="field-body">the sum of all values of the vector</td>
 </tr>
 <tr class="field"><th class="field-name">rtype:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/library/fractions.html#fractions.Fraction" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">Fraction</span></tt></a></td>
 </tr>
@@ -189,7 +180,6 @@ zero.</p>
 </dd></dl>
 
 </div>
-</div>
 
 
           </div>
@@ -197,23 +187,12 @@ zero.</p>
       </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">Vectors</a><ul>
-<li><a class="reference internal" href="#subclasses">Subclasses</a><ul>
-</ul>
-</li>
-<li><a class="reference internal" href="#module-murasyp.vectors">Class definition &amp; methods</a></li>
-</ul>
-</li>
-</ul>
-
   <h4>Previous topic</h4>
   <p class="topless"><a href="functions.html"
                         title="previous chapter">Rational-Valued Functions</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="gambles.html"
-                        title="next chapter">Gambles</a></p>
+                        title="next chapter">Gambles &amp; Rays</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/vectors.txt"
@@ -246,13 +225,12 @@ zero.</p>
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="gambles.html" title="Gambles"
+          <a href="gambles.html" title="Gambles &amp; Rays"
              >next</a> |</li>
         <li class="right" >
           <a href="functions.html" title="Rational-Valued Functions"
              >previous</a> |</li>
-        <li><a href="index.html">murasyp v(git) documentation</a> &raquo;</li>
-          <li><a href="functions.html" >Rational-Valued Functions</a> &raquo;</li> 
+        <li><a href="index.html">murasyp v(git) documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

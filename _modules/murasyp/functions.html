@@ -46,36 +46,44 @@
           <div class="body">
             
   <h1>Source code for murasyp.functions</h1><div class="highlight"><pre>
-<span class="kn">from</span> <span class="nn">murasyp</span> <span class="kn">import</span> <span class="n">_make_rational</span>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Mapping</span>
+<span class="kn">from</span> <span class="nn">murasyp</span> <span class="kn">import</span> <span class="n">_make_rational</span>
 
 <div class="viewcode-block" id="Function"><a class="viewcode-back" href="../../functions.html#murasyp.functions.Function">[docs]</a><span class="k">class</span> <span class="nc">Function</span><span class="p">(</span><span class="n">Mapping</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Immutable rational-valued functions</span>
+    <span class="sd">&quot;&quot;&quot;Rational-valued functions</span>
 
-<span class="sd">      :param: a mapping (such as a :class:`dict`) to Rational values,</span>
-<span class="sd">          i.e., :class:`~fractions.Fraction`. The fractions</span>
-<span class="sd">          may be specified by giving an :class:`int`, a :class:`float` or in</span>
-<span class="sd">          their :class:`str`-representation.</span>
-<span class="sd">      :type: :class:`~collections.Mapping`</span>
+<span class="sd">      :type mapping: :class:`~collections.Mapping` (such as a :class:`dict`)</span>
+<span class="sd">        to a representation of :class:`~numbers.Real`</span>
 
-<span class="sd">    Members behave like typical rational-valued functions: their domain, range,</span>
-<span class="sd">    support, and individual values are accessible. Moreover, they form a vector</span>
-<span class="sd">    space; i.e., scalar multiplication (and division) as well as pointwise</span>
-<span class="sd">    addition and subtraction is possible.</span>
+<span class="sd">    Features:</span>
 
-<span class="sd">    &gt;&gt;&gt; f = Function({&#39;a&#39;: 1.1, &#39;b&#39;: &#39;-1/2&#39;,&#39;c&#39;: 0})</span>
-<span class="sd">    &gt;&gt;&gt; f</span>
-<span class="sd">    Function({&#39;a&#39;: &#39;11/10&#39;, &#39;c&#39;: 0, &#39;b&#39;: &#39;-1/2&#39;})</span>
-<span class="sd">    &gt;&gt;&gt; f[&#39;a&#39;]</span>
-<span class="sd">    Fraction(11, 10)</span>
-<span class="sd">    &gt;&gt;&gt; g = Function({&#39;b&#39;: &#39;.6&#39;, &#39;c&#39;: -2, &#39;d&#39;: 0.0})</span>
-<span class="sd">    &gt;&gt;&gt; (.3 * f - g) / 2</span>
-<span class="sd">    Function({&#39;c&#39;: 1, &#39;b&#39;: &#39;-3/8&#39;})</span>
+<span class="sd">    * Values may be specified as :class:`int`, :class:`float`, or</span>
+<span class="sd">      :class:`~fractions.Fraction`, whose :class:`str`-representation is then</span>
+<span class="sd">      especially convenient.</span>
 
-<span class="sd">    .. note::</span>
+<span class="sd">      &gt;&gt;&gt; f = Function({&#39;a&#39;: 1.1, &#39;b&#39;: &#39;-1/2&#39;,&#39;c&#39;: 0})</span>
+<span class="sd">      &gt;&gt;&gt; f</span>
+<span class="sd">      Function({&#39;a&#39;: &#39;11/10&#39;, &#39;c&#39;: 0, &#39;b&#39;: &#39;-1/2&#39;})</span>
+<span class="sd">      &gt;&gt;&gt; f[&#39;a&#39;]</span>
+<span class="sd">      Fraction(11, 10)</span>
 
-<span class="sd">      Notice that the domain of results of sums and differences is the</span>
-<span class="sd">      intersection of the respective domains.</span>
+<span class="sd">      .. note::</span>
+
+<span class="sd">        No floats are ever really used; they are immediately converted to</span>
+<span class="sd">        fractions and should be seen as just a convenient input representation.</span>
+
+<span class="sd">    * Scalar multiplication (and division) as well as pointwise addition and</span>
+<span class="sd">      subtraction is possible.</span>
+
+<span class="sd">      &gt;&gt;&gt; f = Function({&#39;a&#39;: 1.1, &#39;b&#39;: &#39;-1/2&#39;,&#39;c&#39;: 0})</span>
+<span class="sd">      &gt;&gt;&gt; g = Function({&#39;b&#39;: &#39;.6&#39;, &#39;c&#39;: -2, &#39;d&#39;: 0.0})</span>
+<span class="sd">      &gt;&gt;&gt; (.3 * f - g) / 2</span>
+<span class="sd">      Function({&#39;c&#39;: 1, &#39;b&#39;: &#39;-3/8&#39;})</span>
+
+<span class="sd">      .. note::</span>
+
+<span class="sd">        The domain of results of sums and differences is the intersection of</span>
+<span class="sd">        the respective domains.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
