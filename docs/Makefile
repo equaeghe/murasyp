@@ -34,7 +34,12 @@ help:
 	@echo "  doctest    to run all doctests embedded in the documentation (if enabled)"
 
 clean:
-	-rm -rf $(BUILDDIR)/*
+#	-rm -rf $(BUILDDIR)/*
+# replace standard cleaning action to preserve the $(BUILDDIR)/html dir
+# that contains the docs we are going to publish via gh-pages
+# (the html directory contains gh-pages as a git submodule)
+# [we are using GNU find; others may not contain the -delete action]
+	find $(BUILDDIR)/ -mindepth 1 -not -name html -delete
 
 html:
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
