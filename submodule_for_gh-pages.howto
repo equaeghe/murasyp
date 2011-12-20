@@ -1,0 +1,35 @@
+Github has the nice gh-pages feature (http://pages.github.com/, http://equaeghe.github.com/murasyp/).
+This allows us to conveniently publish the latest docs.
+We here give an overview about what needs to be done *for this project* to put the html docs published on gh-pages in a submodule that can be easily updated.
+(I assume a Unix-like environment; we are in a console.)
+
+The project uses Sphinx to generate html docs for the python code (peruse docs/source).
+This is done by calling 'make html' in docs/. It generates the html docs in docs/build/html.
+
+We make docs/build/html a git-submodule that points to the _upstream_ gh-pages branch.
+Start with git tree without any staged/added files and where docs/build/html does not exist.
+
+$ git submodule add -b gh-pages git@github.com:<github_login>/murasyp.git docs/build/html
+$ git commit -m "added gh-pages as submodule"
+$ git push
+$ git submodule init
+
+After changing things in the docs, you'll want to push the new html files to upstream gh-pages:
+
+$ cd docs
+$ make html
+$ cd build/html
+
+(You should be in the gh-pages branch now, check this with 'git st', otherwise a problem occurred with the submodule creation.)
+
+$ git add -A
+$ git ci -m "updated html docs"
+$ git push origin gh-pages
+
+(The master branch also lists that the submodule is changed, we need to push those changes as well.)
+
+$ cd ../../..
+$ git ci -m "updated html docs in submodule"
+$ git push origin master
+
+[Based on: http://blog.blindgaenger.net/generate_github_pages_in_a_submodule.html]
