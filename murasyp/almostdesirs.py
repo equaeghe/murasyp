@@ -1,5 +1,5 @@
 from collections import Set, MutableSet, Mapping
-from cdd import Matrix, RepType, Polyhedron
+from cdd import Matrix, LPObjType, LinProg, LPStatusType, RepType, Polyhedron
 from murasyp import _make_rational
 from murasyp.gambles import Gamble, Ray
 from murasyp.massfuncs import PMFunc
@@ -187,6 +187,31 @@ class ADesirSet(MutableSet):
         self.set_lower_pr(data, val)
         self.set_upper_pr(data, val)
 
+    def asl(self):
+        """Check whether the set of almost desirable gambles avoids sure loss
+
+          :rtype: :class:`bool`
+
+        >>> D = ADesirSet(set('abc'))
+        >>> D.add({'a': -1, 'b': -1, 'c': 1})
+        >>> D.add({'a': 1, 'b': -1, 'c': -1})
+        >>> D.asl()
+        True
+        >>> D.add({'a': -1, 'b': 1, 'c': -1})
+        >>> D.asl()
+        False
+        
+        """
+        pspace = list(self.pspace())
+        D = list(self)
+        mat = Matrix(list([0] + [int(oray == ray) for oray in D] for ray in D) +
+                     list([-1] + [-ray[x] for ray in D] for x in pspace),
+                     number_type='fraction')
+        mat.obj_type = LPObjType.MIN
+        lp = LinProg(mat)
+        lp.solve()
+        return lp.status != LPStatusType.OPTIMAL
+        
     def get_credal(self):
         """Generate the equivalent credal set
 
