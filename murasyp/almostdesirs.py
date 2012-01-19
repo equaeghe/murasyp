@@ -78,14 +78,13 @@ class ADesirSet(MutableSet):
         """The possibility space of the set of desirable gambles
 
           :returns: the possibility space of the set of desirable gambles, i.e.,
-            the union of the domains of the probability mass functions it
-            contains
+            the union of the domains of the rays it contains
           :rtype: :class:`frozenset`
 
         >>> r = Ray({'a': .03, 'b': -.07})
         >>> s = Ray({'a': .07, 'c': -.03})
-        >>> K = ADesirSet({r, s})
-        >>> K.pspace()
+        >>> D = ADesirSet({r, s})
+        >>> D.pspace()
         frozenset(['a', 'c', 'b'])
 
         """
