@@ -29,7 +29,7 @@ $ git push origin gh-pages
 (The master branch also lists that the submodule is changed, we need to push those changes as well.)
 
 $ cd ../../..
-$ git ci -m "updated html docs in submodule"
+$ git ci -a -m "updated html docs in submodule"
 $ git push origin master
 
 [Based on: http://blog.blindgaenger.net/generate_github_pages_in_a_submodule.html]
