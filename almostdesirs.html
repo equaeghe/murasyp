@@ -22,6 +22,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="author" title="About these documents" href="about.html" />
     <link rel="top" title="murasyp v(git) documentation" href="index.html" />
     <link rel="prev" title="Credal Sets" href="credalsets.html" /> 
   </head>
@@ -136,8 +137,7 @@ constructor</td>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field"><th class="field-name">returns:</th><td class="field-body">the possibility space of the set of desirable gambles, i.e.,
-the union of the domains of the probability mass functions it
-contains</td>
+the union of the domains of the rays it contains</td>
 </tr>
 <tr class="field"><th class="field-name">rtype:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/library/stdtypes.html#frozenset" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">frozenset</span></tt></a></td>
 </tr>
@@ -146,8 +146,8 @@ contains</td>
 </div></blockquote>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span> <span class="o">=</span> <span class="n">Ray</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="o">.</span><span class="mo">03</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="o">-.</span><span class="mo">07</span><span class="p">})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="n">Ray</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="o">.</span><span class="mo">07</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">:</span> <span class="o">-.</span><span class="mo">03</span><span class="p">})</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">K</span> <span class="o">=</span> <span class="n">ADesirSet</span><span class="p">({</span><span class="n">r</span><span class="p">,</span> <span class="n">s</span><span class="p">})</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">K</span><span class="o">.</span><span class="n">pspace</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">D</span> <span class="o">=</span> <span class="n">ADesirSet</span><span class="p">({</span><span class="n">r</span><span class="p">,</span> <span class="n">s</span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">D</span><span class="o">.</span><span class="n">pspace</span><span class="p">()</span>
 <span class="go">frozenset([&#39;a&#39;, &#39;c&#39;, &#39;b&#39;])</span>
 </pre></div>
 </div>
