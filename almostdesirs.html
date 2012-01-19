@@ -276,6 +276,32 @@ value.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="murasyp.almostdesirs.ADesirSet.asl">
+<tt class="descname">asl</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/murasyp/almostdesirs.html#ADesirSet.asl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#murasyp.almostdesirs.ADesirSet.asl" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check whether the set of almost desirable gambles avoids sure loss</p>
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">rtype:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">bool</span></tt></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">D</span> <span class="o">=</span> <span class="n">ADesirSet</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="s">&#39;abc&#39;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">D</span><span class="o">.</span><span class="n">add</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">D</span><span class="o">.</span><span class="n">add</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">D</span><span class="o">.</span><span class="n">asl</span><span class="p">()</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">D</span><span class="o">.</span><span class="n">add</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">D</span><span class="o">.</span><span class="n">asl</span><span class="p">()</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
 <dt id="murasyp.almostdesirs.ADesirSet.get_credal">
 <tt class="descname">get_credal</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/murasyp/almostdesirs.html#ADesirSet.get_credal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#murasyp.almostdesirs.ADesirSet.get_credal" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate the equivalent credal set</p>
