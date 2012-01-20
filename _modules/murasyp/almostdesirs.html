@@ -48,7 +48,7 @@
             
   <h1>Source code for murasyp.almostdesirs</h1><div class="highlight"><pre>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Set</span><span class="p">,</span> <span class="n">MutableSet</span><span class="p">,</span> <span class="n">Mapping</span>
-<span class="kn">from</span> <span class="nn">cdd</span> <span class="kn">import</span> <span class="n">Matrix</span><span class="p">,</span> <span class="n">RepType</span><span class="p">,</span> <span class="n">Polyhedron</span>
+<span class="kn">from</span> <span class="nn">cdd</span> <span class="kn">import</span> <span class="n">Matrix</span><span class="p">,</span> <span class="n">LPObjType</span><span class="p">,</span> <span class="n">LinProg</span><span class="p">,</span> <span class="n">LPStatusType</span><span class="p">,</span> <span class="n">RepType</span><span class="p">,</span> <span class="n">Polyhedron</span>
 <span class="kn">from</span> <span class="nn">murasyp</span> <span class="kn">import</span> <span class="n">_make_rational</span>
 <span class="kn">from</span> <span class="nn">murasyp.gambles</span> <span class="kn">import</span> <span class="n">Gamble</span><span class="p">,</span> <span class="n">Ray</span>
 <span class="kn">from</span> <span class="nn">murasyp.massfuncs</span> <span class="kn">import</span> <span class="n">PMFunc</span>
@@ -127,14 +127,13 @@
         <span class="sd">&quot;&quot;&quot;The possibility space of the set of desirable gambles</span>
 
 <span class="sd">          :returns: the possibility space of the set of desirable gambles, i.e.,</span>
-<span class="sd">            the union of the domains of the probability mass functions it</span>
-<span class="sd">            contains</span>
+<span class="sd">            the union of the domains of the rays it contains</span>
 <span class="sd">          :rtype: :class:`frozenset`</span>
 
 <span class="sd">        &gt;&gt;&gt; r = Ray({&#39;a&#39;: .03, &#39;b&#39;: -.07})</span>
 <span class="sd">        &gt;&gt;&gt; s = Ray({&#39;a&#39;: .07, &#39;c&#39;: -.03})</span>
-<span class="sd">        &gt;&gt;&gt; K = ADesirSet({r, s})</span>
-<span class="sd">        &gt;&gt;&gt; K.pspace()</span>
+<span class="sd">        &gt;&gt;&gt; D = ADesirSet({r, s})</span>
+<span class="sd">        &gt;&gt;&gt; D.pspace()</span>
 <span class="sd">        frozenset([&#39;a&#39;, &#39;c&#39;, &#39;b&#39;])</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -236,6 +235,37 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_lower_pr</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_upper_pr</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="ADesirSet.asl"><a class="viewcode-back" href="../../almostdesirs.html#murasyp.almostdesirs.ADesirSet.asl">[docs]</a>    <span class="k">def</span> <span class="nf">asl</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Check whether the set of almost desirable gambles avoids sure loss</span>
+
+<span class="sd">          :rtype: :class:`bool`</span>
+
+<span class="sd">        We solve a feasibility (linear programming) problem: If we can find</span>
+<span class="sd">        a vector :math:`\lambda\in(\mathbb{R}_{\geq0})^{\mathcal{D}}`</span>
+<span class="sd">        such that :math:`\sum_{f\in\mathcal{D}}\lambda_f\cdot f&lt;-1`,</span>
+<span class="sd">        then the set of almost desirable gambles :math:`\mathcal{D}`</span>
+<span class="sd">        incurs sure loss.</span>
+
+<span class="sd">        &gt;&gt;&gt; D = ADesirSet(set(&#39;abc&#39;))</span>
+<span class="sd">        &gt;&gt;&gt; D.add({&#39;a&#39;: -1, &#39;b&#39;: -1, &#39;c&#39;: 1})</span>
+<span class="sd">        &gt;&gt;&gt; D.add({&#39;a&#39;: 1, &#39;b&#39;: -1, &#39;c&#39;: -1})</span>
+<span class="sd">        &gt;&gt;&gt; D.asl()</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; D.add({&#39;a&#39;: -1, &#39;b&#39;: 1, &#39;c&#39;: -1})</span>
+<span class="sd">        &gt;&gt;&gt; D.asl()</span>
+<span class="sd">        False</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pspace</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pspace</span><span class="p">())</span>
+        <span class="n">D</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">mat</span> <span class="o">=</span> <span class="n">Matrix</span><span class="p">(</span><span class="nb">list</span><span class="p">([</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">oray</span> <span class="o">==</span> <span class="n">ray</span><span class="p">)</span> <span class="k">for</span> <span class="n">oray</span> <span class="ow">in</span> <span class="n">D</span><span class="p">]</span> <span class="k">for</span> <span class="n">ray</span> <span class="ow">in</span> <span class="n">D</span><span class="p">)</span> <span class="o">+</span>
+                     <span class="nb">list</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="o">-</span><span class="n">ray</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="k">for</span> <span class="n">ray</span> <span class="ow">in</span> <span class="n">D</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">pspace</span><span class="p">),</span>
+                     <span class="n">number_type</span><span class="o">=</span><span class="s">&#39;fraction&#39;</span><span class="p">)</span>
+        <span class="n">mat</span><span class="o">.</span><span class="n">obj_type</span> <span class="o">=</span> <span class="n">LPObjType</span><span class="o">.</span><span class="n">MIN</span>
+        <span class="n">lp</span> <span class="o">=</span> <span class="n">LinProg</span><span class="p">(</span><span class="n">mat</span><span class="p">)</span>
+        <span class="n">lp</span><span class="o">.</span><span class="n">solve</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">lp</span><span class="o">.</span><span class="n">status</span> <span class="o">!=</span> <span class="n">LPStatusType</span><span class="o">.</span><span class="n">OPTIMAL</span>
 </div>
 <div class="viewcode-block" id="ADesirSet.get_credal"><a class="viewcode-back" href="../../almostdesirs.html#murasyp.almostdesirs.ADesirSet.get_credal">[docs]</a>    <span class="k">def</span> <span class="nf">get_credal</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Generate the equivalent credal set</span>
