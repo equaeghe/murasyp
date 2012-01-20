@@ -192,6 +192,12 @@ class ADesirSet(MutableSet):
 
           :rtype: :class:`bool`
 
+        We solve a feasibility (linear programming) problem: If we can find
+        a vector :math:`\lambda\in(\mathbb{R}_{\geq0})^{\mathcal{D}}`
+        such that :math:`\sum_{f\in\mathcal{D}}\lambda_f\cdot f<-1`,
+        then the set of almost desirable gambles :math:`\mathcal{D}`
+        incurs sure loss.
+
         >>> D = ADesirSet(set('abc'))
         >>> D.add({'a': -1, 'b': -1, 'c': 1})
         >>> D.add({'a': 1, 'b': -1, 'c': -1})
@@ -200,7 +206,7 @@ class ADesirSet(MutableSet):
         >>> D.add({'a': -1, 'b': 1, 'c': -1})
         >>> D.asl()
         False
-        
+
         """
         pspace = list(self.pspace())
         D = list(self)
@@ -211,7 +217,7 @@ class ADesirSet(MutableSet):
         lp = LinProg(mat)
         lp.solve()
         return lp.status != LPStatusType.OPTIMAL
-        
+
     def get_credal(self):
         """Generate the equivalent credal set
 
