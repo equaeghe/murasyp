@@ -11,7 +11,7 @@ Currently, murasyp cannot really be installed; it can be tested by installing `P
     git clone git://github.com/equaeghe/murasyp
 
 and running the `Python <http://python.org/>`_ shell in the source code directory.
-Examples of how to use murasyp can be found in this dosumentation.
+Examples of how to use murasyp can be found in this documentation.
 You can also browse the source code on GitHub: `equaeghe/murasyp <http://github.com/equaeghe/murasyp>`_.
 Note that you need `Sphinx <http://sphinx.pocoo.org/>`_ to generate the documentation and to run the doctests.
 

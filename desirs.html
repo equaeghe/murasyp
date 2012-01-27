@@ -48,11 +48,11 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <span class="target" id="module-murasyp.almostdesirs"></span><div class="section" id="sets-of-almost-desirable-gambles">
+  <span class="target" id="module-murasyp.desirs"></span><div class="section" id="sets-of-almost-desirable-gambles">
 <h1>Sets of almost desirable gambles<a class="headerlink" href="#sets-of-almost-desirable-gambles" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
-<dt id="murasyp.almostdesirs.ADesirSet">
-<em class="property">class </em><tt class="descclassname">murasyp.almostdesirs.</tt><tt class="descname">ADesirSet</tt><big>(</big><em>data=set([])</em><big>)</big><a class="reference internal" href="_modules/murasyp/almostdesirs.html#ADesirSet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#murasyp.almostdesirs.ADesirSet" title="Permalink to this definition">¶</a></dt>
+<dt id="murasyp.desirs.DesirSet">
+<em class="property">class </em><tt class="descclassname">murasyp.desirs.</tt><tt class="descname">DesirSet</tt><big>(</big><em>data=set([])</em><big>)</big><a class="reference internal" href="_modules/murasyp/desirs.html#DesirSet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#murasyp.desirs.DesirSet" title="Permalink to this definition">¶</a></dt>
 <dd><p>A mutable set of rays</p>
 <blockquote>
 <div><table class="docutils field-list" frame="void" rules="none">
@@ -70,17 +70,17 @@ i.e., it must be nonconstant.</td>
 <ul>
 <li><p class="first">There is an alternate constructor. If <cite>data</cite> is a
 <a class="reference external" href="http://docs.python.org/library/collections.html#collections.Set" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">Set</span></tt></a> without <a class="reference external" href="http://docs.python.org/library/collections.html#collections.Mapping" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">Mapping</span></tt></a>-members,
-then a relative set of almost desirable gambles is generated.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">ADesirSet</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="s">&#39;abc&#39;</span><span class="p">))</span>
-<span class="go">ADesirSet(set([Ray({&#39;a&#39;: 1}), Ray({&#39;b&#39;: 1}), Ray({&#39;c&#39;: 1})]))</span>
+then a relative set of desirable gambles is generated.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">DesirSet</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="s">&#39;abc&#39;</span><span class="p">))</span>
+<span class="go">DesirSet(set([Ray({&#39;a&#39;: 1}), Ray({&#39;b&#39;: 1}), Ray({&#39;c&#39;: 1})]))</span>
 </pre></div>
 </div>
 </li>
 </ul>
 <dl class="method">
-<dt id="murasyp.almostdesirs.ADesirSet.add">
-<tt class="descname">add</tt><big>(</big><em>data</em><big>)</big><a class="reference internal" href="_modules/murasyp/almostdesirs.html#ADesirSet.add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#murasyp.almostdesirs.ADesirSet.add" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add a ray to the set of almost desirable gambles</p>
+<dt id="murasyp.desirs.DesirSet.add">
+<tt class="descname">add</tt><big>(</big><em>data</em><big>)</big><a class="reference internal" href="_modules/murasyp/desirs.html#DesirSet.add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#murasyp.desirs.DesirSet.add" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a ray to the set of desirable gambles</p>
 <blockquote>
 <div><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -92,19 +92,19 @@ constructor</td>
 </tbody>
 </table>
 </div></blockquote>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">D</span> <span class="o">=</span> <span class="n">ADesirSet</span><span class="p">()</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">D</span> <span class="o">=</span> <span class="n">DesirSet</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">D</span>
-<span class="go">ADesirSet(set([]))</span>
+<span class="go">DesirSet(set([]))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">D</span><span class="o">.</span><span class="n">add</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="o">-.</span><span class="mo">06</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="o">.</span><span class="mi">14</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">:</span> <span class="mf">1.8</span><span class="p">,</span> <span class="s">&#39;d&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">D</span>
-<span class="go">ADesirSet(set([Ray({&#39;a&#39;: &#39;-1/30&#39;, &#39;c&#39;: 1, &#39;b&#39;: &#39;7/90&#39;})]))</span>
+<span class="go">DesirSet(set([Ray({&#39;a&#39;: &#39;-1/30&#39;, &#39;c&#39;: 1, &#39;b&#39;: &#39;7/90&#39;})]))</span>
 </pre></div>
 </div>
 </dd></dl>
 
 <dl class="method">
-<dt id="murasyp.almostdesirs.ADesirSet.discard">
-<tt class="descname">discard</tt><big>(</big><em>data</em><big>)</big><a class="reference internal" href="_modules/murasyp/almostdesirs.html#ADesirSet.discard"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#murasyp.almostdesirs.ADesirSet.discard" title="Permalink to this definition">¶</a></dt>
+<dt id="murasyp.desirs.DesirSet.discard">
+<tt class="descname">discard</tt><big>(</big><em>data</em><big>)</big><a class="reference internal" href="_modules/murasyp/desirs.html#DesirSet.discard"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#murasyp.desirs.DesirSet.discard" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove a ray from the credal set</p>
 <blockquote>
 <div><table class="docutils field-list" frame="void" rules="none">
@@ -117,19 +117,19 @@ constructor</td>
 </tbody>
 </table>
 </div></blockquote>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">D</span> <span class="o">=</span> <span class="n">ADesirSet</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">,</span><span class="s">&#39;b&#39;</span><span class="p">})</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">D</span> <span class="o">=</span> <span class="n">DesirSet</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">,</span><span class="s">&#39;b&#39;</span><span class="p">})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">D</span>
-<span class="go">ADesirSet(set([Ray({&#39;a&#39;: 1}), Ray({&#39;b&#39;: 1})]))</span>
+<span class="go">DesirSet(set([Ray({&#39;a&#39;: 1}), Ray({&#39;b&#39;: 1})]))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">D</span><span class="o">.</span><span class="n">discard</span><span class="p">(</span><span class="n">Ray</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">}))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">D</span>
-<span class="go">ADesirSet(set([Ray({&#39;b&#39;: 1})]))</span>
+<span class="go">DesirSet(set([Ray({&#39;b&#39;: 1})]))</span>
 </pre></div>
 </div>
 </dd></dl>
 
 <dl class="method">
-<dt id="murasyp.almostdesirs.ADesirSet.pspace">
-<tt class="descname">pspace</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/murasyp/almostdesirs.html#ADesirSet.pspace"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#murasyp.almostdesirs.ADesirSet.pspace" title="Permalink to this definition">¶</a></dt>
+<dt id="murasyp.desirs.DesirSet.pspace">
+<tt class="descname">pspace</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/murasyp/desirs.html#DesirSet.pspace"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#murasyp.desirs.DesirSet.pspace" title="Permalink to this definition">¶</a></dt>
 <dd><p>The possibility space of the set of desirable gambles</p>
 <blockquote>
 <div><table class="docutils field-list" frame="void" rules="none">
@@ -146,7 +146,7 @@ the union of the domains of the rays it contains</td>
 </div></blockquote>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span> <span class="o">=</span> <span class="n">Ray</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="o">.</span><span class="mo">03</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="o">-.</span><span class="mo">07</span><span class="p">})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="n">Ray</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="o">.</span><span class="mo">07</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">:</span> <span class="o">-.</span><span class="mo">03</span><span class="p">})</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">D</span> <span class="o">=</span> <span class="n">ADesirSet</span><span class="p">({</span><span class="n">r</span><span class="p">,</span> <span class="n">s</span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">D</span> <span class="o">=</span> <span class="n">DesirSet</span><span class="p">({</span><span class="n">r</span><span class="p">,</span> <span class="n">s</span><span class="p">})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">D</span><span class="o">.</span><span class="n">pspace</span><span class="p">()</span>
 <span class="go">frozenset([&#39;a&#39;, &#39;c&#39;, &#39;b&#39;])</span>
 </pre></div>
@@ -154,25 +154,25 @@ the union of the domains of the rays it contains</td>
 </dd></dl>
 
 <dl class="method">
-<dt id="murasyp.almostdesirs.ADesirSet.discard_redundant">
-<tt class="descname">discard_redundant</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/murasyp/almostdesirs.html#ADesirSet.discard_redundant"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#murasyp.almostdesirs.ADesirSet.discard_redundant" title="Permalink to this definition">¶</a></dt>
+<dt id="murasyp.desirs.DesirSet.discard_redundant">
+<tt class="descname">discard_redundant</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/murasyp/desirs.html#DesirSet.discard_redundant"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#murasyp.desirs.DesirSet.discard_redundant" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove redundant elements from the set of desirable gambles</p>
 <p>Redundant elements are those that are not extreme rays of set of
 desirable gambles&#8217;s convex conical hull.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">D</span> <span class="o">=</span> <span class="n">ADesirSet</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="s">&#39;abc&#39;</span><span class="p">))</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">D</span> <span class="o">=</span> <span class="n">DesirSet</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="s">&#39;abc&#39;</span><span class="p">))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">D</span><span class="o">.</span><span class="n">add</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">D</span>
-<span class="go">ADesirSet(set([Ray({&#39;a&#39;: 1, &#39;c&#39;: 1, &#39;b&#39;: 1}), ...]))</span>
+<span class="go">DesirSet(set([Ray({&#39;a&#39;: 1, &#39;c&#39;: 1, &#39;b&#39;: 1}), ...]))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">D</span><span class="o">.</span><span class="n">discard_redundant</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">D</span>
-<span class="go">ADesirSet(set([Ray({&#39;a&#39;: 1}), Ray({&#39;b&#39;: 1}), Ray({&#39;c&#39;: 1})]))</span>
+<span class="go">DesirSet(set([Ray({&#39;a&#39;: 1}), Ray({&#39;b&#39;: 1}), Ray({&#39;c&#39;: 1})]))</span>
 </pre></div>
 </div>
 </dd></dl>
 
 <dl class="method">
-<dt id="murasyp.almostdesirs.ADesirSet.set_lower_pr">
-<tt class="descname">set_lower_pr</tt><big>(</big><em>data</em>, <em>val</em><big>)</big><a class="reference internal" href="_modules/murasyp/almostdesirs.html#ADesirSet.set_lower_pr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#murasyp.almostdesirs.ADesirSet.set_lower_pr" title="Permalink to this definition">¶</a></dt>
+<dt id="murasyp.desirs.DesirSet.set_lower_pr">
+<tt class="descname">set_lower_pr</tt><big>(</big><em>data</em>, <em>val</em><big>)</big><a class="reference internal" href="_modules/murasyp/desirs.html#DesirSet.set_lower_pr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#murasyp.desirs.DesirSet.set_lower_pr" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the lower probability/prevision (expectation) of an event/gamble</p>
 <blockquote>
 <div><table class="docutils field-list" frame="void" rules="none">
@@ -192,11 +192,11 @@ constructor</td>
 </table>
 </div></blockquote>
 <p>The marginal gamble corresponing to the prevision specification is
-calculated and added to the set of almost desirable gambles.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">D</span> <span class="o">=</span> <span class="n">ADesirSet</span><span class="p">()</span>
+calculated and added to the set of desirable gambles.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">D</span> <span class="o">=</span> <span class="n">DesirSet</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">D</span><span class="o">.</span><span class="n">set_lower_pr</span><span class="p">(</span><span class="n">Gamble</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">})</span> <span class="o">|</span> <span class="p">{</span><span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">},</span> <span class="o">.</span><span class="mi">4</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">D</span>
-<span class="go">ADesirSet(set([Ray({&#39;a&#39;: 1, &#39;c&#39;: &#39;-2/3&#39;, &#39;b&#39;: 1})]))</span>
+<span class="go">DesirSet(set([Ray({&#39;a&#39;: 1, &#39;c&#39;: &#39;-2/3&#39;, &#39;b&#39;: 1})]))</span>
 </pre></div>
 </div>
 <div class="admonition note">
@@ -206,8 +206,8 @@ calculated and added to the set of almost desirable gambles.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="murasyp.almostdesirs.ADesirSet.set_upper_pr">
-<tt class="descname">set_upper_pr</tt><big>(</big><em>data</em>, <em>val</em><big>)</big><a class="reference internal" href="_modules/murasyp/almostdesirs.html#ADesirSet.set_upper_pr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#murasyp.almostdesirs.ADesirSet.set_upper_pr" title="Permalink to this definition">¶</a></dt>
+<dt id="murasyp.desirs.DesirSet.set_upper_pr">
+<tt class="descname">set_upper_pr</tt><big>(</big><em>data</em>, <em>val</em><big>)</big><a class="reference internal" href="_modules/murasyp/desirs.html#DesirSet.set_upper_pr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#murasyp.desirs.DesirSet.set_upper_pr" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the upper probability/prevision (expectation) of an event/gamble</p>
 <blockquote>
 <div><table class="docutils field-list" frame="void" rules="none">
@@ -227,11 +227,11 @@ constructor</td>
 </table>
 </div></blockquote>
 <p>The marginal gamble corresponing to the prevision specification is
-calculated and added to the set of almost desirable gambles.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">D</span> <span class="o">=</span> <span class="n">ADesirSet</span><span class="p">()</span>
+calculated and added to the set of desirable gambles.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">D</span> <span class="o">=</span> <span class="n">DesirSet</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">D</span><span class="o">.</span><span class="n">set_upper_pr</span><span class="p">(</span><span class="n">Gamble</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">})</span> <span class="o">|</span> <span class="p">{</span><span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">},</span> <span class="o">.</span><span class="mi">4</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">D</span>
-<span class="go">ADesirSet(set([Ray({&#39;a&#39;: -1, &#39;c&#39;: &#39;2/3&#39;, &#39;b&#39;: -1})]))</span>
+<span class="go">DesirSet(set([Ray({&#39;a&#39;: -1, &#39;c&#39;: &#39;2/3&#39;, &#39;b&#39;: -1})]))</span>
 </pre></div>
 </div>
 <div class="admonition note">
@@ -241,8 +241,8 @@ calculated and added to the set of almost desirable gambles.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="murasyp.almostdesirs.ADesirSet.set_pr">
-<tt class="descname">set_pr</tt><big>(</big><em>data</em>, <em>val</em><big>)</big><a class="reference internal" href="_modules/murasyp/almostdesirs.html#ADesirSet.set_pr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#murasyp.almostdesirs.ADesirSet.set_pr" title="Permalink to this definition">¶</a></dt>
+<dt id="murasyp.desirs.DesirSet.set_pr">
+<tt class="descname">set_pr</tt><big>(</big><em>data</em>, <em>val</em><big>)</big><a class="reference internal" href="_modules/murasyp/desirs.html#DesirSet.set_pr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#murasyp.desirs.DesirSet.set_pr" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the probability/prevision (expectation) of an event/gamble</p>
 <blockquote>
 <div><table class="docutils field-list" frame="void" rules="none">
@@ -263,10 +263,10 @@ constructor</td>
 </div></blockquote>
 <p>This is identical to setting the lower and upper prevision to the same
 value.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">D</span> <span class="o">=</span> <span class="n">ADesirSet</span><span class="p">()</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">D</span> <span class="o">=</span> <span class="n">DesirSet</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">D</span><span class="o">.</span><span class="n">set_pr</span><span class="p">(</span><span class="n">Gamble</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">})</span> <span class="o">|</span> <span class="p">{</span><span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">},</span> <span class="o">.</span><span class="mi">4</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">D</span>
-<span class="go">ADesirSet(set([Ray({&#39;a&#39;: -1, &#39;c&#39;: &#39;2/3&#39;, &#39;b&#39;: -1}), Ray({&#39;a&#39;: 1, &#39;c&#39;: &#39;-2/3&#39;, &#39;b&#39;: 1})]))</span>
+<span class="go">DesirSet(set([Ray({&#39;a&#39;: -1, &#39;c&#39;: &#39;2/3&#39;, &#39;b&#39;: -1}), Ray({&#39;a&#39;: 1, &#39;c&#39;: &#39;-2/3&#39;, &#39;b&#39;: 1})]))</span>
 </pre></div>
 </div>
 <div class="admonition note">
@@ -276,9 +276,9 @@ value.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="murasyp.almostdesirs.ADesirSet.asl">
-<tt class="descname">asl</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/murasyp/almostdesirs.html#ADesirSet.asl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#murasyp.almostdesirs.ADesirSet.asl" title="Permalink to this definition">¶</a></dt>
-<dd><p>Check whether the set of almost desirable gambles avoids sure loss</p>
+<dt id="murasyp.desirs.DesirSet.asl">
+<tt class="descname">asl</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/murasyp/desirs.html#DesirSet.asl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#murasyp.desirs.DesirSet.asl" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check whether the set of desirable gambles avoids sure loss</p>
 <blockquote>
 <div><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -291,10 +291,10 @@ value.</p>
 </div></blockquote>
 <p>We solve a feasibility (linear programming) problem: If we can find
 a vector <img class="math" src="_images/math/fd5a0f9d9cd2d866b47d3215fd8a4b9a40974afa.png" alt="\lambda\in(\mathbb{R}_{\geq0})^{\mathcal{D}}"/>
-such that <img class="math" src="_images/math/440c13072e83ee8f4ea5976ea268c30a308146fa.png" alt="\sum_{f\in\mathcal{D}}\lambda_f\cdot f&lt;-1"/>,
-then the set of almost desirable gambles <img class="math" src="_images/math/36eee9eaded3a8c323d85046041a94a032ded392.png" alt="\mathcal{D}"/>
+such that <img class="math" src="_images/math/adbcaafaa5a6a656a16ca8a43d7a44f034e53a8d.png" alt="\sum_{f\in\mathcal{D}}\lambda_f\cdot f\leq-1"/>,
+then the set of desirable gambles <img class="math" src="_images/math/36eee9eaded3a8c323d85046041a94a032ded392.png" alt="\mathcal{D}"/>
 incurs sure loss.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">D</span> <span class="o">=</span> <span class="n">ADesirSet</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="s">&#39;abc&#39;</span><span class="p">))</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">D</span> <span class="o">=</span> <span class="n">DesirSet</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="s">&#39;abc&#39;</span><span class="p">))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">D</span><span class="o">.</span><span class="n">add</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">D</span><span class="o">.</span><span class="n">add</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">D</span><span class="o">.</span><span class="n">asl</span><span class="p">()</span>
@@ -307,8 +307,8 @@ incurs sure loss.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="murasyp.almostdesirs.ADesirSet.get_credal">
-<tt class="descname">get_credal</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/murasyp/almostdesirs.html#ADesirSet.get_credal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#murasyp.almostdesirs.ADesirSet.get_credal" title="Permalink to this definition">¶</a></dt>
+<dt id="murasyp.desirs.DesirSet.get_credal">
+<tt class="descname">get_credal</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/murasyp/desirs.html#DesirSet.get_credal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#murasyp.desirs.DesirSet.get_credal" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate the equivalent credal set</p>
 <blockquote>
 <div><table class="docutils field-list" frame="void" rules="none">
@@ -322,7 +322,7 @@ incurs sure loss.</p>
 </tbody>
 </table>
 </div></blockquote>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">D</span> <span class="o">=</span> <span class="n">ADesirSet</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="s">&#39;abc&#39;</span><span class="p">))</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">D</span> <span class="o">=</span> <span class="n">DesirSet</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="s">&#39;abc&#39;</span><span class="p">))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">D</span><span class="o">.</span><span class="n">set_lower_pr</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span> <span class="o">.</span><span class="mi">5</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">D</span><span class="o">.</span><span class="n">get_credal</span><span class="p">()</span>
 <span class="go">CredalSet(set([PMFunc({&#39;a&#39;: &#39;1/2&#39;, &#39;b&#39;: &#39;1/2&#39;}), PMFunc({&#39;c&#39;: &#39;1/2&#39;, &#39;b&#39;: &#39;1/2&#39;}), PMFunc({&#39;a&#39;: 1}), PMFunc({&#39;c&#39;: 1})]))</span>
@@ -345,7 +345,7 @@ incurs sure loss.</p>
                         title="previous chapter">Credal Sets</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
-    <li><a href="_sources/almostdesirs.txt"
+    <li><a href="_sources/desirs.txt"
            rel="nofollow">Show Source</a></li>
   </ul>
 <div id="searchbox" style="display: none">
@@ -381,7 +381,7 @@ incurs sure loss.</p>
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2011, Erik Quaeghebeur.
+        &copy; Copyright 2011–2012, Erik Quaeghebeur.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
     </div>
   </body>

@@ -24,7 +24,7 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="author" title="About these documents" href="about.html" />
     <link rel="top" title="murasyp v(git) documentation" href="index.html" />
-    <link rel="next" title="Sets of almost desirable gambles" href="almostdesirs.html" />
+    <link rel="next" title="Sets of almost desirable gambles" href="desirs.html" />
     <link rel="prev" title="Mass Functions" href="massfuncs.html" /> 
   </head>
   <body>
@@ -38,7 +38,7 @@
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="almostdesirs.html" title="Sets of almost desirable gambles"
+          <a href="desirs.html" title="Sets of almost desirable gambles"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="massfuncs.html" title="Mass Functions"
@@ -217,22 +217,22 @@ convex hull.</p>
 <dl class="method">
 <dt id="murasyp.credalsets.CredalSet.get_adesir">
 <tt class="descname">get_adesir</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/murasyp/credalsets.html#CredalSet.get_adesir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#murasyp.credalsets.CredalSet.get_adesir" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generate the equivalent set of almost desirable gambles</p>
+<dd><p>Generate the equivalent set of desirable gambles</p>
 <blockquote>
 <div><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">returns:</th><td class="field-body">the set of almost desirable gambles that is equivalent as an
+<tr class="field"><th class="field-name">returns:</th><td class="field-body">the set of desirable gambles that is equivalent as an
 uncertainty model</td>
 </tr>
-<tr class="field"><th class="field-name">rtype:</th><td class="field-body"><a class="reference internal" href="almostdesirs.html#murasyp.almostdesirs.ADesirSet" title="murasyp.almostdesirs.ADesirSet"><tt class="xref py py-class docutils literal"><span class="pre">ADesirSet</span></tt></a></td>
+<tr class="field"><th class="field-name">rtype:</th><td class="field-body"><a class="reference internal" href="desirs.html#murasyp.desirs.DesirSet" title="murasyp.desirs.DesirSet"><tt class="xref py py-class docutils literal"><span class="pre">DesirSet</span></tt></a></td>
 </tr>
 </tbody>
 </table>
 </div></blockquote>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">CredalSet</span><span class="p">(</span><span class="nb">set</span><span class="p">([</span><span class="n">PMFunc</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">}),</span> <span class="n">PMFunc</span><span class="p">({</span><span class="s">&#39;c&#39;</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">}),</span> <span class="n">PMFunc</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">}),</span> <span class="n">PMFunc</span><span class="p">({</span><span class="s">&#39;c&#39;</span><span class="p">})]))</span><span class="o">.</span><span class="n">get_adesir</span><span class="p">()</span>
-<span class="go">ADesirSet(set([Ray({&#39;a&#39;: 1}), Ray({&#39;b&#39;: 1}), Ray({&#39;c&#39;: 1}), Ray({&#39;a&#39;: 1, &#39;c&#39;: 1, &#39;b&#39;: -1})]))</span>
+<span class="go">DesirSet(set([Ray({&#39;a&#39;: 1}), Ray({&#39;b&#39;: 1}), Ray({&#39;c&#39;: 1}), Ray({&#39;a&#39;: 1, &#39;c&#39;: 1, &#39;b&#39;: -1})]))</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -251,7 +251,7 @@ uncertainty model</td>
   <p class="topless"><a href="massfuncs.html"
                         title="previous chapter">Mass Functions</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="almostdesirs.html"
+  <p class="topless"><a href="desirs.html"
                         title="next chapter">Sets of almost desirable gambles</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
@@ -285,7 +285,7 @@ uncertainty model</td>
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="almostdesirs.html" title="Sets of almost desirable gambles"
+          <a href="desirs.html" title="Sets of almost desirable gambles"
              >next</a> |</li>
         <li class="right" >
           <a href="massfuncs.html" title="Mass Functions"
@@ -294,7 +294,7 @@ uncertainty model</td>
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2011, Erik Quaeghebeur.
+        &copy; Copyright 2011–2012, Erik Quaeghebeur.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
     </div>
   </body>
