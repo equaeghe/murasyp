@@ -186,14 +186,14 @@ class CredalSet(MutableSet):
             self.discard(K[i])
 
     def get_adesir(self):
-        """Generate the equivalent set of almost desirable gambles
+        """Generate the equivalent set of desirable gambles
 
-          :returns: the set of almost desirable gambles that is equivalent as an
+          :returns: the set of desirable gambles that is equivalent as an
             uncertainty model
-          :rtype: :class:`~murasyp.almostdesirs.ADesirSet`
+          :rtype: :class:`~murasyp.desirs.DesirSet`
 
         >>> CredalSet(set([PMFunc({'a', 'b'}), PMFunc({'c', 'b'}), PMFunc({'a'}), PMFunc({'c'})])).get_adesir()
-        ADesirSet(set([Ray({'a': 1}), Ray({'b': 1}), Ray({'c': 1}), Ray({'a': 1, 'c': 1, 'b': -1})]))
+        DesirSet(set([Ray({'a': 1}), Ray({'b': 1}), Ray({'c': 1}), Ray({'a': 1, 'c': 1, 'b': -1})]))
 
         """
         pspace = list(self.pspace())
@@ -203,11 +203,11 @@ class CredalSet(MutableSet):
         mat.rep_type = RepType.INEQUALITY
         poly = Polyhedron(mat)
         ext = poly.get_generators()
-        return ADesirSet(set([Ray({pspace[j-1]: ext[i][j]
-                                   for j in range(1, ext.col_size)})
-                              for i in range(0, ext.row_size)] +
-                             [Ray({pspace[j-1]: -ext[i][j]
-                                   for j in range(1, ext.col_size)})
-                              for i in ext.lin_set]))
+        return DesirSet(set([Ray({pspace[j-1]: ext[i][j]
+                                  for j in range(1, ext.col_size)})
+                             for i in range(0, ext.row_size)] +
+                            [Ray({pspace[j-1]: -ext[i][j]
+                                  for j in range(1, ext.col_size)})
+                             for i in ext.lin_set]))
 
-from murasyp.almostdesirs import ADesirSet # avoid circular-dependency
+from murasyp.desirs import DesirSet # avoid circular-dependency
