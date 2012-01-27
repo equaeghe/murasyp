@@ -5,8 +5,8 @@
   from murasyp.gambles import Ray
   from murasyp.desirs import *
 
-Sets of almost desirable gambles
-================================
+Sets of desirable gambles
+=========================
 
 .. autoclass:: DesirSet
 
