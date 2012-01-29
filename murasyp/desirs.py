@@ -229,7 +229,7 @@ class DesirSet(MutableSet):
         :math:`\sum_{f\in\mathcal{D}}\lambda_f\cdot f
         \leq-\sum_{\omega\in\Omega}\\tau_\omega\cdot I_{\omega}`
         and :math:`\sum_{\omega\in\Omega}\\tau_\omega\geq1`,
-        where :math:`I_\omega` is the ray corresponing to
+        where :math:`I_\omega` is the ray corresponding to
         the :math:`\omega`-axis, then the set of desirable gambles
         :math:`\mathcal{D}` incurs partial loss.
 
