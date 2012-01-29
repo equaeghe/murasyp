@@ -267,6 +267,45 @@
         <span class="n">lp</span><span class="o">.</span><span class="n">solve</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">lp</span><span class="o">.</span><span class="n">status</span> <span class="o">!=</span> <span class="n">LPStatusType</span><span class="o">.</span><span class="n">OPTIMAL</span>
 </div>
+<div class="viewcode-block" id="DesirSet.apl"><a class="viewcode-back" href="../../desirs.html#murasyp.desirs.DesirSet.apl">[docs]</a>    <span class="k">def</span> <span class="nf">apl</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Check whether the set of desirable gambles avoids partial loss</span>
+
+<span class="sd">          :rtype: :class:`bool`</span>
+
+<span class="sd">        We solve a feasibility (linear programming) problem:</span>
+<span class="sd">        If we can find a vector :math:`(\lambda,\\tau)</span>
+<span class="sd">        \in(\mathbb{R}_{\geq0})^{\mathcal{D}\\times\Omega}`, such that</span>
+<span class="sd">        :math:`\sum_{f\in\mathcal{D}}\lambda_f\cdot f</span>
+<span class="sd">        \leq-\sum_{\omega\in\Omega}\\tau_\omega\cdot I_{\omega}`</span>
+<span class="sd">        and :math:`\sum_{\omega\in\Omega}\\tau_\omega\geq1`,</span>
+<span class="sd">        where :math:`I_\omega` is the ray corresponing to</span>
+<span class="sd">        the :math:`\omega`-axis, then the set of desirable gambles</span>
+<span class="sd">        :math:`\mathcal{D}` incurs partial loss.</span>
+
+<span class="sd">        &gt;&gt;&gt; D = DesirSet(set(&#39;abc&#39;))</span>
+<span class="sd">        &gt;&gt;&gt; D.add({&#39;a&#39;: -1, &#39;b&#39;: -1, &#39;c&#39;: 1})</span>
+<span class="sd">        &gt;&gt;&gt; D.apl()</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; D.add({&#39;a&#39;: -1, &#39;b&#39;: 1, &#39;c&#39;: -1})</span>
+<span class="sd">        &gt;&gt;&gt; D.apl()</span>
+<span class="sd">        False</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pspace</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pspace</span><span class="p">())</span>
+        <span class="n">D</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">E</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">DesirSet</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pspace</span><span class="p">()))</span>
+        <span class="n">mat</span> <span class="o">=</span> <span class="n">Matrix</span><span class="p">(</span><span class="nb">list</span><span class="p">([</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">oray</span> <span class="o">==</span> <span class="n">ray</span><span class="p">)</span> <span class="k">for</span> <span class="n">oray</span> <span class="ow">in</span> <span class="n">D</span><span class="p">]</span>
+                              <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">E</span><span class="p">)</span> <span class="o">*</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">ray</span> <span class="ow">in</span> <span class="n">D</span><span class="p">)</span> <span class="o">+</span>
+                     <span class="nb">list</span><span class="p">([</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">D</span><span class="p">)</span> <span class="o">*</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                              <span class="o">+</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">oray</span> <span class="o">==</span> <span class="n">ray</span><span class="p">)</span> <span class="k">for</span> <span class="n">oray</span> <span class="ow">in</span> <span class="n">E</span><span class="p">]</span> <span class="k">for</span> <span class="n">ray</span> <span class="ow">in</span> <span class="n">E</span><span class="p">)</span> <span class="o">+</span>
+                     <span class="nb">list</span><span class="p">([</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="o">-</span><span class="n">ray</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="k">for</span> <span class="n">ray</span> <span class="ow">in</span> <span class="n">D</span> <span class="o">+</span> <span class="n">E</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">pspace</span><span class="p">)</span> <span class="o">+</span>
+                     <span class="nb">list</span><span class="p">([[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">D</span><span class="p">)</span> <span class="o">*</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">E</span><span class="p">)</span> <span class="o">*</span> <span class="p">[</span><span class="mi">1</span><span class="p">]]),</span>
+                     <span class="n">number_type</span><span class="o">=</span><span class="s">&#39;fraction&#39;</span><span class="p">)</span>
+        <span class="n">mat</span><span class="o">.</span><span class="n">obj_type</span> <span class="o">=</span> <span class="n">LPObjType</span><span class="o">.</span><span class="n">MIN</span>
+        <span class="n">lp</span> <span class="o">=</span> <span class="n">LinProg</span><span class="p">(</span><span class="n">mat</span><span class="p">)</span>
+        <span class="n">lp</span><span class="o">.</span><span class="n">solve</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">lp</span><span class="o">.</span><span class="n">status</span> <span class="o">!=</span> <span class="n">LPStatusType</span><span class="o">.</span><span class="n">OPTIMAL</span>
+</div>
 <div class="viewcode-block" id="DesirSet.get_credal"><a class="viewcode-back" href="../../desirs.html#murasyp.desirs.DesirSet.get_credal">[docs]</a>    <span class="k">def</span> <span class="nf">get_credal</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Generate the equivalent credal set</span>
 

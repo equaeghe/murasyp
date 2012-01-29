@@ -307,6 +307,40 @@ incurs sure loss.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="murasyp.desirs.DesirSet.apl">
+<tt class="descname">apl</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/murasyp/desirs.html#DesirSet.apl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#murasyp.desirs.DesirSet.apl" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check whether the set of desirable gambles avoids partial loss</p>
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">rtype:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">bool</span></tt></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>We solve a feasibility (linear programming) problem:
+If we can find a vector <img class="math" src="_images/math/df47a64627a45c59778ec4d858c57a97cb3e3cba.png" alt="(\lambda,\tau)
+\in(\mathbb{R}_{\geq0})^{\mathcal{D}\times\Omega}"/>, such that
+<img class="math" src="_images/math/2f435c40e547cc3c412ce33eccb231a118f7ab89.png" alt="\sum_{f\in\mathcal{D}}\lambda_f\cdot f
+\leq-\sum_{\omega\in\Omega}\tau_\omega\cdot I_{\omega}"/>
+and <img class="math" src="_images/math/068c2ad775f1b27451442fdec924da3c685233a3.png" alt="\sum_{\omega\in\Omega}\tau_\omega\geq1"/>,
+where <img class="math" src="_images/math/f4d3ba7373610c94bd24a19688f322822e4cbfff.png" alt="I_\omega"/> is the ray corresponing to
+the <img class="math" src="_images/math/54d7d48553f4d9e7ab418118607ea324cbfddfda.png" alt="\omega"/>-axis, then the set of desirable gambles
+<img class="math" src="_images/math/36eee9eaded3a8c323d85046041a94a032ded392.png" alt="\mathcal{D}"/> incurs partial loss.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">D</span> <span class="o">=</span> <span class="n">DesirSet</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="s">&#39;abc&#39;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">D</span><span class="o">.</span><span class="n">add</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">D</span><span class="o">.</span><span class="n">apl</span><span class="p">()</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">D</span><span class="o">.</span><span class="n">add</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">D</span><span class="o">.</span><span class="n">apl</span><span class="p">()</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
 <dt id="murasyp.desirs.DesirSet.get_credal">
 <tt class="descname">get_credal</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/murasyp/desirs.html#DesirSet.get_credal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#murasyp.desirs.DesirSet.get_credal" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate the equivalent credal set</p>
