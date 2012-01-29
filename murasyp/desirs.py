@@ -225,7 +225,7 @@ class DesirSet(MutableSet):
 
         We solve a feasibility (linear programming) problem:
         If we can find a vector :math:`(\lambda,\\tau)
-        \in(\mathbb{R}_{\geq0})^{\mathcal{D}\\times\Omega}`, such that
+        \in(\mathbb{R}_{\geq0})^{\mathcal{D}\\times\Omega}` such that
         :math:`\sum_{f\in\mathcal{D}}\lambda_f\cdot f
         \leq-\sum_{\omega\in\Omega}\\tau_\omega\cdot I_{\omega}`
         and :math:`\sum_{\omega\in\Omega}\\tau_\omega\geq1`,
@@ -266,7 +266,7 @@ class DesirSet(MutableSet):
         >>> D = DesirSet(set('abc'))
         >>> D.set_lower_pr({'a': 1, 'b': 0, 'c': 1}, .5)
         >>> D.get_credal()
-        CredalSet(set([PMFunc({'a': '1/2', 'b': '1/2'}), PMFunc({'c': '1/2', 'b': '1/2'}), PMFunc({'a': 1}), PMFunc({'c': 1})]))
+        CredalSet(set([PMFunc({'a': '1/2', 'b': '1/2'}), PMFunc({'c': '1/2', 'b': '1/2'}), ...
 
         """
         pspace = list(self.pspace())

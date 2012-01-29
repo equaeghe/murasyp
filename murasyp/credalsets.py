@@ -185,14 +185,15 @@ class CredalSet(MutableSet):
         for i in red:
             self.discard(K[i])
 
-    def get_adesir(self):
+    def get_desir(self):
         """Generate the equivalent set of desirable gambles
 
           :returns: the set of desirable gambles that is equivalent as an
             uncertainty model
           :rtype: :class:`~murasyp.desirs.DesirSet`
 
-        >>> CredalSet(set([PMFunc({'a', 'b'}), PMFunc({'c', 'b'}), PMFunc({'a'}), PMFunc({'c'})])).get_adesir()
+        >>> CredalSet(set([PMFunc({'a', 'b'}), PMFunc({'c', 'b'}),
+        ...                PMFunc({'a'}), PMFunc({'c'})])).get_desir()
         DesirSet(set([Ray({'a': 1}), Ray({'b': 1}), Ray({'c': 1}), Ray({'a': 1, 'c': 1, 'b': -1})]))
 
         """

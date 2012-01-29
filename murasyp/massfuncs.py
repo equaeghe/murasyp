@@ -61,8 +61,8 @@ class UMFunc(Vector):
       >>> (m | f.support()) * f
       Fraction(1, 3)
 
-    * Arithmetic with unit mass functions results in vectors, which may be
-      converted to a unit mass functions in case it satisfies the conditions.
+    * Arithmetic with unit mass functions results in a vector, which may be
+      converted to a unit mass function in case it satisfies the conditions.
 
       >>> m = UMFunc({'a': 1.7, 'b': -.7})
       >>> n = UMFunc({'a': .5, 'b': .5})
