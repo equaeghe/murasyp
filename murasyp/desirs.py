@@ -218,6 +218,39 @@ class DesirSet(MutableSet):
         lp.solve()
         return lp.status != LPStatusType.OPTIMAL
 
+    def apl(self):
+        """Check whether the set of desirable gambles avoids partial loss
+
+          :rtype: :class:`bool`
+
+        We solve a feasibility (linear programming) problem: If we can find a ...,
+        then the set of desirable gambles :math:`\mathcal{D}`
+        incurs partial loss.
+
+        >>> D = DesirSet(set('abc'))
+        >>> D.add({'a': -1, 'b': -1, 'c': 1})
+        >>> D.apl()
+        True
+        >>> D.add({'a': -1, 'b': 1, 'c': -1})
+        >>> D.apl()
+        False
+
+        """
+        pspace = list(self.pspace())
+        D = list(self)
+        E = list(DesirSet(self.pspace()))
+        mat = Matrix(list([0] + [int(oray == ray) for oray in D]
+                              + len(E) * [0] for ray in D) +
+                     list([0] + len(D) * [0]
+                              + [int(oray == ray) for oray in E] for ray in E) +
+                     list([0] + [-ray[x] for ray in D + E] for x in pspace) +
+                     list([[-1] + len(D) * [0] + len(E) * [1]]),
+                     number_type='fraction')
+        mat.obj_type = LPObjType.MIN
+        lp = LinProg(mat)
+        lp.solve()
+        return lp.status != LPStatusType.OPTIMAL
+
     def get_credal(self):
         """Generate the equivalent credal set
 
