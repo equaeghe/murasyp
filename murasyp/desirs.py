@@ -223,9 +223,15 @@ class DesirSet(MutableSet):
 
           :rtype: :class:`bool`
 
-        We solve a feasibility (linear programming) problem: If we can find a ...,
-        then the set of desirable gambles :math:`\mathcal{D}`
-        incurs partial loss.
+        We solve a feasibility (linear programming) problem:
+        If we can find a vector :math:`(\lambda,\\tau)
+        \in(\mathbb{R}_{\geq0})^{\mathcal{D}\\times\Omega}`, such that
+        :math:`\sum_{f\in\mathcal{D}}\lambda_f\cdot f
+        \leq-\sum_{\omega\in\Omega}\\tau_\omega\cdot I_{\omega}`
+        and :math:`\sum_{\omega\in\Omega}\\tau_\omega\geq1`,
+        where :math:`I_\omega` is the ray corresponing to
+        the :math:`\omega`-axis, then the set of desirable gambles
+        :math:`\mathcal{D}` incurs partial loss.
 
         >>> D = DesirSet(set('abc'))
         >>> D.add({'a': -1, 'b': -1, 'c': 1})
