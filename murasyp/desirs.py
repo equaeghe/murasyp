@@ -37,6 +37,10 @@ class DesirSet(MutableSet):
       >>> D ** (f | f.support())
       Fraction(2, 5)
 
+      .. note::
+
+          The domain of the gamble determines the conditioning event.
+
     """
     def __init__(self, data=set([])):
         """Create a set of desirable gambles"""

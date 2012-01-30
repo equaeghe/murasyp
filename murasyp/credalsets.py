@@ -19,8 +19,8 @@ class CredalSet(MutableSet):
       >>> CredalSet(set('abc'))
       CredalSet(set([PMFunc({'a': 1}), PMFunc({'b': 1}), PMFunc({'c': 1})]))
 
-    * Lower and upper expectations can be calculated, using the ``*`` and ``**``
-      operators, respectively.
+    * Lower and upper (conditional) expectations can be calculated, using the
+      ``*`` and ``**`` operators, respectively.
 
       >>> p = PMFunc({'a': .03, 'b': .07, 'c': .9})
       >>> q = PMFunc({'a': .07, 'b': .03, 'c': .9})
@@ -34,6 +34,10 @@ class CredalSet(MutableSet):
       Fraction(-2, 5)
       >>> K ** (f | f.support())
       Fraction(2, 5)
+
+      .. note::
+
+          The domain of the gamble determines the conditioning event.
 
     * They can be conditioned (each element :class:`~murasyp.massfuncs.PMFunc`
       is).
