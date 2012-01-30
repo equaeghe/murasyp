@@ -234,14 +234,15 @@
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">red</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">discard</span><span class="p">(</span><span class="n">K</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
 </div>
-<div class="viewcode-block" id="CredalSet.get_adesir"><a class="viewcode-back" href="../../credalsets.html#murasyp.credalsets.CredalSet.get_adesir">[docs]</a>    <span class="k">def</span> <span class="nf">get_adesir</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="CredalSet.get_desir"><a class="viewcode-back" href="../../credalsets.html#murasyp.credalsets.CredalSet.get_desir">[docs]</a>    <span class="k">def</span> <span class="nf">get_desir</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Generate the equivalent set of desirable gambles</span>
 
 <span class="sd">          :returns: the set of desirable gambles that is equivalent as an</span>
 <span class="sd">            uncertainty model</span>
 <span class="sd">          :rtype: :class:`~murasyp.desirs.DesirSet`</span>
 
-<span class="sd">        &gt;&gt;&gt; CredalSet(set([PMFunc({&#39;a&#39;, &#39;b&#39;}), PMFunc({&#39;c&#39;, &#39;b&#39;}), PMFunc({&#39;a&#39;}), PMFunc({&#39;c&#39;})])).get_adesir()</span>
+<span class="sd">        &gt;&gt;&gt; CredalSet(set([PMFunc({&#39;a&#39;, &#39;b&#39;}), PMFunc({&#39;c&#39;, &#39;b&#39;}),</span>
+<span class="sd">        ...                PMFunc({&#39;a&#39;}), PMFunc({&#39;c&#39;})])).get_desir()</span>
 <span class="sd">        DesirSet(set([Ray({&#39;a&#39;: 1}), Ray({&#39;b&#39;: 1}), Ray({&#39;c&#39;: 1}), Ray({&#39;a&#39;: 1, &#39;c&#39;: 1, &#39;b&#39;: -1})]))</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>

@@ -215,8 +215,8 @@ convex hull.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="murasyp.credalsets.CredalSet.get_adesir">
-<tt class="descname">get_adesir</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/murasyp/credalsets.html#CredalSet.get_adesir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#murasyp.credalsets.CredalSet.get_adesir" title="Permalink to this definition">¶</a></dt>
+<dt id="murasyp.credalsets.CredalSet.get_desir">
+<tt class="descname">get_desir</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/murasyp/credalsets.html#CredalSet.get_desir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#murasyp.credalsets.CredalSet.get_desir" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate the equivalent set of desirable gambles</p>
 <blockquote>
 <div><table class="docutils field-list" frame="void" rules="none">
@@ -231,7 +231,8 @@ uncertainty model</td>
 </tbody>
 </table>
 </div></blockquote>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">CredalSet</span><span class="p">(</span><span class="nb">set</span><span class="p">([</span><span class="n">PMFunc</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">}),</span> <span class="n">PMFunc</span><span class="p">({</span><span class="s">&#39;c&#39;</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">}),</span> <span class="n">PMFunc</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">}),</span> <span class="n">PMFunc</span><span class="p">({</span><span class="s">&#39;c&#39;</span><span class="p">})]))</span><span class="o">.</span><span class="n">get_adesir</span><span class="p">()</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">CredalSet</span><span class="p">(</span><span class="nb">set</span><span class="p">([</span><span class="n">PMFunc</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">}),</span> <span class="n">PMFunc</span><span class="p">({</span><span class="s">&#39;c&#39;</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">}),</span>
+<span class="gp">... </span>               <span class="n">PMFunc</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">}),</span> <span class="n">PMFunc</span><span class="p">({</span><span class="s">&#39;c&#39;</span><span class="p">})]))</span><span class="o">.</span><span class="n">get_desir</span><span class="p">()</span>
 <span class="go">DesirSet(set([Ray({&#39;a&#39;: 1}), Ray({&#39;b&#39;: 1}), Ray({&#39;c&#39;: 1}), Ray({&#39;a&#39;: 1, &#39;c&#39;: 1, &#39;b&#39;: -1})]))</span>
 </pre></div>
 </div>
