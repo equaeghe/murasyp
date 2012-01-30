@@ -76,6 +76,24 @@ then a relative set of desirable gambles is generated.</p>
 </pre></div>
 </div>
 </li>
+<li><p class="first">Lower and upper (conditional) expectations can be calculated, using the
+<tt class="docutils literal"><span class="pre">*</span></tt> and <tt class="docutils literal"><span class="pre">**</span></tt> operators, respectively.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">D</span> <span class="o">=</span> <span class="n">DesirSet</span><span class="p">(</span><span class="nb">set</span><span class="p">([</span><span class="n">Ray</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">:</span> <span class="s">&#39;7/90&#39;</span><span class="p">}),</span>
+<span class="gp">... </span>                  <span class="n">Ray</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">:</span> <span class="s">&#39;-1/30&#39;</span><span class="p">}),</span>
+<span class="gp">... </span>                  <span class="n">Ray</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">:</span> <span class="s">&#39;1/9&#39;</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">}),</span>
+<span class="gp">... </span>                  <span class="n">Ray</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">:</span> <span class="s">&#39;-1/9&#39;</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})]))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">Gamble</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">D</span> <span class="o">*</span> <span class="n">f</span>
+<span class="go">Fraction(-1, 25)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">D</span> <span class="o">**</span> <span class="n">f</span>
+<span class="go">Fraction(1, 25)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">D</span> <span class="o">*</span> <span class="p">(</span><span class="n">f</span> <span class="o">|</span> <span class="n">f</span><span class="o">.</span><span class="n">support</span><span class="p">())</span>
+<span class="go">Fraction(-2, 5)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">D</span> <span class="o">**</span> <span class="p">(</span><span class="n">f</span> <span class="o">|</span> <span class="n">f</span><span class="o">.</span><span class="n">support</span><span class="p">())</span>
+<span class="go">Fraction(2, 5)</span>
+</pre></div>
+</div>
+</li>
 </ul>
 <dl class="method">
 <dt id="murasyp.desirs.DesirSet.add">
