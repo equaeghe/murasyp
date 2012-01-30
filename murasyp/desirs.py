@@ -284,9 +284,9 @@ class DesirSet(MutableSet):
             raise TypeError(str(other) + " is not a gamble")
         dom = other.domain()
         pspace = self.pspace()
-        if not (dom <= pspace):
-            raise ValueError("The gamble's domain (conditioning event) " +
-                             "is not a subset of the possibility space")
+        #if not (dom <= pspace):
+            #raise ValueError("The gamble's domain (conditioning event) " +
+                             #"is not a subset of the possibility space")
         pspace = list(self.pspace())
         D = list(self)
         mat = Matrix(list([0, 0] + [int(oray == ray) for oray in D]
@@ -298,7 +298,10 @@ class DesirSet(MutableSet):
         mat.obj_func = tuple([0, 1] + len(D) * [0])
         lp = LinProg(mat)
         lp.solve()
-        return lp.obj_value
+        if lp.status == LPStatusType.OPTIMAL:
+            return lp.obj_value
+        else:
+            raise ValueError("No feasible solution")
 
     def __pow__(self, other):
         """Upper expectation of a gamble"""
