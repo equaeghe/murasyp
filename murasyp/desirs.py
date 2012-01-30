@@ -20,6 +20,23 @@ class DesirSet(MutableSet):
       >>> DesirSet(set('abc'))
       DesirSet(set([Ray({'a': 1}), Ray({'b': 1}), Ray({'c': 1})]))
 
+    * Lower and upper (conditional) expectations can be calculated, using the
+      ``*`` and ``**`` operators, respectively.
+
+      >>> D = DesirSet(set([Ray({'a': -1, 'c': '7/90'}),
+      ...                   Ray({'a': 1, 'c': '-1/30'}),
+      ...                   Ray({'a': -1, 'c': '1/9', 'b': -1}),
+      ...                   Ray({'a': 1, 'c': '-1/9', 'b': 1})]))
+      >>> f = Gamble({'a': -1, 'b': 1, 'c': 0})
+      >>> D * f
+      Fraction(-1, 25)
+      >>> D ** f
+      Fraction(1, 25)
+      >>> D * (f | f.support())
+      Fraction(-2, 5)
+      >>> D ** (f | f.support())
+      Fraction(2, 5)
+
     """
     def __init__(self, data=set([])):
         """Create a set of desirable gambles"""
@@ -256,6 +273,32 @@ class DesirSet(MutableSet):
         lp = LinProg(mat)
         lp.solve()
         return lp.status != LPStatusType.OPTIMAL
+
+    def __mul__(self, other):
+        """Lower expectation of a gamble"""
+        if not isinstance(other, Gamble):
+            raise TypeError(str(other) + " is not a gamble")
+        dom = other.domain()
+        pspace = self.pspace()
+        if not (dom <= pspace):
+            raise ValueError("The gamble's domain (conditioning event) " +
+                             "is not a subset of the possibility space")
+        pspace = list(self.pspace())
+        D = list(self)
+        mat = Matrix(list([0, 0] + [int(oray == ray) for oray in D]
+                          for ray in D) +
+                     list([other[x], -int(x in dom)] + [-ray[x] for ray in D]
+                          for x in pspace),
+                      number_type='fraction')
+        mat.obj_type = LPObjType.MAX
+        mat.obj_func = tuple([0, 1] + len(D) * [0])
+        lp = LinProg(mat)
+        lp.solve()
+        return lp.obj_value
+
+    def __pow__(self, other):
+        """Upper expectation of a gamble"""
+        return - self.__mul__(- other)
 
     def get_credal(self):
         """Generate the equivalent credal set
