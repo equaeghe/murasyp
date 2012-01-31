@@ -156,6 +156,11 @@ class DesirSet(MutableSet):
 
           The domain of the input gamble determines the conditioning event.
 
+        .. warning::
+
+          The set of desirable gambles becomes a set of *almost* desirable
+          gambles.
+
         """
         self.add(Gamble(data) - _make_rational(val))
 
@@ -180,6 +185,11 @@ class DesirSet(MutableSet):
 
           The domain of the input gamble determines the conditioning event.
 
+        .. warning::
+
+          The set of desirable gambles becomes a set of *almost* desirable
+          gambles.
+
         """
         self.add(_make_rational(val) - Gamble(data))
 
@@ -203,6 +213,11 @@ class DesirSet(MutableSet):
         .. note::
 
           The domain of the input gamble determines the conditioning event.
+
+        .. warning::
+
+          The set of desirable gambles becomes a set of *almost* desirable
+          gambles.
 
         """
         self.set_lower_pr(data, val)
