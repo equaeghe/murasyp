@@ -39,7 +39,12 @@ class DesirSet(MutableSet):
 
       .. note::
 
-          The domain of the gamble determines the conditioning event.
+        The domain of the gamble determines the conditioning event.
+
+      .. warning::
+
+        These operations are not dependable when dealing with a set of
+        almost desirable gambles.
 
     """
     def __init__(self, data=set([])):
@@ -315,8 +320,15 @@ class DesirSet(MutableSet):
         lp.solve()
         if lp.status == LPStatusType.OPTIMAL:
             return lp.obj_value
+        elif lp.status == LPStatusType.UNDECIDED:
+            status = "undecided"
+        elif lp.status == LPStatusType.INCONSISTENT:
+            status = "inconsistent"
+        elif lp.status == LPStatusType.UNBOUNDED:
+            status = "unbounded"
         else:
-            raise ValueError("No feasible solution")
+            status = "of unknown status"
+        raise ValueError("The linear program is " + str(status) + '.')
 
     def __pow__(self, other):
         """Upper expectation of a gamble"""
