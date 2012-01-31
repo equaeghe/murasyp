@@ -69,9 +69,8 @@
 <span class="sd">      &gt;&gt;&gt; DesirSet(set(&#39;abc&#39;))</span>
 <span class="sd">      DesirSet(set([Ray({&#39;a&#39;: 1}), Ray({&#39;b&#39;: 1}), Ray({&#39;c&#39;: 1})]))</span>
 
-
-<span class="sd">    * Lower and upper expectations can be calculated, using the ``*`` and ``**``</span>
-<span class="sd">      operators, respectively.</span>
+<span class="sd">    * Lower and upper (conditional) expectations can be calculated, using the</span>
+<span class="sd">      ``*`` and ``**`` operators, respectively.</span>
 
 <span class="sd">      &gt;&gt;&gt; D = DesirSet(set([Ray({&#39;a&#39;: -1, &#39;c&#39;: &#39;7/90&#39;}),</span>
 <span class="sd">      ...                   Ray({&#39;a&#39;: 1, &#39;c&#39;: &#39;-1/30&#39;}),</span>
@@ -86,6 +85,15 @@
 <span class="sd">      Fraction(-2, 5)</span>
 <span class="sd">      &gt;&gt;&gt; D ** (f | f.support())</span>
 <span class="sd">      Fraction(2, 5)</span>
+
+<span class="sd">      .. note::</span>
+
+<span class="sd">        The domain of the gamble determines the conditioning event.</span>
+
+<span class="sd">      .. warning::</span>
+
+<span class="sd">        These operations are not dependable when dealing with a set of</span>
+<span class="sd">        almost desirable gambles.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="nb">set</span><span class="p">([])):</span>
@@ -202,6 +210,11 @@
 
 <span class="sd">          The domain of the input gamble determines the conditioning event.</span>
 
+<span class="sd">        .. warning::</span>
+
+<span class="sd">          The set of desirable gambles becomes a set of *almost* desirable</span>
+<span class="sd">          gambles.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Gamble</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">-</span> <span class="n">_make_rational</span><span class="p">(</span><span class="n">val</span><span class="p">))</span>
 </div>
@@ -226,6 +239,11 @@
 
 <span class="sd">          The domain of the input gamble determines the conditioning event.</span>
 
+<span class="sd">        .. warning::</span>
+
+<span class="sd">          The set of desirable gambles becomes a set of *almost* desirable</span>
+<span class="sd">          gambles.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">_make_rational</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="o">-</span> <span class="n">Gamble</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
 </div>
@@ -249,6 +267,11 @@
 <span class="sd">        .. note::</span>
 
 <span class="sd">          The domain of the input gamble determines the conditioning event.</span>
+
+<span class="sd">        .. warning::</span>
+
+<span class="sd">          The set of desirable gambles becomes a set of *almost* desirable</span>
+<span class="sd">          gambles.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_lower_pr</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
@@ -326,22 +349,35 @@
 </div>
     <span class="k">def</span> <span class="nf">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Lower expectation of a gamble&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Gamble</span><span class="p">):</span>
-            <span class="n">pspace</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pspace</span><span class="p">())</span>
-            <span class="n">D</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-            <span class="n">dom</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="n">domain</span><span class="p">()</span>
-            <span class="n">mat</span> <span class="o">=</span> <span class="n">Matrix</span><span class="p">(</span><span class="nb">list</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">oray</span> <span class="o">==</span> <span class="n">ray</span><span class="p">)</span> <span class="k">for</span> <span class="n">oray</span> <span class="ow">in</span> <span class="n">D</span><span class="p">]</span>
-                              <span class="k">for</span> <span class="n">ray</span> <span class="ow">in</span> <span class="n">D</span><span class="p">)</span> <span class="o">+</span>
-                         <span class="nb">list</span><span class="p">([</span><span class="n">other</span><span class="p">[</span><span class="n">x</span><span class="p">],</span> <span class="o">-</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span> <span class="ow">in</span> <span class="n">dom</span><span class="p">)]</span> <span class="o">+</span> <span class="p">[</span><span class="o">-</span><span class="n">ray</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="k">for</span> <span class="n">ray</span> <span class="ow">in</span> <span class="n">D</span><span class="p">]</span>
-                              <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">pspace</span><span class="p">),</span>
-                         <span class="n">number_type</span><span class="o">=</span><span class="s">&#39;fraction&#39;</span><span class="p">)</span>
-            <span class="n">mat</span><span class="o">.</span><span class="n">obj_type</span> <span class="o">=</span> <span class="n">LPObjType</span><span class="o">.</span><span class="n">MAX</span>
-            <span class="n">mat</span><span class="o">.</span><span class="n">obj_func</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">D</span><span class="p">)</span> <span class="o">*</span> <span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-            <span class="n">lp</span> <span class="o">=</span> <span class="n">LinProg</span><span class="p">(</span><span class="n">mat</span><span class="p">)</span>
-            <span class="n">lp</span><span class="o">.</span><span class="n">solve</span><span class="p">()</span>
-            <span class="k">return</span> <span class="n">lp</span><span class="o">.</span><span class="n">obj_value</span>
-        <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Gamble</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">other</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot; is not a gamble&quot;</span><span class="p">)</span>
+        <span class="n">dom</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="n">domain</span><span class="p">()</span>
+        <span class="n">pspace</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pspace</span><span class="p">()</span>
+        <span class="c">#if not (dom &lt;= pspace):</span>
+            <span class="c">#raise ValueError(&quot;The gamble&#39;s domain (conditioning event) &quot; +</span>
+                             <span class="c">#&quot;is not a subset of the possibility space&quot;)</span>
+        <span class="n">pspace</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pspace</span><span class="p">())</span>
+        <span class="n">D</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">mat</span> <span class="o">=</span> <span class="n">Matrix</span><span class="p">(</span><span class="nb">list</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">oray</span> <span class="o">==</span> <span class="n">ray</span><span class="p">)</span> <span class="k">for</span> <span class="n">oray</span> <span class="ow">in</span> <span class="n">D</span><span class="p">]</span>
+                          <span class="k">for</span> <span class="n">ray</span> <span class="ow">in</span> <span class="n">D</span><span class="p">)</span> <span class="o">+</span>
+                     <span class="nb">list</span><span class="p">([</span><span class="n">other</span><span class="p">[</span><span class="n">x</span><span class="p">],</span> <span class="o">-</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span> <span class="ow">in</span> <span class="n">dom</span><span class="p">)]</span> <span class="o">+</span> <span class="p">[</span><span class="o">-</span><span class="n">ray</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="k">for</span> <span class="n">ray</span> <span class="ow">in</span> <span class="n">D</span><span class="p">]</span>
+                          <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">pspace</span><span class="p">),</span>
+                      <span class="n">number_type</span><span class="o">=</span><span class="s">&#39;fraction&#39;</span><span class="p">)</span>
+        <span class="n">mat</span><span class="o">.</span><span class="n">obj_type</span> <span class="o">=</span> <span class="n">LPObjType</span><span class="o">.</span><span class="n">MAX</span>
+        <span class="n">mat</span><span class="o">.</span><span class="n">obj_func</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">D</span><span class="p">)</span> <span class="o">*</span> <span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">lp</span> <span class="o">=</span> <span class="n">LinProg</span><span class="p">(</span><span class="n">mat</span><span class="p">)</span>
+        <span class="n">lp</span><span class="o">.</span><span class="n">solve</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">lp</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">LPStatusType</span><span class="o">.</span><span class="n">OPTIMAL</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">lp</span><span class="o">.</span><span class="n">obj_value</span>
+        <span class="k">elif</span> <span class="n">lp</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">LPStatusType</span><span class="o">.</span><span class="n">UNDECIDED</span><span class="p">:</span>
+            <span class="n">status</span> <span class="o">=</span> <span class="s">&quot;undecided&quot;</span>
+        <span class="k">elif</span> <span class="n">lp</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">LPStatusType</span><span class="o">.</span><span class="n">INCONSISTENT</span><span class="p">:</span>
+            <span class="n">status</span> <span class="o">=</span> <span class="s">&quot;inconsistent&quot;</span>
+        <span class="k">elif</span> <span class="n">lp</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">LPStatusType</span><span class="o">.</span><span class="n">UNBOUNDED</span><span class="p">:</span>
+            <span class="n">status</span> <span class="o">=</span> <span class="s">&quot;unbounded&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">status</span> <span class="o">=</span> <span class="s">&quot;of unknown status&quot;</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;The linear program is &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">status</span><span class="p">)</span> <span class="o">+</span> <span class="s">&#39;.&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__pow__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Upper expectation of a gamble&quot;&quot;&quot;</span>

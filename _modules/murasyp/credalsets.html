@@ -68,8 +68,8 @@
 <span class="sd">      &gt;&gt;&gt; CredalSet(set(&#39;abc&#39;))</span>
 <span class="sd">      CredalSet(set([PMFunc({&#39;a&#39;: 1}), PMFunc({&#39;b&#39;: 1}), PMFunc({&#39;c&#39;: 1})]))</span>
 
-<span class="sd">    * Lower and upper expectations can be calculated, using the ``*`` and ``**``</span>
-<span class="sd">      operators, respectively.</span>
+<span class="sd">    * Lower and upper (conditional) expectations can be calculated, using the</span>
+<span class="sd">      ``*`` and ``**`` operators, respectively.</span>
 
 <span class="sd">      &gt;&gt;&gt; p = PMFunc({&#39;a&#39;: .03, &#39;b&#39;: .07, &#39;c&#39;: .9})</span>
 <span class="sd">      &gt;&gt;&gt; q = PMFunc({&#39;a&#39;: .07, &#39;b&#39;: .03, &#39;c&#39;: .9})</span>
@@ -83,6 +83,10 @@
 <span class="sd">      Fraction(-2, 5)</span>
 <span class="sd">      &gt;&gt;&gt; K ** (f | f.support())</span>
 <span class="sd">      Fraction(2, 5)</span>
+
+<span class="sd">      .. note::</span>
+
+<span class="sd">          The domain of the gamble determines the conditioning event.</span>
 
 <span class="sd">    * They can be conditioned (each element :class:`~murasyp.massfuncs.PMFunc`</span>
 <span class="sd">      is).</span>
