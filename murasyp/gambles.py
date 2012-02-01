@@ -76,10 +76,15 @@ class Gamble(Vector):
 
         >>> Gamble({'a': 1, 'b': 3, 'c': 4}).bounds()
         (Fraction(1, 1), Fraction(4, 1))
+        >>> Gamble({}).bounds()
+        (0, 0)
 
         """
         values = self.range()
-        return (min(values), max(values))
+        if values != frozenset():
+            return (min(values), max(values))
+        else:
+            return (0, 0)
 
     def scaled_shifted(self):
         """Shifted and scaled version of the gamble
