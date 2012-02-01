@@ -7,5 +7,5 @@ def _make_rational(value):
     """Make a Fraction of acceptable input"""
     try:
         return Fraction(str(value)) # avoid float to Fraction by going to string
-    except:
+    except ValueError:
         print(repr(value) + " is not a Rational number")
