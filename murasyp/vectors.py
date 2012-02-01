@@ -63,7 +63,7 @@ class Vector(Function, Hashable):
         if isinstance(other, Set):
             return type(self)({x: self[x] for x in other})
         else:
-            raise("the argument must be a Set")
+            raise TypeError("the argument must be a Set")
 
     def mass(self):
         """Sum of the values of the vector
