@@ -122,17 +122,23 @@ class DesirSet(MutableSet):
         DesirSet(set([DiRay({'a': 1, 'c': 1, 'b': 1}, {}), ...]))
         >>> D.discard_redundant()
         >>> D
-        DesirSet(set([DiRay({'a': 1}, {}), DiRay({'b': 1}, {}), ...]))
+        DesirSet(set([DiRay({'a': 1}, {}), DiRay({'b': 1}, {}), DiRay({'c': 1}, {})]))
 
-        .. warning::
+        Because we use dirays, we can make sure we do not discard rays that do
+        not belong to the convex hull of the set of desirable gambles but that
+        do belong to its convex closure.
 
-          Does not take the second tier ray of constituent dirays into account,
-          as it should. So it may give an incorrect answer.
+        >>> D = DesirSet(set([DiRay({'b'}, {'c'}), DiRay({'a'}, {'c'}),
+        ...                   DiRay({'a': 1, 'b': 1}, {})]))
+        >>> D.discard_redundant()
+        >>> D
+        DesirSet(set([DiRay({'a': 1, 'b': 1}, {}), ...]))
 
         """
         pspace = list(self.pspace())
         D = list(self)
-        mat = Matrix(list([0] + list(ray[x] for x in pspace) for ray in D),
+        mat = Matrix(list([0] + list(ray[x] for x in pspace) +
+                                list(ray.dir[x] for x in pspace) for ray in D),
                      number_type='fraction')
         mat.rep_type = RepType.GENERATOR
         lin, red = mat.canonicalize()
