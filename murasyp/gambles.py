@@ -239,9 +239,9 @@ class DiRay(Ray):
 
     What has changed:
 
-    * The constructor has changed: it now accepts a second argument that would
-      be accepted by the :class:`~murasyp.gambles.Ray` constructor, but it need
-      not be given explicitly.
+    * The constructor has changed: it now accepts a second argument acceptable
+      to the :class:`~murasyp.gambles.Ray` constructor, but it need not be
+      given explicitly.
 
       >>> DiRay({'a', 'b'}, {'a', 'c'})
       DiRay({'a': 1, 'b': 1}, {'a': 1, 'c': 1})
