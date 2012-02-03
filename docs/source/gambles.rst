@@ -12,7 +12,17 @@ Gambles
 
 .. autoclass:: Gamble
 
+Origin
+------
+
+.. autoclass:: Origin
+
 Rays
 ----
 
 .. autoclass:: Ray
+
+DiRays
+------
+
+.. autoclass:: DiRay

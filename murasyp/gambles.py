@@ -200,3 +200,82 @@ class Ray(Gamble):
         return Gamble(self) / other
 
     __rmul__ = __mul__
+
+
+class Origin(Gamble):
+    """The origin is a zero gamble
+
+    This class derives from :class:`~murasyp.gambles.Gamble`, so its methods
+    apply here as well.
+
+    What has changed:
+
+    * Its constructor does not accept any arguments, because only the zero
+      gamble is created.
+
+      >>> o = Origin()
+      >>> o['a']
+      0
+      >>> o[50]
+      0
+      >>> o["any valid argument"]
+      0
+      >>> Origin({'a'})
+      Traceback (most recent call last):
+        ...
+      TypeError: __init__() takes exactly 1 argument (2 given)
+
+
+    """
+    def __init__(self):
+        """Create an origin"""
+        Gamble.__init__(self, {})
+
+class DiRay(Ray):
+    """Dirays are two-tier lexicographical rays
+
+    This class derives from :class:`~murasyp.gambles.Ray`, so its
+    methods apply here as well.
+
+    What has changed:
+
+    * The constructor has changed: it now accepts a second argument that would
+      be accepted by the :class:`~murasyp.gambles.Ray` constructor, but it need
+      not be given explicitly.
+
+      >>> DiRay({'a', 'b'}, {'a', 'c'})
+      DiRay({'a': 1, 'b': 1}, {'a': 1, 'c': 1})
+      >>> DiRay({'a', 'b'})
+      DiRay({'a': 1, 'b': 1}, {})
+      >>> DiRay({'a', 'b'}, {})
+      DiRay({'a': 1, 'b': 1}, {})
+
+    * The second tier ray can be accessed through the `dir` variable.
+
+      >>> DiRay({'a', 'b'}, {'a', 'c'}).dir
+      Ray({'a': 1, 'c': 1})
+      >>> DiRay({'a', 'b'}).dir
+      Origin({})
+
+    """
+    def __init__(self, data, dir_data={}):
+        """Create a diray"""
+        Ray.__init__(self, data)
+        if dir_data == {}:
+            self.dir = Origin()
+        else:
+            self.dir = Ray(dir_data)
+
+    def __repr__(self):
+        """Return a readable string representation"""
+        return (type(self).__name__ + '({'
+                + ', '.join(repr(arg) + ': '
+                         + (repr(str(val)) if '/' in str(val) else str(val))
+                         for arg, val in self._mapping.iteritems())
+                + '}, {'
+                + ', '.join(repr(arg) + ': '
+                         + (repr(str(val)) if '/' in str(val) else str(val))
+                         for arg, val in self.dir._mapping.iteritems())
+                + '})')
+
+    __str__ = lambda self: str((self._mapping, self.dir._mapping))
