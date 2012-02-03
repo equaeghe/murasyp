@@ -225,11 +225,12 @@ class DesirSet(MutableSet):
 
           :rtype: :class:`bool`
 
-        We solve a feasibility (linear programming) problem: If we can find
-        a vector :math:`\lambda\in(\mathbb{R}_{\geq0})^{\mathcal{D}}`
-        such that :math:`\sum_{f\in\mathcal{D}}\lambda_f\cdot f\leq-1`,
-        then the set of desirable gambles :math:`\mathcal{D}`
-        incurs sure loss.
+        We solve a linear programming feasibility problem:
+        If we can find a vector
+        :math:`\lambda\in(\mathbb{R}_{\geq0})^{\mathcal{D}}`
+        such that :math:`\sum_{g\in\mathcal{D}}\lambda_g\cdot g\leq-1`,
+        then the set of desirable gambles :math:`\mathcal{D}` incurs sure loss,
+        otherwise it avoids sure loss.
 
         >>> D = DesirSet(set('abc'))
         >>> D.add({'a': -1, 'b': -1, 'c': 1})
@@ -256,15 +257,21 @@ class DesirSet(MutableSet):
 
           :rtype: :class:`bool`
 
-        We solve a feasibility (linear programming) problem:
-        If we can find a vector :math:`(\lambda,\\tau)
+        We solve a feasibility problem:
+        Let :math:`I_\omega` be the ray corresponding to the :math:`\omega`-axis
+        and :math:`g'` the second tier part of :math:`g`.
+        If there is a vector :math:`(\lambda,\\tau)
         \in(\mathbb{R}_{\geq0})^{\mathcal{D}\\times\Omega}` such that
-        :math:`\sum_{f\in\mathcal{D}}\lambda_f\cdot f
-        \leq-\sum_{\omega\in\Omega}\\tau_\omega\cdot I_{\omega}`
-        and :math:`\sum_{\omega\in\Omega}\\tau_\omega\geq1`,
-        where :math:`I_\omega` is the ray corresponding to
-        the :math:`\omega`-axis, then the set of desirable gambles
-        :math:`\mathcal{D}` incurs partial loss.
+        :math:`\sum_{g\in\mathcal{D}}\lambda_g\cdot g
+        \leq-\sum_{\omega\in\Omega}\\tau_\omega\cdot I_{\omega}`,
+        :math:`\sum_{\omega\in\Omega}\\tau_\omega\geq1`, and
+        :math:`\sum_{g\in\mathcal{D}}\lambda_g\cdot g'(\omega)\leq0` for
+        :math:`\omega` such that :math:`\\tau_\omega=0`, then the set of
+        desirable gambles :math:`\mathcal{D}` incurs partial loss.
+
+        This problem can be reformulated as an iteration of *linear
+        programming* optimization problems: **TODO**
+        (Current implementation does not belong to this explanation!)
 
         >>> D = DesirSet(set('abc'))
         >>> D.add({'a': -1, 'b': -1, 'c': 1})
