@@ -108,6 +108,8 @@ of its domain and a specified <a class="reference external" href="http://docs.py
 </div></blockquote>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Gamble</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">})</span><span class="o">.</span><span class="n">bounds</span><span class="p">()</span>
 <span class="go">(Fraction(1, 1), Fraction(4, 1))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Gamble</span><span class="p">({})</span><span class="o">.</span><span class="n">bounds</span><span class="p">()</span>
+<span class="go">(0, 0)</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -195,6 +197,36 @@ gamble <img class="math" src="_images/math/bb2c93730dbb48558bb3c4738c956c4e8f816
 </dd></dl>
 
 </div>
+<div class="section" id="origin">
+<h2>Origin<a class="headerlink" href="#origin" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="murasyp.gambles.Origin">
+<em class="property">class </em><tt class="descclassname">murasyp.gambles.</tt><tt class="descname">Origin</tt><a class="reference internal" href="_modules/murasyp/gambles.html#Origin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#murasyp.gambles.Origin" title="Permalink to this definition">¶</a></dt>
+<dd><p>The origin is a zero gamble</p>
+<p>This class derives from <a class="reference internal" href="#murasyp.gambles.Gamble" title="murasyp.gambles.Gamble"><tt class="xref py py-class docutils literal"><span class="pre">Gamble</span></tt></a>, so its methods
+apply here as well.</p>
+<p>What has changed:</p>
+<ul>
+<li><p class="first">Its constructor does not accept any arguments, because only the zero
+gamble is created.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">o</span> <span class="o">=</span> <span class="n">Origin</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">o</span><span class="p">[</span><span class="s">&#39;a&#39;</span><span class="p">]</span>
+<span class="go">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">o</span><span class="p">[</span><span class="mi">50</span><span class="p">]</span>
+<span class="go">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">o</span><span class="p">[</span><span class="s">&quot;any valid argument&quot;</span><span class="p">]</span>
+<span class="go">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Origin</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">})</span>
+<span class="gt">Traceback (most recent call last):</span>
+  <span class="c">...</span>
+<span class="gr">TypeError</span>: <span class="n">__init__() takes exactly 1 argument (2 given)</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</dd></dl>
+
+</div>
 <div class="section" id="rays">
 <h2>Rays<a class="headerlink" href="#rays" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
@@ -228,6 +260,40 @@ apply here as well.</p>
 </dd></dl>
 
 </div>
+<div class="section" id="dirays">
+<h2>DiRays<a class="headerlink" href="#dirays" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="murasyp.gambles.DiRay">
+<em class="property">class </em><tt class="descclassname">murasyp.gambles.</tt><tt class="descname">DiRay</tt><big>(</big><em>data</em>, <em>dir_data={}</em><big>)</big><a class="reference internal" href="_modules/murasyp/gambles.html#DiRay"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#murasyp.gambles.DiRay" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dirays are two-tier lexicographical rays</p>
+<p>This class derives from <a class="reference internal" href="#murasyp.gambles.Ray" title="murasyp.gambles.Ray"><tt class="xref py py-class docutils literal"><span class="pre">Ray</span></tt></a>, so its
+methods apply here as well.</p>
+<p>What has changed:</p>
+<ul>
+<li><p class="first">The constructor has changed: it now accepts a second argument that would
+be accepted by the <a class="reference internal" href="#murasyp.gambles.Ray" title="murasyp.gambles.Ray"><tt class="xref py py-class docutils literal"><span class="pre">Ray</span></tt></a> constructor, but it need
+not be given explicitly.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">DiRay</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">},</span> <span class="p">{</span><span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">})</span>
+<span class="go">DiRay({&#39;a&#39;: 1, &#39;b&#39;: 1}, {&#39;a&#39;: 1, &#39;c&#39;: 1})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">DiRay</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">})</span>
+<span class="go">DiRay({&#39;a&#39;: 1, &#39;b&#39;: 1}, {})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">DiRay</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">},</span> <span class="p">{})</span>
+<span class="go">DiRay({&#39;a&#39;: 1, &#39;b&#39;: 1}, {})</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">The second tier ray can be accessed through the <cite>dir</cite> variable.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">DiRay</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">},</span> <span class="p">{</span><span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">})</span><span class="o">.</span><span class="n">dir</span>
+<span class="go">Ray({&#39;a&#39;: 1, &#39;c&#39;: 1})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">DiRay</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">})</span><span class="o">.</span><span class="n">dir</span>
+<span class="go">Origin({})</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</dd></dl>
+
+</div>
 </div>
 
 
@@ -240,7 +306,9 @@ apply here as well.</p>
   <ul>
 <li><a class="reference internal" href="#">Gambles &amp; Rays</a><ul>
 <li><a class="reference internal" href="#gambles">Gambles</a></li>
+<li><a class="reference internal" href="#origin">Origin</a></li>
 <li><a class="reference internal" href="#rays">Rays</a></li>
+<li><a class="reference internal" href="#dirays">DiRays</a></li>
 </ul>
 </li>
 </ul>
