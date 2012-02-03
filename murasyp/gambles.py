@@ -167,7 +167,7 @@ class Ray(Gamble):
       >>> Ray(r * r)
       Ray({'a': '1/4', 'b': 1})
 
-    .. warning:
+    .. warning::
 
       Currently, ray addition incorrectly returns rays:
 
@@ -262,7 +262,10 @@ class DiRay(Ray):
         """Create a diray"""
         Ray.__init__(self, data)
         if dir_data == {}:
-            self.dir = Origin()
+            if isinstance(data, DiRay):
+                self.dir = data.dir
+            else:
+                self.dir = Origin()
         else:
             self.dir = Ray(dir_data)
 

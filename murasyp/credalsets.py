@@ -190,15 +190,20 @@ class CredalSet(MutableSet):
             self.discard(K[i])
 
     def get_desir(self):
-        """Generate the equivalent set of desirable gambles
+        """Generate the corresponding closed set of desirable gambles
 
-          :returns: the set of desirable gambles that is equivalent as an
+          :returns: the set of desirable gambles that corresponds as an
             uncertainty model
           :rtype: :class:`~murasyp.desirs.DesirSet`
 
         >>> CredalSet(set([PMFunc({'a', 'b'}), PMFunc({'c', 'b'}),
         ...                PMFunc({'a'}), PMFunc({'c'})])).get_desir()
-        DesirSet(set([Ray({'a': 1}), Ray({'b': 1}), Ray({'c': 1}), Ray({'a': 1, 'c': 1, 'b': -1})]))
+        DesirSet(set([DiRay({'a': 1}, {}), DiRay({'b': 1}, {}), DiRay({'c': 1}, {}), DiRay({'a': 1, 'c': 1, 'b': -1}, {})]))
+
+        .. warning::
+
+          Does not generate second tier ray of constituent dirays, as it should.
+          So technically speaking, it gives an incorrect answer.
 
         """
         pspace = list(self.pspace())

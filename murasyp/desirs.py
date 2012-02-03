@@ -1,32 +1,29 @@
 from collections import Set, MutableSet, Mapping
 from cdd import Matrix, LPObjType, LinProg, LPStatusType, RepType, Polyhedron
 from murasyp import _make_rational
-from murasyp.gambles import Gamble, Ray
+from murasyp.gambles import Gamble, Ray, DiRay
 from murasyp.massfuncs import PMFunc
 
 class DesirSet(MutableSet):
-    """A mutable set of rays
+    """A mutable set of dirays
 
-      :type data: a :class:`~collections.Set` of :class:`~collections.Mapping`,
-          each of which can be normalized to a :class:`~murasyp.gambles.Ray`,
-          i.e., it must be nonconstant.
+      :type data: a :class:`~collections.Set` of objects accepted by the
+        :class:`~murasyp.gambles.DiRay` constructor.
 
     Features:
 
-    * There is an alternate constructor. If `data` is a
-      :class:`~collections.Set` without :class:`~collections.Mapping`-members,
-      then a relative set of desirable gambles is generated.
+    * There is alternative constructor that accepts possibility spaces as well:
 
       >>> DesirSet(set('abc'))
-      DesirSet(set([Ray({'a': 1}), Ray({'b': 1}), Ray({'c': 1})]))
+      DesirSet(set([DiRay({'a': 1}, {}), DiRay({'b': 1}, {}), ...]))
 
     * Lower and upper (conditional) expectations can be calculated, using the
       ``*`` and ``**`` operators, respectively.
 
-      >>> D = DesirSet(set([Ray({'a': -1, 'c': '7/90'}),
-      ...                   Ray({'a': 1, 'c': '-1/30'}),
-      ...                   Ray({'a': -1, 'c': '1/9', 'b': -1}),
-      ...                   Ray({'a': 1, 'c': '-1/9', 'b': 1})]))
+      >>> D = DesirSet(set([Gamble({'a': -1, 'c': '7/90'}),
+      ...                   Gamble({'a': 1, 'c': '-1/30'}),
+      ...                   Gamble({'a': -1, 'c': '1/9', 'b': -1}),
+      ...                   Gamble({'a': 1, 'c': '-1/9', 'b': 1})]))
       >>> f = Gamble({'a': -1, 'b': 1, 'c': 0})
       >>> D * f
       Fraction(-1, 25)
@@ -41,32 +38,28 @@ class DesirSet(MutableSet):
 
         The domain of the gamble determines the conditioning event.
 
+
       .. warning::
 
-        These operations are not dependable when dealing with a set of
-        almost desirable gambles.
+        Does not take the second tier ray of constituent dirays into account,
+        as it should. So it may give an incorrect answer.
 
     """
     def __init__(self, data=set([])):
         """Create a set of desirable gambles"""
         if isinstance(data, Set):
-            are_mappings = [isinstance(elem, Mapping) for elem in data]
-            if all(are_mappings):
-                self._set = set(Ray(mapping) for mapping in data)
-            elif not any(are_mappings):
-                self._set = set(Ray({x}) for x in data) # vacuous
-            else:
-                raise TypeError("either all or none of the elements of the "
-                                + "specified Set " + str(data) + "must be "
-                                + "Mappings")
+            try:
+                self._set = set(DiRay(element) for element in data)
+            except:
+                self._set = set(DiRay({element}) for element in data)
         else:
             raise TypeError("specify a Set instead of a "
                             + type(data).__name__)
 
     def add(self, data):
-        """Add a ray to the set of desirable gambles
+        """Add a diray to the set of desirable gambles
 
-          :type data: arguments accepted by the :class:`~murasyp.gambles.Ray`
+          :type data: arguments accepted by the :class:`~murasyp.gambles.DiRay`
             constructor
 
         >>> D = DesirSet()
@@ -74,26 +67,26 @@ class DesirSet(MutableSet):
         DesirSet(set([]))
         >>> D.add({'a': -.06, 'b': .14, 'c': 1.8, 'd': 0})
         >>> D
-        DesirSet(set([Ray({'a': '-1/30', 'c': 1, 'b': '7/90'})]))
+        DesirSet(set([DiRay({'a': '-1/30', 'c': 1, 'b': '7/90'}, {})]))
 
         """
-        self._set.add(Ray(data))
+        self._set.add(DiRay(data))
 
     def discard(self, data):
-        """Remove a ray from the credal set
+        """Remove a diray from the credal set
 
-          :type data: arguments accepted by the :class:`~murasyp.gambles.Ray`
+          :type data: arguments accepted by the :class:`~murasyp.gambles.DiRay`
             constructor
 
         >>> D = DesirSet({'a','b'})
         >>> D
-        DesirSet(set([Ray({'a': 1}), Ray({'b': 1})]))
+        DesirSet(set([DiRay({'a': 1}, {}), DiRay({'b': 1}, {})]))
         >>> D.discard(Ray({'a'}))
         >>> D
-        DesirSet(set([Ray({'b': 1})]))
+        DesirSet(set([DiRay({'b': 1}, {})]))
 
         """
-        self._set.discard(Ray(data))
+        self._set.discard(DiRay(data))
 
     __len__ = lambda self: self._set.__len__()
     __iter__ = lambda self: self._set.__iter__()
@@ -104,7 +97,7 @@ class DesirSet(MutableSet):
         """The possibility space of the set of desirable gambles
 
           :returns: the possibility space of the set of desirable gambles, i.e.,
-            the union of the domains of the rays it contains
+            the union of the domains of the dirays it contains
           :rtype: :class:`frozenset`
 
         >>> r = Ray({'a': .03, 'b': -.07})
@@ -114,7 +107,8 @@ class DesirSet(MutableSet):
         frozenset(['a', 'c', 'b'])
 
         """
-        return frozenset.union(*(ray.domain() for ray in self))
+        return frozenset.union(*(diray.domain() | diray.dir.domain()
+                                 for diray in self))
 
     def discard_redundant(self):
         """Remove redundant elements from the set of desirable gambles
@@ -125,10 +119,15 @@ class DesirSet(MutableSet):
         >>> D = DesirSet(set('abc'))
         >>> D.add({'a': 1, 'b': 1, 'c': 1})
         >>> D
-        DesirSet(set([Ray({'a': 1, 'c': 1, 'b': 1}), ...]))
+        DesirSet(set([DiRay({'a': 1, 'c': 1, 'b': 1}, {}), ...]))
         >>> D.discard_redundant()
         >>> D
-        DesirSet(set([Ray({'a': 1}), Ray({'b': 1}), Ray({'c': 1})]))
+        DesirSet(set([DiRay({'a': 1}, {}), DiRay({'b': 1}, {}), ...]))
+
+        .. warning::
+
+          Does not take the second tier ray of constituent dirays into account,
+          as it should. So it may give an incorrect answer.
 
         """
         pspace = list(self.pspace())
@@ -144,65 +143,57 @@ class DesirSet(MutableSet):
         """Set the lower probability/prevision (expectation) of an event/gamble
 
           :arg data: the gamble for which a probability/prevision value is given
-          :type data: arguments accepted by the :class:`~murasyp.gambles.Ray`
+          :type data: arguments accepted by the :class:`~murasyp.gambles.Gamble`
             constructor
           :arg val: the probability/prevision value
           :type val: a representation of :class:`~numbers.Real`
 
-        The marginal gamble corresponing to the prevision specification is
+        The nontrivial diray corresponing to the prevision specification is
         calculated and added to the set of desirable gambles.
 
         >>> D = DesirSet()
         >>> D.set_lower_pr(Gamble({'a', 'b'}) | {'a', 'b', 'c'}, .4)
         >>> D
-        DesirSet(set([Ray({'a': 1, 'c': '-2/3', 'b': 1})]))
+        DesirSet(set([DiRay({'a': 1, 'c': '-2/3', 'b': 1}, {'a': 1, 'c': 1, 'b': 1})]))
 
         .. note::
 
           The domain of the input gamble determines the conditioning event.
 
-        .. warning::
-
-          The set of desirable gambles becomes a set of *almost* desirable
-          gambles.
-
         """
-        self.add(Gamble(data) - _make_rational(val))
+        gamble = Gamble(data)
+        self.add(DiRay(gamble - _make_rational(val), gamble.domain()))
 
     def set_upper_pr(self, data, val):
         """Set the upper probability/prevision (expectation) of an event/gamble
 
           :arg data: the gamble for which a probability/prevision value is given
-          :type data: arguments accepted by the :class:`~murasyp.gambles.Ray`
+          :type data: arguments accepted by the :class:`~murasyp.gambles.Gamble`
             constructor
           :arg val: the probability/prevision value
           :type val: a representation of :class:`~numbers.Real`
 
-        The marginal gamble corresponing to the prevision specification is
+        The nontrivial diray corresponing to the prevision specification is
         calculated and added to the set of desirable gambles.
 
         >>> D = DesirSet()
         >>> D.set_upper_pr(Gamble({'a', 'b'}) | {'a', 'b', 'c'}, .4)
         >>> D
-        DesirSet(set([Ray({'a': -1, 'c': '2/3', 'b': -1})]))
+        DesirSet(set([DiRay({'a': -1, 'c': '2/3', 'b': -1}, {'a': 1, 'c': 1, 'b': 1})]))
 
         .. note::
 
           The domain of the input gamble determines the conditioning event.
 
-        .. warning::
-
-          The set of desirable gambles becomes a set of *almost* desirable
-          gambles.
-
         """
-        self.add(_make_rational(val) - Gamble(data))
+        gamble = Gamble(data)
+        self.add(DiRay(_make_rational(val) - gamble, gamble.domain()))
 
     def set_pr(self, data, val):
         """Set the probability/prevision (expectation) of an event/gamble
 
           :arg data: the gamble for which a probability/prevision value is given
-          :type data: arguments accepted by the :class:`~murasyp.gambles.Ray`
+          :type data: arguments accepted by the :class:`~murasyp.gambles.Gamble`
             constructor
           :arg val: the probability/prevision value
           :type val: a representation of :class:`~numbers.Real`
@@ -213,16 +204,11 @@ class DesirSet(MutableSet):
         >>> D = DesirSet()
         >>> D.set_pr(Gamble({'a', 'b'}) | {'a', 'b', 'c'}, .4)
         >>> D
-        DesirSet(set([Ray({'a': -1, 'c': '2/3', 'b': -1}), Ray({'a': 1, 'c': '-2/3', 'b': 1})]))
+        DesirSet(set([DiRay({'a': -1, 'c': '2/3', 'b': -1}, {'a': 1, 'c': 1, 'b': 1}), DiRay({'a': 1, 'c': '-2/3', 'b': 1}, {'a': 1, 'c': 1, 'b': 1})]))
 
         .. note::
 
           The domain of the input gamble determines the conditioning event.
-
-        .. warning::
-
-          The set of desirable gambles becomes a set of *almost* desirable
-          gambles.
 
         """
         self.set_lower_pr(data, val)
@@ -282,6 +268,11 @@ class DesirSet(MutableSet):
         >>> D.apl()
         False
 
+        .. warning::
+
+          Does not take the second tier ray of constituent dirays into account,
+          as it should. So it may give an incorrect answer.
+
         """
         pspace = list(self.pspace())
         D = list(self)
@@ -303,10 +294,6 @@ class DesirSet(MutableSet):
         if not isinstance(other, Gamble):
             raise TypeError(str(other) + " is not a gamble")
         dom = other.domain()
-        pspace = self.pspace()
-        #if not (dom <= pspace):
-            #raise ValueError("The gamble's domain (conditioning event) " +
-                             #"is not a subset of the possibility space")
         pspace = list(self.pspace())
         D = list(self)
         mat = Matrix(list([0, 0] + [int(oray == ray) for oray in D]
@@ -335,15 +322,21 @@ class DesirSet(MutableSet):
         return - self.__mul__(- other)
 
     def get_credal(self):
-        """Generate the equivalent credal set
+        """Generate the corresponding (closed) credal set
 
-          :returns: the credal set that is equivalent as an uncertainty model
+          :returns: the credal set that corresponds as an uncertainty model
           :rtype: :class:`~murasyp.credalsets.CredalSet`
 
         >>> D = DesirSet(set('abc'))
         >>> D.set_lower_pr({'a': 1, 'b': 0, 'c': 1}, .5)
         >>> D.get_credal()
         CredalSet(set([PMFunc({'a': '1/2', 'b': '1/2'}), PMFunc({'c': '1/2', 'b': '1/2'}), ...
+
+        .. warning::
+
+          We can only express closed credal sets currently.
+          So therefore we currently do not take the second tier ray of
+          constituent dirays into account.
 
         """
         pspace = list(self.pspace())
