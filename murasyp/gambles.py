@@ -167,6 +167,16 @@ class Ray(Gamble):
       >>> Ray(r * r)
       Ray({'a': '1/4', 'b': 1})
 
+    .. warning:
+
+      Currently, ray addition incorrectly returns rays:
+
+      >>> r = Ray({'b', 'c'})
+      >>> r + r
+      Ray({'c': 1, 'b': 1})
+      >>> 2 * r
+      Gamble({'c': 2, 'b': 2})
+
     """
 
     def __init__(self, data):
