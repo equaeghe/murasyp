@@ -269,8 +269,36 @@ class DesirSet(MutableSet):
         :math:`\omega` such that :math:`\\tau_\omega=0`, then the set of
         desirable gambles :math:`\mathcal{D}` incurs partial loss.
 
-        This problem can be reformulated as an iteration of *linear
-        programming* optimization problems: **TODO**
+        This problem can be solved by solving an iteration of *linear
+        programming* optimization problems:
+        Assume that we know no loss is possible on a subset :math:`A_i` of the
+        possibility space :math:`\Omega`.
+        We therefore check whether loss is possible its complement, or whether
+        we need to focus on a smaller set :math:`A_{i+1}`.
+        To do this, we try to find the vector :math:`(\lambda,\\tau)
+        \in(\mathbb{R}_{\geq0})^{\mathcal{D}}\\times[0,1]^{\Omega\setminus A_i}`
+        that maximizes
+        :math:`\sum_{\omega\in\Omega\setminus A_i}\\tau_\omega` subject to
+
+        .. math::
+
+          \\textstyle\\forall\omega\in\Omega\setminus A_i:
+          \sum_{g\in\mathcal{D}}\lambda_g\cdot g(\omega) \leq -\sum_{\omega\in\Omega\setminus A_i}\\tau_\omega\cdot I_{\omega}(\omega)
+
+        and
+
+        .. math::
+
+          \\textstyle\\forall\omega\in A_i:
+          \sum_{g\in\mathcal{D}}\lambda_g\cdot g'(\omega)\leq0.
+
+        In case :math:`\\tau=1`, then :math:`\mathcal{D}` incurs partial loss,
+        otherwise we set
+        :math:`A_{i+1}=A_i\cup\{\omega\in\Omega\setminus A_i: \\tau_\omega=0\}`.
+        In case :math:`A_{i+1}=\Omega`, then :math:`\mathcal{D}` avoids
+        partial loss, otherwise, we go to the next linear program
+
+        **TODO**
         (Current implementation does not belong to this explanation!)
 
         >>> D = DesirSet(set('abc'))
