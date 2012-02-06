@@ -38,7 +38,6 @@ class DesirSet(MutableSet):
 
         The domain of the gamble determines the conditioning event.
 
-
       .. warning::
 
         Does not take the second tier ray of constituent dirays into account,
@@ -257,46 +256,40 @@ class DesirSet(MutableSet):
 
           :rtype: :class:`bool`
 
-        We solve a feasibility problem:
-        Let :math:`I_\omega` be the ray corresponding to the :math:`\omega`-axis
-        and :math:`g'` the second tier part of :math:`g`.
+        We have to solve a feasibility problem:
+        Let :math:`\Omega` denote the possibility space, :math:`I_\omega` the
+        ray corresponding to the :math:`\omega`-axis, and :math:`g'` the second
+        tier part of :math:`g`.
         If there is a vector :math:`(\lambda,\\tau)
         \in(\mathbb{R}_{\geq0})^{\mathcal{D}\\times\Omega}` such that
+        :math:`\sum_{\omega\in\Omega}\\tau_\omega\geq1`,
         :math:`\sum_{g\in\mathcal{D}}\lambda_g\cdot g
-        \leq-\sum_{\omega\in\Omega}\\tau_\omega\cdot I_{\omega}`,
-        :math:`\sum_{\omega\in\Omega}\\tau_\omega\geq1`, and
+        \leq-\sum_{\omega\in\Omega}\\tau_\omega\cdot I_{\omega}`, and
         :math:`\sum_{g\in\mathcal{D}}\lambda_g\cdot g'(\omega)\leq0` for
         :math:`\omega` such that :math:`\\tau_\omega=0`, then the set of
         desirable gambles :math:`\mathcal{D}` incurs partial loss.
 
         This problem can be solved by solving an iteration of *linear
-        programming* optimization problems:
-        Assume that we know no loss is possible on a subset :math:`A_i` of the
-        possibility space :math:`\Omega`.
-        We therefore check whether loss is possible its complement, or whether
-        we need to focus on a smaller set :math:`A_{i+1}`.
+        programming* optimization problems (cf. [WPV2004]_, Algorithm 2):
+        Assume that no partial loss is possible with nonzero values on a
+        subset :math:`A_i` of :math:`\Omega`.
+        We therefore check whether partial loss is possible with strictly
+        negative values on its complement, or whether we need to focus on a
+        smaller set :math:`A_{i+1}`.
         To do this, we try to find the vector :math:`(\lambda,\\tau)
         \in(\mathbb{R}_{\geq0})^{\mathcal{D}}\\times[0,1]^{\Omega\setminus A_i}`
         that maximizes
         :math:`\sum_{\omega\in\Omega\setminus A_i}\\tau_\omega` subject to
-
-        .. math::
-
-          \\textstyle\\forall\omega\in\Omega\setminus A_i:
-          \sum_{g\in\mathcal{D}}\lambda_g\cdot g(\omega) \leq -\sum_{\omega\in\Omega\setminus A_i}\\tau_\omega\cdot I_{\omega}(\omega)
-
-        and
-
-        .. math::
-
-          \\textstyle\\forall\omega\in A_i:
-          \sum_{g\in\mathcal{D}}\lambda_g\cdot g'(\omega)\leq0.
-
+        :math:`\sum_{g\in\mathcal{D}}\lambda_g\cdot g \leq
+        -\sum_{\omega\in\Omega\setminus A_i}\\tau_\omega\cdot I_{\omega}` and
+        :math:`\sum_{g\in\mathcal{D}}\lambda_g\cdot g'(\omega)\leq0` for all
+        :math:`\omega` in :math:`A_i`.
         In case :math:`\\tau=1`, then :math:`\mathcal{D}` incurs partial loss,
         otherwise we set
         :math:`A_{i+1}=A_i\cup\{\omega\in\Omega\setminus A_i: \\tau_\omega=0\}`.
         In case :math:`A_{i+1}=\Omega`, then :math:`\mathcal{D}` avoids
-        partial loss, otherwise, we go to the next linear program
+        partial loss, otherwise, we go to the next linear program in the
+        iteration.
 
         **TODO**
         (Current implementation does not belong to this explanation!)

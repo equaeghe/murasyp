@@ -13,6 +13,7 @@ Welcome to murasyp's documentation!
   :maxdepth: 2
 
   about
+  references
 
 Main classes
 ------------
