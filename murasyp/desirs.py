@@ -240,6 +240,12 @@ class DesirSet(MutableSet):
         >>> D.asl()
         False
 
+        .. warning::
+
+            We assume that the second-tier ray of the constituent dirays is
+            nonnegative.
+            There are no guarantees in case this assumption is violated.
+
         """
         pspace = list(self.pspace())
         D = list(self)
@@ -271,28 +277,23 @@ class DesirSet(MutableSet):
 
         This problem can be solved by solving an iteration of *linear
         programming* optimization problems (cf. [WPV2004]_, Algorithm 2):
-        Assume that no partial loss is possible with nonzero values on a
+        Assume that no partial loss is possible with nonzero values outside a
         subset :math:`A_i` of :math:`\Omega`.
         We therefore check whether partial loss is possible with strictly
-        negative values on its complement, or whether we need to focus on a
+        negative values on :math:`A_i`, or whether we need to focus on a
         smaller set :math:`A_{i+1}`.
         To do this, we try to find the vector :math:`(\lambda,\\tau)
-        \in(\mathbb{R}_{\geq0})^{\mathcal{D}}\\times[0,1]^{\Omega\setminus A_i}`
-        that maximizes
-        :math:`\sum_{\omega\in\Omega\setminus A_i}\\tau_\omega` subject to
+        \in(\mathbb{R}_{\geq0})^{\mathcal{D}}\\times[0,1]^{A_i}`
+        that maximizes :math:`\sum_{\omega\in A_i}\\tau_\omega` subject to
         :math:`\sum_{g\in\mathcal{D}}\lambda_g\cdot g \leq
-        -\sum_{\omega\in\Omega\setminus A_i}\\tau_\omega\cdot I_{\omega}` and
+        -\sum_{\omega\in A_i}\\tau_\omega\cdot I_{\omega}` and
         :math:`\sum_{g\in\mathcal{D}}\lambda_g\cdot g'(\omega)\leq0` for all
-        :math:`\omega` in :math:`A_i`.
+        :math:`\omega` in :math:`\Omega\setminus A_i`.
         In case :math:`\\tau=1`, then :math:`\mathcal{D}` incurs partial loss,
-        otherwise we set
-        :math:`A_{i+1}=A_i\cup\{\omega\in\Omega\setminus A_i: \\tau_\omega=0\}`.
-        In case :math:`A_{i+1}=\Omega`, then :math:`\mathcal{D}` avoids
+        otherwise we set :math:`A_{i+1}=\{\omega\in A_i: \\tau_\omega=1\}`.
+        In case :math:`A_{i+1}=\emptyset`, then :math:`\mathcal{D}` avoids
         partial loss, otherwise, we go to the next linear program in the
         iteration.
-
-        **TODO**
-        (Current implementation does not belong to this explanation!)
 
         >>> D = DesirSet(set('abc'))
         >>> D.add({'a': -1, 'b': -1, 'c': 1})
@@ -302,26 +303,55 @@ class DesirSet(MutableSet):
         >>> D.apl()
         False
 
+        We can deal correctly with non-closed sets of desirable gambles:
+
+        >>> D = DesirSet(set('abc'))
+        >>> D.set_upper_pr(Gamble({'a', 'b'}) | {'a', 'b', 'c'}, 0)
+        >>> D
+        DesirSet(set([DiRay({'a': -1, 'b': -1}, {'a': 1, 'c': 1, 'b': 1}), ...]))
+        >>> D.apl()
+        True
+
         .. warning::
 
-          Does not take the second tier ray of constituent dirays into account,
-          as it should. So it may give an incorrect answer.
+            We assume that the second-tier ray of the constituent dirays is
+            nonnegative.
+            There are no guarantees in case this assumption is violated.
 
         """
-        pspace = list(self.pspace())
-        D = list(self)
-        E = list(DesirSet(self.pspace()))
-        mat = Matrix(list([0] + [int(oray == ray) for oray in D]
-                              + len(E) * [0] for ray in D) +
-                     list([0] + len(D) * [0]
-                              + [int(oray == ray) for oray in E] for ray in E) +
-                     list([0] + [-ray[x] for ray in D + E] for x in pspace) +
-                     list([[-1] + len(D) * [0] + len(E) * [1]]),
-                     number_type='fraction')
-        mat.obj_type = LPObjType.MIN
-        lp = LinProg(mat)
-        lp.solve()
-        return lp.status != LPStatusType.OPTIMAL
+        pspace = self.pspace()
+        A = pspace
+        while len(A) > 0:
+            D = list(self)
+            I = list(DesirSet(A))
+            mat = Matrix([[0] + [int(oray == ray) for oray in D] + len(I) * [0]
+                          for ray in D] +
+                         [[0] + len(D) * [0] + [int(oray == ray) for oray in I]
+                          for ray in I] +
+                         [[1] + len(D) * [0] + [-int(oray == ray) for oray in I]
+                          for ray in I] +
+                         [[0] + [-ray[x] for ray in D + I]
+                          for x in pspace] +
+                         [[0] + [-ray.dir[x] for ray in D] + len(I) * [0]
+                          for x in pspace - A],
+                         number_type='fraction')
+            mat.obj_type = LPObjType.MAX
+            mat.obj_func = tuple([0] + len(D) * [0] + len(I) * [1])
+            lp = LinProg(mat)
+            lp.solve()
+            if lp.status != LPStatusType.OPTIMAL:
+                raise ValueError("No solution found for linear program. " +
+                                 "pycddlib returned status code " +
+                                 "'" + lp.status + "'.")
+            else:
+                tau = lp.primal_solution[-len(I):]
+                if not any(tau):
+                    return True
+                elif all(tau):
+                    return False
+                else:
+                    A = sum(Gamble(I[k]) for k in range(0, len(tau))
+                                         if tau[k] == 1).support()
 
     def __mul__(self, other):
         """Lower expectation of a gamble"""
