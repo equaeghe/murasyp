@@ -224,12 +224,9 @@ class DesirSet(MutableSet):
 
           :rtype: :class:`bool`
 
-        We solve a linear programming feasibility problem:
-        If we can find a vector
-        :math:`\lambda\in(\mathbb{R}_{\geq0})^{\mathcal{D}}`
-        such that :math:`\sum_{g\in\mathcal{D}}\lambda_g\cdot g\leq-1`,
-        then the set of desirable gambles :math:`\mathcal{D}` incurs sure loss,
-        otherwise it avoids sure loss.
+        A set of desirable gambles does not avoid sure loss if and only if some
+        nonnegative linear combination of desirable gambles is everywhere
+        negative.
 
         >>> D = DesirSet(set('abc'))
         >>> D.add({'a': -1, 'b': -1, 'c': 1})
@@ -245,6 +242,15 @@ class DesirSet(MutableSet):
             We assume that the second-tier ray of the constituent dirays is
             nonnegative.
             There are no guarantees in case this assumption is violated.
+
+        .. admonition:: Algorithm
+
+            We have to solve a linear programming feasibility problem:
+            If we can find a vector
+            :math:`\lambda\in(\mathbb{R}_{\geq0})^{\mathcal{D}}`
+            such that :math:`\sum_{g\in\mathcal{D}}\lambda_g\cdot g\leq-1`,
+            then the set of desirable gambles :math:`\mathcal{D}` incurs sure loss,
+            otherwise it avoids sure loss.
 
         """
         pspace = list(self.pspace())
@@ -262,38 +268,9 @@ class DesirSet(MutableSet):
 
           :rtype: :class:`bool`
 
-        We have to solve a feasibility problem:
-        Let :math:`\Omega` denote the possibility space, :math:`I_\omega` the
-        ray corresponding to the :math:`\omega`-axis, and :math:`g'` the second
-        tier part of :math:`g`.
-        If there is a vector :math:`(\lambda,\\tau)
-        \in(\mathbb{R}_{\geq0})^{\mathcal{D}\\times\Omega}` such that
-        :math:`\sum_{\omega\in\Omega}\\tau_\omega\geq1`,
-        :math:`\sum_{g\in\mathcal{D}}\lambda_g\cdot g
-        \leq-\sum_{\omega\in\Omega}\\tau_\omega\cdot I_{\omega}`, and
-        :math:`\sum_{g\in\mathcal{D}}\lambda_g\cdot g'(\omega)\leq0` for
-        :math:`\omega` such that :math:`\\tau_\omega=0`, then the set of
-        desirable gambles :math:`\mathcal{D}` incurs partial loss.
-
-        This problem can be solved by solving an iteration of *linear
-        programming* optimization problems (cf. [WPV2004]_, Algorithm 2):
-        Assume that no partial loss is possible with nonzero values outside a
-        subset :math:`A_i` of :math:`\Omega`.
-        We therefore check whether partial loss is possible with strictly
-        negative values on :math:`A_i`, or whether we need to focus on a
-        smaller set :math:`A_{i+1}`.
-        To do this, we try to find the vector :math:`(\lambda,\\tau)
-        \in(\mathbb{R}_{\geq0})^{\mathcal{D}}\\times[0,1]^{A_i}`
-        that maximizes :math:`\sum_{\omega\in A_i}\\tau_\omega` subject to
-        :math:`\sum_{g\in\mathcal{D}}\lambda_g\cdot g \leq
-        -\sum_{\omega\in A_i}\\tau_\omega\cdot I_{\omega}` and
-        :math:`\sum_{g\in\mathcal{D}}\lambda_g\cdot g'(\omega)\leq0` for all
-        :math:`\omega` in :math:`\Omega\setminus A_i`.
-        In case :math:`\\tau=1`, then :math:`\mathcal{D}` incurs partial loss,
-        otherwise we set :math:`A_{i+1}=\{\omega\in A_i: \\tau_\omega=1\}`.
-        In case :math:`A_{i+1}=\emptyset`, then :math:`\mathcal{D}` avoids
-        partial loss, otherwise, we go to the next linear program in the
-        iteration.
+        A set of desirable gambles does not avoid partial loss if and only if
+        some nonnegative linear combination of desirable gambles is everywhere
+        nonpositive and somewhere negative.
 
         >>> D = DesirSet(set('abc'))
         >>> D.add({'a': -1, 'b': -1, 'c': 1})
@@ -303,7 +280,8 @@ class DesirSet(MutableSet):
         >>> D.apl()
         False
 
-        We can deal correctly with non-closed sets of desirable gambles:
+        We can deal correctly with non-closed sets of desirable gambles, i.e.,
+        containing nontrivial dirays:
 
         >>> D = DesirSet(set('abc'))
         >>> D.set_upper_pr(Gamble({'a', 'b'}) | {'a', 'b', 'c'}, 0)
@@ -317,6 +295,41 @@ class DesirSet(MutableSet):
             We assume that the second-tier ray of the constituent dirays is
             nonnegative.
             There are no guarantees in case this assumption is violated.
+
+        .. admonition:: Algorithm
+
+            We have to solve a feasibility problem:
+            Let :math:`\Omega` denote the possibility space, :math:`I_\omega` the
+            ray corresponding to the :math:`\omega`-axis, and :math:`g'` the second
+            tier part of :math:`g`.
+            If there is a vector :math:`(\lambda,\\tau)
+            \in(\mathbb{R}_{\geq0})^{\mathcal{D}\\times\Omega}` such that
+            :math:`\sum_{\omega\in\Omega}\\tau_\omega\geq1`,
+            :math:`\sum_{g\in\mathcal{D}}\lambda_g\cdot g
+            \leq-\sum_{\omega\in\Omega}\\tau_\omega\cdot I_{\omega}`, and
+            :math:`\sum_{g\in\mathcal{D}}\lambda_g\cdot g'(\omega)\leq0` for
+            :math:`\omega` such that :math:`\\tau_\omega=0`, then the set of
+            desirable gambles :math:`\mathcal{D}` incurs partial loss.
+
+            This problem can be solved by solving an iteration of *linear
+            programming* optimization problems (cf. [WPV2004]_, Algorithm 2):
+            Assume that no partial loss is possible with nonzero values outside a
+            subset :math:`A_i` of :math:`\Omega`.
+            We therefore check whether partial loss is possible with strictly
+            negative values on :math:`A_i`, or whether we need to focus on a
+            smaller set :math:`A_{i+1}`.
+            To do this, we try to find the vector :math:`(\lambda,\\tau)
+            \in(\mathbb{R}_{\geq0})^{\mathcal{D}}\\times[0,1]^{A_i}`
+            that maximizes :math:`\sum_{\omega\in A_i}\\tau_\omega` subject to
+            :math:`\sum_{g\in\mathcal{D}}\lambda_g\cdot g \leq
+            -\sum_{\omega\in A_i}\\tau_\omega\cdot I_{\omega}` and
+            :math:`\sum_{g\in\mathcal{D}}\lambda_g\cdot g'(\omega)\leq0` for all
+            :math:`\omega` in :math:`\Omega\setminus A_i`.
+            In case :math:`\\tau=1`, then :math:`\mathcal{D}` incurs partial loss,
+            otherwise we set :math:`A_{i+1}=\{\omega\in A_i: \\tau_\omega=1\}`.
+            In case :math:`A_{i+1}=\emptyset`, then :math:`\mathcal{D}` avoids
+            partial loss, otherwise, we go to the next linear program in the
+            iteration.
 
         """
         pspace = self.pspace()
