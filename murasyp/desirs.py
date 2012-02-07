@@ -1,3 +1,5 @@
+# coding: utf-8
+
 from collections import Set, MutableSet, Mapping
 from cdd import Matrix, LPObjType, LinProg, LPStatusType, RepType, Polyhedron
 from murasyp import _make_rational
@@ -237,12 +239,6 @@ class DesirSet(MutableSet):
         >>> D.asl()
         False
 
-        .. warning::
-
-            We assume that the second-tier ray of the constituent dirays is
-            nonnegative.
-            There are no guarantees in case this assumption is violated.
-
         .. admonition:: Algorithm
 
             We have to solve a linear programming feasibility problem:
@@ -251,6 +247,10 @@ class DesirSet(MutableSet):
             such that :math:`\sum_{g\in\mathcal{D}}\lambda_g\cdot g\leq-1`,
             then the set of desirable gambles :math:`\mathcal{D}` incurs sure loss,
             otherwise it avoids sure loss.
+
+        .. note::
+
+            The second-tier ray of the constituent dirays is ignored.
 
         """
         pspace = list(self.pspace())
@@ -290,12 +290,6 @@ class DesirSet(MutableSet):
         >>> D.apl()
         True
 
-        .. warning::
-
-            We assume that the second-tier ray of the constituent dirays is
-            nonnegative.
-            There are no guarantees in case this assumption is violated.
-
         .. admonition:: Algorithm
 
             We have to solve a feasibility problem:
@@ -307,9 +301,10 @@ class DesirSet(MutableSet):
             :math:`\sum_{\omega\in\Omega}\\tau_\omega\geq1`,
             :math:`\sum_{g\in\mathcal{D}}\lambda_g\cdot g
             \leq-\sum_{\omega\in\Omega}\\tau_\omega\cdot I_{\omega}`, and
-            :math:`\sum_{g\in\mathcal{D}}\lambda_g\cdot g'(\omega)\leq0` for
-            :math:`\omega` such that :math:`\\tau_\omega=0`, then the set of
-            desirable gambles :math:`\mathcal{D}` incurs partial loss.
+            :math:`\lambda_g\cdot g'(\omega)\leq0` for
+            :math:`\omega` such that :math:`\\tau_\omega=0` and for all
+            :math:`g` in :math:`\mathcal{D}`, then the set of desirable gambles
+            :math:`\mathcal{D}` incurs partial loss.
 
             This problem can be solved by solving an iteration of *linear
             programming* optimization problems (cf. [WPV2004]_, Algorithm 2):
@@ -323,10 +318,11 @@ class DesirSet(MutableSet):
             that maximizes :math:`\sum_{\omega\in A_i}\\tau_\omega` subject to
             :math:`\sum_{g\in\mathcal{D}}\lambda_g\cdot g \leq
             -\sum_{\omega\in A_i}\\tau_\omega\cdot I_{\omega}` and
-            :math:`\sum_{g\in\mathcal{D}}\lambda_g\cdot g'(\omega)\leq0` for all
-            :math:`\omega` in :math:`\Omega\setminus A_i`.
-            In case :math:`\\tau=1`, then :math:`\mathcal{D}` incurs partial loss,
-            otherwise we set :math:`A_{i+1}=\{\omega\in A_i: \\tau_\omega=1\}`.
+            :math:`\lambda_g\cdot g'|_{\Omega\setminus A_i}\leq0` for all
+            :math:`g` in :math:`\mathcal{D}`.
+            In case :math:`\\tau=1`, then :math:`\mathcal{D}` incurs partial
+            loss, otherwise we set
+            :math:`A_{i+1}=\{\omega\in A_i: \\tau_\omega=1\}`.
             In case :math:`A_{i+1}=\emptyset`, then :math:`\mathcal{D}` avoids
             partial loss, otherwise, we go to the next linear program in the
             iteration.
@@ -338,15 +334,16 @@ class DesirSet(MutableSet):
             D = list(self)
             I = list(DesirSet(A))
             mat = Matrix([[0] + [int(oray == ray) for oray in D] + len(I) * [0]
-                          for ray in D] +
-                         [[0] + len(D) * [0] + [int(oray == ray) for oray in I]
-                          for ray in I] +
-                         [[1] + len(D) * [0] + [-int(oray == ray) for oray in I]
-                          for ray in I] +
-                         [[0] + [-ray[x] for ray in D + I]
-                          for x in pspace] +
-                         [[0] + [-ray.dir[x] for ray in D] + len(I) * [0]
-                          for x in pspace - A],
+                          for ray in D] # λ >= 0
+                       + [[0] + len(D) * [0] + [int(oray == ray) for oray in I]
+                          for ray in I] # τ >= 0
+                       + [[1] + len(D) * [0] + [-int(oray == ray) for oray in I]
+                          for ray in I] # τ <= 1
+                       + [[0] + [-ray[x] for ray in D + I]
+                          for x in pspace] # <λ,id>_D <= -<τ,id>_I
+                       + [[0] + [-ray.dir[x]*int(oray == ray) for oray in D]
+                              + len(I) * [0] # λ_g⋅g'(ω) <= 0
+                          for x in pspace - A for ray in D], # for ω s.t. τ_ω=0
                          number_type='fraction')
             mat.obj_type = LPObjType.MAX
             mat.obj_func = tuple([0] + len(D) * [0] + len(I) * [1])
