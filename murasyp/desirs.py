@@ -14,7 +14,7 @@ class DesirSet(MutableSet):
 
     Features:
 
-    * There is alternative constructor that accepts possibility spaces as well:
+    * There is an alternative constructor that accepts possibility spaces:
 
       >>> DesirSet(set('abc'))
       DesirSet(set([DiRay({'a': 1}, {}), DiRay({'b': 1}, {}), ...]))
@@ -38,12 +38,28 @@ class DesirSet(MutableSet):
 
       .. note::
 
-        The domain of the gamble determines the conditioning event.
+          The domain of the gamble determines the conditioning event.
+
+      .. admonition:: Algorithm
+
+          We have to solve an optimization problem:
+          Let :math:`\Omega` denote the possibility space and :math:`g'` the
+          second tier part of :math:`g`.
+          Maximize :math:`\mu\in\mathbb{R}` subject to
+          :math:`f|_{\mathrm{dom}f}-\mu\geq
+          \sum_{g\in\mathcal{D}}\lambda_g\cdot g|_{\mathrm{dom}f}`,
+          :math:`0\geq\sum_{g\in\mathcal{D}}
+          \lambda_g\cdot g|_{\Omega\setminus\mathrm{dom}f}`,
+          :math:`\lambda_g\cdot g'(\omega)\leq0` for
+          :math:`\omega\in\Omega\setminus\mathrm{dom}f` such that
+          :math:`\sum_{g\in\mathcal{D}}\lambda_g\cdot g(\omega)=0` and for all
+          :math:`g` in :math:`\mathcal{D}`, and with
+          :math:`\lambda\in(\mathbb{R}_{\geq0})^\mathcal{D}`.
 
       .. warning::
 
-        Does not take the second tier ray of constituent dirays into account,
-        as it should. So it may give an incorrect answer.
+          Does not take the second tier ray of constituent dirays into account,
+          as it should. So it may give an incorrect answer.
 
     """
     def __init__(self, data=set([])):
@@ -134,6 +150,11 @@ class DesirSet(MutableSet):
         >>> D.discard_redundant()
         >>> D
         DesirSet(set([DiRay({'a': 1, 'b': 1}, {}), ...]))
+
+        .. warning::
+
+            Currently, we do not deal correctly with all non-closed sets of
+            desirable gambles.
 
         """
         pspace = list(self.pspace())
