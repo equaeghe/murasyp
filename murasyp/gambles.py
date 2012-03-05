@@ -233,8 +233,7 @@ class Cone(Set, Hashable):
     def domain(self):
         """The union of the domains of the element rays
 
-          :returns: the possibility space of the cone, i.e., the union of the
-            domains of the rays it contains
+          :returns: the union of the domains of the rays it contains
           :rtype: :class:`frozenset`
 
         >>> r = Ray({'a': .03, 'b': -.07})
