@@ -20,7 +20,7 @@ class Gamble(Vector):
     * Pointwise multiplication and scalar addition & subtraction
       have been added.
 
-      >>> f = Gamble({'a': 1.1, 'b': '-1/2','c': 0})
+      >>> f = Gamble({'a': 1.1, 'b': '-1/2', 'c': 0})
       >>> g = Gamble({'b': '.6', 'c': -2, 'd': 0.0})
       >>> f * g
       Gamble({'a': 0, 'c': 0, 'b': '-3/10', 'd': 0})
