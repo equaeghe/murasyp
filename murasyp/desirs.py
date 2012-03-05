@@ -333,24 +333,23 @@ class DesirSet(MutableSet):
     def get_credal(self):
         """Generate the corresponding (closed) credal set
 
-          :returns: the credal set that corresponds as an uncertainty model
+          :returns: the (closed) credal set that corresponds as an uncertainty
+            model
           :rtype: :class:`~murasyp.credalsets.CredalSet`
 
         >>> D = DesirSet(set('abc'))
         >>> D.set_lower_pr({'a': 1, 'b': 0, 'c': 1}, .5)
         >>> D.get_credal()
-        CredalSet(set([PMFunc({'a': '1/2', 'b': '1/2'}), PMFunc({'c': '1/2', 'b': '1/2'}), ...
+        CredalSet()
 
         .. warning::
 
-          We can only express closed credal sets currently.
-          So therefore we currently do not take the second tier ray of
-          constituent dirays into account.
+          Currently, this method is broken.
 
         """
-        pspace = list(self.pspace())
-        D = list(self)
-        mat = Matrix(list([0] + list(ray[x] for x in pspace) for ray in D),
+        C = Cone().union(self) # does not work; create union method for Cone
+        pspace = C.domain()
+        mat = Matrix(list([0] + list(ray[x] for x in pspace) for ray in C),
                      number_type='fraction')
         mat.rep_type = RepType.INEQUALITY
         poly = Polyhedron(mat)
