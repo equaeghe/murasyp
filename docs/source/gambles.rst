@@ -12,11 +12,6 @@ Gambles
 
 .. autoclass:: Gamble
 
-Origin
-------
-
-.. autoclass:: Origin
-
 Rays
 ----
 

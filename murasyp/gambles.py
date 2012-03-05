@@ -143,21 +143,19 @@ class Gamble(Vector):
 
 
 class Ray(Gamble):
-    """Rays are directions in gamble space, i.e., normalized gambles
+    """Rays are the origin or directions in gamble space
 
     This class derives from :class:`~murasyp.gambles.Gamble`, so its methods
     apply here as well.
 
     What has changed:
 
-    * Its max-norm is one and its domain coincides with its support.
+    * Its domain coincides with its support and it is max-normalized.
 
       >>> Ray({'a': 5, 'b': -1, 'c': 0})
       Ray({'a': 1, 'b': '-1/5'})
       >>> Ray({'a': 0})
-      Traceback (most recent call last):
-        ...
-      ValueError: no Ray can be constructed from the identically zero Mapping {'a': 0}
+      Ray({})
 
     * Ray-arithmetic results in gambles (which can be converted to rays).
 
@@ -183,9 +181,9 @@ class Ray(Gamble):
         """Create a ray"""
         gamble = Gamble(data).normalized()
         if gamble == None:
-            raise ValueError("no Ray can be constructed from "
-                             + "the identically zero Mapping " + str(data))
-        Gamble.__init__(self, gamble | gamble.support())
+            Gamble.__init__(self, {})
+        else:
+            Gamble.__init__(self, gamble | gamble.support())
 
     def __mul__(self, other):
         """Multiplication of rays (and other types)"""
@@ -200,33 +198,3 @@ class Ray(Gamble):
         return Gamble(self) / other
 
     __rmul__ = __mul__
-
-
-class Origin(Gamble):
-    """The origin is a zero gamble
-
-    This class derives from :class:`~murasyp.gambles.Gamble`, so its methods
-    apply here as well.
-
-    What has changed:
-
-    * Its constructor does not accept any arguments, because only the zero
-      gamble is created.
-
-      >>> o = Origin()
-      >>> o['a']
-      0
-      >>> o[50]
-      0
-      >>> o["any valid argument"]
-      0
-      >>> Origin({'a'})
-      Traceback (most recent call last):
-        ...
-      TypeError: __init__() takes exactly 1 argument (2 given)
-
-
-    """
-    def __init__(self):
-        """Create an origin"""
-        Gamble.__init__(self, {})
