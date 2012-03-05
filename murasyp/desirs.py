@@ -3,14 +3,14 @@
 from collections import Set, MutableSet, Mapping
 from cdd import Matrix, LPObjType, LinProg, LPStatusType, RepType, Polyhedron
 from murasyp import _make_rational
-from murasyp.gambles import Gamble, Ray
+from murasyp.gambles import Gamble, Ray, Cone
 from murasyp.massfuncs import PMFunc
 
 class DesirSet(MutableSet):
-    """A mutable set of dirays
+    """A mutable set of cones
 
-      :type data: a :class:`~collections.Set` of :class:`~collections.Set` of
-        arguments accepted by the :class:`~murasyp.gambles.Ray` constructor.
+      :type data: a :class:`~collections.Set` of arguments accepted by the
+        :class:`~murasyp.gambles.Cone` constructor.
 
     Features:
 
@@ -50,17 +50,15 @@ class DesirSet(MutableSet):
           Currently returns possibly incorrect answer.
 
     """
-    def __init__(self, data=set([])):
+    def __init__(self, data=set()):
         """Create a set of desirable gambles"""
         if isinstance(data, Set):
             try:
-                self._set = set(frozenset(Ray(element) for element in group)
-                                for group in data)
+                self._set = {Cone(element) for element in data}
             except:
-                self._set = set(frozenset({Ray({element})}) for element in data)
+                self._set = {Cone({element}) for element in data}
         else:
-            raise TypeError("specify a Set instead of a "
-                            + type(data).__name__)
+            raise TypeError("specify a Set instead of a " + type(data).__name__)
 
     def add(self, data):
         """Add a ray group to the set of desirable gambles
