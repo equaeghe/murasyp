@@ -9,15 +9,15 @@ from murasyp.massfuncs import PMFunc
 class DesirSet(MutableSet):
     """A mutable set of dirays
 
-      :type data: a :class:`~collections.Set` of objects accepted by the
-        :class:`~murasyp.gambles.DiRay` constructor.
+      :type data: a :class:`~collections.Set` of :class:`~collections.Set` of
+        arguments accepted by the :class:`~murasyp.gambles.Ray` constructor.
 
     Features:
 
     * There is an alternative constructor that accepts possibility spaces:
 
       >>> DesirSet(set('abc'))
-      DesirSet(set([DiRay({'a': 1}, {}), DiRay({'b': 1}, {}), ...]))
+      DesirSet(set([frozenset([Ray({'b': 1})]), frozenset([Ray({'c': 1})]), frozenset([Ray({'a': 1})])]))
 
     * Lower and upper (conditional) expectations can be calculated, using the
       ``*`` and ``**`` operators, respectively.
@@ -43,67 +43,56 @@ class DesirSet(MutableSet):
       .. admonition:: Algorithm
 
           We have to solve an optimization problem:
-          Let :math:`\Omega` denote the possibility space and :math:`g'` the
-          second tier part of :math:`g`.
-          Maximize :math:`\mu\in\mathbb{R}` subject to
-          :math:`f|_{\mathrm{dom}f}-\mu\geq
-          \sum_{g\in\mathcal{D}}\lambda_g\cdot g|_{\mathrm{dom}f}`,
-          :math:`0\geq\sum_{g\in\mathcal{D}}
-          \lambda_g\cdot g|_{\Omega\setminus\mathrm{dom}f}`,
-          :math:`\lambda_g\cdot g'(\omega)\leq0` for
-          :math:`\omega\in\Omega\setminus\mathrm{dom}f` such that
-          :math:`\sum_{g\in\mathcal{D}}\lambda_g\cdot g(\omega)=0` and for all
-          :math:`g` in :math:`\mathcal{D}`, and with
-          :math:`\lambda\in(\mathbb{R}_{\geq0})^\mathcal{D}`.
+          ***todo***
 
       .. warning::
 
-          Does not take the second tier ray of constituent dirays into account,
-          as it should. So it may give an incorrect answer.
+          Currently returns possibly incorrect answer.
 
     """
     def __init__(self, data=set([])):
         """Create a set of desirable gambles"""
         if isinstance(data, Set):
             try:
-                self._set = set(DiRay(element) for element in data)
+                self._set = set(frozenset(Ray(element) for element in group)
+                                for group in data)
             except:
-                self._set = set(DiRay({element}) for element in data)
+                self._set = set(frozenset({Ray({element})}) for element in data)
         else:
             raise TypeError("specify a Set instead of a "
                             + type(data).__name__)
 
     def add(self, data):
-        """Add a diray to the set of desirable gambles
+        """Add a ray group to the set of desirable gambles
 
-          :type data: arguments accepted by the :class:`~murasyp.gambles.DiRay`
-            constructor
+          :type data: :class:`~frozenset` of arguments accepted by the
+            :class:`~murasyp.gambles.Ray` constructor
 
         >>> D = DesirSet()
         >>> D
         DesirSet(set([]))
-        >>> D.add({'a': -.06, 'b': .14, 'c': 1.8, 'd': 0})
+        >>> D.add({Gamble({'a': -.06, 'b': .14, 'c': 1.8, 'd': 0})})
         >>> D
-        DesirSet(set([DiRay({'a': '-1/30', 'c': 1, 'b': '7/90'}, {})]))
+        DesirSet(set([frozenset([Ray({'a': '-1/30', 'c': 1, 'b': '7/90'})])]))
 
         """
-        self._set.add(DiRay(data))
+        self._set.add(frozenset(Ray(element) for element in data))
 
     def discard(self, data):
-        """Remove a diray from the credal set
+        """Remove a ray group from the set of desirable gambles
 
-          :type data: arguments accepted by the :class:`~murasyp.gambles.DiRay`
-            constructor
+          :type data: :class:`~frozenset` of arguments accepted by the
+            :class:`~murasyp.gambles.Ray` constructor
 
         >>> D = DesirSet({'a','b'})
         >>> D
-        DesirSet(set([DiRay({'a': 1}, {}), DiRay({'b': 1}, {})]))
-        >>> D.discard(Ray({'a'}))
+        DesirSet(set([frozenset([Ray({'b': 1})]), frozenset([Ray({'a': 1})])]))
+        >>> D.discard({Ray({'a'})})
         >>> D
-        DesirSet(set([DiRay({'b': 1}, {})]))
+        DesirSet(set([frozenset([Ray({'b': 1})])]))
 
         """
-        self._set.discard(DiRay(data))
+        self._set.discard(frozenset(Ray(element) for element in data))
 
     __len__ = lambda self: self._set.__len__()
     __iter__ = lambda self: self._set.__iter__()
@@ -114,18 +103,18 @@ class DesirSet(MutableSet):
         """The possibility space of the set of desirable gambles
 
           :returns: the possibility space of the set of desirable gambles, i.e.,
-            the union of the domains of the dirays it contains
+            the union of the domains of the rays it contains
           :rtype: :class:`frozenset`
 
         >>> r = Ray({'a': .03, 'b': -.07})
         >>> s = Ray({'a': .07, 'c': -.03})
-        >>> D = DesirSet({r, s})
+        >>> D = DesirSet({frozenset({r, s})})
         >>> D.pspace()
         frozenset(['a', 'c', 'b'])
 
         """
-        return frozenset.union(*(diray.domain() | diray.dir.domain()
-                                 for diray in self))
+        return frozenset.union(*(frozenset.union(*(ray.domain for ray in group))
+                                 for group in self))
 
     def discard_redundant(self):
         """Remove redundant elements from the set of desirable gambles
