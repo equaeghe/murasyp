@@ -17,7 +17,7 @@ class DesirSet(MutableSet):
     * There is an alternative constructor that accepts possibility spaces:
 
       >>> DesirSet(set('abc'))
-      DesirSet(set([frozenset([Ray({'b': 1})]), frozenset([Ray({'c': 1})]), frozenset([Ray({'a': 1})])]))
+      DesirSet(set([Cone(frozenset([Ray({'b': 1})])), Cone(frozenset([Ray({'c': 1})])), Cone(frozenset([Ray({'a': 1})]))]))
 
     * Lower and upper (conditional) expectations can be calculated, using the
       ``*`` and ``**`` operators, respectively.
@@ -61,33 +61,33 @@ class DesirSet(MutableSet):
             raise TypeError("specify a Set instead of a " + type(data).__name__)
 
     def add(self, data):
-        """Add a ray group to the set of desirable gambles
+        """Add a cone to the set of desirable gambles
 
-          :type data: :class:`~frozenset` of arguments accepted by the
-            :class:`~murasyp.gambles.Ray` constructor
+          :type data: arguments accepted by the :class:`~murasyp.gambles.Cone`
+            constructor
 
         >>> D = DesirSet()
         >>> D
         DesirSet(set([]))
         >>> D.add({Gamble({'a': -.06, 'b': .14, 'c': 1.8, 'd': 0})})
         >>> D
-        DesirSet(set([frozenset([Ray({'a': '-1/30', 'c': 1, 'b': '7/90'})])]))
+        DesirSet(set([Cone(frozenset([Ray({'a': '-1/30', 'c': 1, 'b': '7/90'})]))]))
 
         """
-        self._set.add(frozenset(Ray(element) for element in data))
+        self._set.add(Cone(data))
 
     def discard(self, data):
-        """Remove a ray group from the set of desirable gambles
+        """Remove a cone from the set of desirable gambles
 
-          :type data: :class:`~frozenset` of arguments accepted by the
-            :class:`~murasyp.gambles.Ray` constructor
+          :type data: arguments accepted by the :class:`~murasyp.gambles.Cone`
+            constructor
 
         >>> D = DesirSet({'a','b'})
         >>> D
-        DesirSet(set([frozenset([Ray({'b': 1})]), frozenset([Ray({'a': 1})])]))
+        DesirSet(set([Cone(frozenset([Ray({'b': 1})])), Cone(frozenset([Ray({'a': 1})]))]))
         >>> D.discard({Ray({'a'})})
         >>> D
-        DesirSet(set([frozenset([Ray({'b': 1})])]))
+        DesirSet(set([Cone(frozenset([Ray({'b': 1})]))]))
 
         """
         self._set.discard(frozenset(Ray(element) for element in data))
@@ -101,58 +101,18 @@ class DesirSet(MutableSet):
         """The possibility space of the set of desirable gambles
 
           :returns: the possibility space of the set of desirable gambles, i.e.,
-            the union of the domains of the rays it contains
+            the union of the domains of the cones it contains
           :rtype: :class:`frozenset`
 
-        >>> r = Ray({'a': .03, 'b': -.07})
-        >>> s = Ray({'a': .07, 'c': -.03})
-        >>> D = DesirSet({frozenset({r, s})})
-        >>> D.pspace()
-        frozenset(['a', 'c', 'b'])
-
-        """
-        return frozenset.union(*(frozenset.union(*(ray.domain for ray in group))
-                                 for group in self))
-
-    def discard_redundant(self):
-        """Remove redundant elements from the set of desirable gambles
-
-        Redundant elements are those that are not extreme rays of set of
-        desirable gambles's convex conical hull.
-
         >>> D = DesirSet(set('abc'))
-        >>> D.add({'a': 1, 'b': 1, 'c': 1})
-        >>> D
-        DesirSet(set([DiRay({'a': 1, 'c': 1, 'b': 1}, {}), ...]))
-        >>> D.discard_redundant()
-        >>> D
-        DesirSet(set([DiRay({'a': 1}, {}), DiRay({'b': 1}, {}), DiRay({'c': 1}, {})]))
-
-        Because we use dirays, we can make sure we do not discard rays that do
-        not belong to the convex hull of the set of desirable gambles but that
-        do belong to its convex closure.
-
-        >>> D = DesirSet(set([DiRay({'b'}, {'c'}), DiRay({'a'}, {'c'}),
-        ...                   DiRay({'a': 1, 'b': 1}, {})]))
-        >>> D.discard_redundant()
-        >>> D
-        DesirSet(set([DiRay({'a': 1, 'b': 1}, {}), ...]))
-
-        .. warning::
-
-            Currently, we do not deal correctly with all non-closed sets of
-            desirable gambles.
+        >>> r = Ray({'c': .03, 'd': -.07})
+        >>> s = Ray({'a': .07, 'e': -.03})
+        >>> D .add({r, s})
+        >>> D.pspace()
+        frozenset(['a', 'c', 'b', 'e', 'd'])
 
         """
-        pspace = list(self.pspace())
-        D = list(self)
-        mat = Matrix(list([0] + list(ray[x] for x in pspace) +
-                                list(ray.dir[x] for x in pspace) for ray in D),
-                     number_type='fraction')
-        mat.rep_type = RepType.GENERATOR
-        lin, red = mat.canonicalize()
-        for i in red:
-            self.discard(D[i])
+        return frozenset.union(*(cone.domain() for cone in self))
 
     def set_lower_pr(self, data, val):
         """Set the lower probability/prevision (expectation) of an event/gamble
@@ -163,13 +123,13 @@ class DesirSet(MutableSet):
           :arg val: the probability/prevision value
           :type val: a representation of :class:`~numbers.Real`
 
-        The nontrivial diray corresponing to the prevision specification is
+        The nontrivial cone corresponing to the prevision specification is
         calculated and added to the set of desirable gambles.
 
         >>> D = DesirSet()
         >>> D.set_lower_pr(Gamble({'a', 'b'}) | {'a', 'b', 'c'}, .4)
         >>> D
-        DesirSet(set([DiRay({'a': 1, 'c': '-2/3', 'b': 1}, {'a': 1, 'c': 1, 'b': 1})]))
+        DesirSet(set([Cone(frozenset([Ray({'a': 1, 'c': 1, 'b': 1}), Ray({'a': 1, 'c': '-2/3', 'b': 1})]))]))
 
         .. note::
 
@@ -177,7 +137,7 @@ class DesirSet(MutableSet):
 
         """
         gamble = Gamble(data)
-        self.add(DiRay(gamble - _make_rational(val), gamble.domain()))
+        self.add({gamble - _make_rational(val), Ray(gamble.domain())})
 
     def set_upper_pr(self, data, val):
         """Set the upper probability/prevision (expectation) of an event/gamble
@@ -188,21 +148,20 @@ class DesirSet(MutableSet):
           :arg val: the probability/prevision value
           :type val: a representation of :class:`~numbers.Real`
 
-        The nontrivial diray corresponing to the prevision specification is
+        The nontrivial cone corresponing to the prevision specification is
         calculated and added to the set of desirable gambles.
 
         >>> D = DesirSet()
         >>> D.set_upper_pr(Gamble({'a', 'b'}) | {'a', 'b', 'c'}, .4)
         >>> D
-        DesirSet(set([DiRay({'a': -1, 'c': '2/3', 'b': -1}, {'a': 1, 'c': 1, 'b': 1})]))
+        DesirSet(set([Cone(frozenset([Ray({'a': 1, 'c': 1, 'b': 1}), Ray({'a': -1, 'c': '2/3', 'b': -1})]))]))
 
         .. note::
 
           The domain of the input gamble determines the conditioning event.
 
         """
-        gamble = Gamble(data)
-        self.add(DiRay(_make_rational(val) - gamble, gamble.domain()))
+        self.set_lower_pr(-Gamble(data), -val)
 
     def set_pr(self, data, val):
         """Set the probability/prevision (expectation) of an event/gamble
@@ -219,7 +178,7 @@ class DesirSet(MutableSet):
         >>> D = DesirSet()
         >>> D.set_pr(Gamble({'a', 'b'}) | {'a', 'b', 'c'}, .4)
         >>> D
-        DesirSet(set([DiRay({'a': -1, 'c': '2/3', 'b': -1}, {'a': 1, 'c': 1, 'b': 1}), DiRay({'a': 1, 'c': '-2/3', 'b': 1}, {'a': 1, 'c': 1, 'b': 1})]))
+        DesirSet(set([Cone(frozenset([Ray({'a': 1, 'c': 1, 'b': 1}), Ray({'a': 1, 'c': '-2/3', 'b': 1})])), Cone(frozenset([Ray({'a': 1, 'c': 1, 'b': 1}), Ray({'a': -1, 'c': '2/3', 'b': -1})]))]))
 
         .. note::
 
