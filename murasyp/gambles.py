@@ -1,5 +1,5 @@
 from itertools import repeat
-from collections import Set
+from collections import Set, Hashable
 from murasyp import _make_rational
 from murasyp.vectors import Vector
 
@@ -200,8 +200,8 @@ class Ray(Gamble):
     __rmul__ = __mul__
 
 
-class Cone(Set):
-    """An immutable set of rays
+class Cone(Set, Hashable):
+    """An immutable, hashable set of rays
 
       :type data: a :class:`~collections.Set` of arguments accepted by the
         :class:`~murasyp.gambles.Ray` constructor.
@@ -227,6 +227,7 @@ class Cone(Set):
     __len__ = lambda self: self._set.__len__()
     __iter__ = lambda self: self._set.__iter__()
     __contains__ = lambda self: self._set.__contains__()
+    __hash__ = lambda self: self._set.__hash__()
     __repr__ = lambda self: type(self).__name__ + '(' + repr(self._set) + ')'
 
     def domain(self):
