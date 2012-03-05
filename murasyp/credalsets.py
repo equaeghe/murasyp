@@ -190,7 +190,7 @@ class CredalSet(MutableSet):
             self.discard(K[i])
 
     def get_desir(self):
-        """Generate the corresponding closed set of desirable gambles
+        """Generate the corresponding open set of desirable gambles
 
           :returns: the set of desirable gambles that corresponds as an
             uncertainty model
@@ -198,11 +198,7 @@ class CredalSet(MutableSet):
 
         >>> CredalSet(set([PMFunc({'a', 'b'}), PMFunc({'c', 'b'}),
         ...                PMFunc({'a'}), PMFunc({'c'})])).get_desir()
-        DesirSet(...)
-
-        .. warning::
-
-          Currently not correctly implemented.
+        DesirSet(set([Cone(frozenset([Ray({'a': 1}), Ray({'b': 1}), Ray({'c': 1}), Ray({'a': 1, 'c': 1, 'b': -1})]))]))
 
         """
         pspace = list(self.pspace())
@@ -212,11 +208,11 @@ class CredalSet(MutableSet):
         mat.rep_type = RepType.INEQUALITY
         poly = Polyhedron(mat)
         ext = poly.get_generators()
-        return DesirSet(set([Ray({pspace[j-1]: ext[i][j]
-                                  for j in range(1, ext.col_size)})
-                             for i in range(0, ext.row_size)] +
-                            [Ray({pspace[j-1]: -ext[i][j]
-                                  for j in range(1, ext.col_size)})
-                             for i in ext.lin_set]))
+        return DesirSet({frozenset(Ray({pspace[j-1]: ext[i][j]
+                                        for j in range(1, ext.col_size)})
+                                   for i in range(0, ext.row_size)) |
+                         frozenset(Ray({pspace[j-1]: -ext[i][j]
+                                        for j in range(1, ext.col_size)})
+                                   for i in ext.lin_set)})
 
 from murasyp.desirs import DesirSet # avoid circular-dependency
