@@ -198,3 +198,49 @@ class Ray(Gamble):
         return Gamble(self) / other
 
     __rmul__ = __mul__
+
+
+class Cone(Set):
+    """An immutable set of rays
+
+      :type data: a :class:`~collections.Set` of arguments accepted by the
+        :class:`~murasyp.gambles.Ray` constructor.
+
+    Features:
+
+    * There is an alternative constructor that accepts possibility spaces:
+
+      >>> Cone(set('abc'))
+      Cone(frozenset([Ray({'a': 1}), Ray({'b': 1}), Ray({'c': 1})]))
+
+    """
+    def __init__(self, data=frozenset()):
+        """Create a set of desirable gambles"""
+        if isinstance(data, Set):
+            try:
+                self._set = frozenset(Ray(element) for element in data)
+            except:
+                self._set = frozenset(Ray({element}) for element in data)
+        else:
+            raise TypeError("specify a Set instead of a " + type(data).__name__)
+
+    __len__ = lambda self: self._set.__len__()
+    __iter__ = lambda self: self._set.__iter__()
+    __contains__ = lambda self: self._set.__contains__()
+    __repr__ = lambda self: type(self).__name__ + '(' + repr(self._set) + ')'
+
+    def domain(self):
+        """The union of the domains of the element rays
+
+          :returns: the possibility space of the cone, i.e., the union of the
+            domains of the rays it contains
+          :rtype: :class:`frozenset`
+
+        >>> r = Ray({'a': .03, 'b': -.07})
+        >>> s = Ray({'a': .07, 'c': -.03})
+        >>> C = Cone(frozenset({r, s}))
+        >>> C.domain()
+        frozenset(['a', 'c', 'b'])
+
+        """
+        return frozenset.union(*(ray.domain() for ray in self))

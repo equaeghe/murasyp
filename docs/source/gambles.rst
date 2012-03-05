@@ -16,3 +16,8 @@ Rays
 ----
 
 .. autoclass:: Ray
+
+Cones
+-----
+
+.. autoclass:: Cone
