@@ -35,7 +35,7 @@ class Gamble(Vector):
 
     """
 
-    def __init__(self, data):
+    def __init__(self, data={}):
         """Create a gamble"""
         if isinstance(data, Set): # indicators
             data = dict(zip(data, repeat(1)))
@@ -177,7 +177,7 @@ class Ray(Gamble):
 
     """
 
-    def __init__(self, data):
+    def __init__(self, data={}):
         """Create a ray"""
         gamble = Gamble(data).normalized()
         if gamble == None:

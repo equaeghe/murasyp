@@ -39,7 +39,7 @@ class Function(Mapping):
 
     """
 
-    def __init__(self, mapping):
+    def __init__(self, mapping={}):
         """Create a rational-valued function"""
         if isinstance(mapping, Mapping):
             self._mapping = {arg: _make_rational(value)
