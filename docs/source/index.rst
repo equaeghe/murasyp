@@ -24,9 +24,9 @@ Main classes
   functions
   vectors
   gambles
+  desirs
   massfuncs
   credalsets
-  desirs
 
 Indices and tables
 ------------------
