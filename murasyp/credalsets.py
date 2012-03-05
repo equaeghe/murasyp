@@ -198,12 +198,11 @@ class CredalSet(MutableSet):
 
         >>> CredalSet(set([PMFunc({'a', 'b'}), PMFunc({'c', 'b'}),
         ...                PMFunc({'a'}), PMFunc({'c'})])).get_desir()
-        DesirSet(set([DiRay({'a': 1}, {}), DiRay({'b': 1}, {}), DiRay({'c': 1}, {}), DiRay({'a': 1, 'c': 1, 'b': -1}, {})]))
+        DesirSet(...)
 
         .. warning::
 
-          Does not generate second tier ray of constituent dirays, as it should.
-          So technically speaking, it gives an incorrect answer.
+          Currently not correctly implemented.
 
         """
         pspace = list(self.pspace())

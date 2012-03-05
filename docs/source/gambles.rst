@@ -21,8 +21,3 @@ Rays
 ----
 
 .. autoclass:: Ray
-
-DiRays
-------
-
-.. autoclass:: DiRay

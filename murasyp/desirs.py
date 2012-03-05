@@ -3,7 +3,7 @@
 from collections import Set, MutableSet, Mapping
 from cdd import Matrix, LPObjType, LinProg, LPStatusType, RepType, Polyhedron
 from murasyp import _make_rational
-from murasyp.gambles import Gamble, Ray, DiRay
+from murasyp.gambles import Gamble, Ray
 from murasyp.massfuncs import PMFunc
 
 class DesirSet(MutableSet):
