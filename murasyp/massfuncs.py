@@ -1,5 +1,5 @@
 from itertools import repeat
-from collections import Set
+from collections import Set, Mapping
 from fractions import Fraction
 from murasyp import _make_rational
 from murasyp.vectors import Vector
@@ -13,10 +13,12 @@ class UMFunc(Vector):
 
     What has changed:
 
-    * There is a new constructor. If `data` is a :class:`~collections.Set`,
-      then the mass is spread over its elements uniformly.
+    * There is a new constructor. If `data` is not a
+      :class:`~collections.Mapping`, but is a :class:`~collections.Hashable`
+      :class:`~collections.Container`, thenthe mass is spread uniformly over its
+      components.
 
-      >>> UMFunc(set('abc'))
+      >>> UMFunc('abc')
       UMFunc({'a': '1/3', 'c': '1/3', 'b': '1/3'})
 
     * Its total mass, i.e., the sum of its values, is one and its domain
@@ -73,15 +75,17 @@ class UMFunc(Vector):
 
     """
 
-    def __init__(self, data):
+    def __init__(self, data={}):
         """Create a unit mass function"""
-        if isinstance(data, Set): # uniform
-            data = dict(zip(data, repeat(Fraction(1, len(data)))))
-        umfunc = Vector(data).sum_normalized()
-        if umfunc == None:
-            raise ValueError("no UMFunc can be constructed from a Mapping "
-                             + str(data) + " with a total mass of zero")
-        Vector.__init__(self, umfunc | umfunc.support())
+        if isinstance(data, Mapping):  # Hashable Mapping to Rational
+            umfunc = Vector(data).sum_normalized()
+            if umfunc == None:
+                raise ValueError("no UMFunc can be constructed from a Mapping "
+                                + str(data) + " with a total mass of zero")
+            Vector.__init__(self, umfunc | umfunc.support())
+        else: # uniform over Hashable Container
+            Vector.__init__(self, {component: Fraction(1, len(data))
+                                   for component in data})
 
     def __or__(self, other):
         """Mass function conditional on the given event"""
