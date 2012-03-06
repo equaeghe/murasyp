@@ -17,7 +17,7 @@ class DesirSet(MutableSet):
     * There is an alternative constructor that accepts possibility spaces:
 
       >>> DesirSet(set('abc'))
-      DesirSet(set([Cone(frozenset([Ray({'b': 1})])), Cone(frozenset([Ray({'c': 1})])), Cone(frozenset([Ray({'a': 1})]))]))
+      DesirSet(set([Cone([Ray({'b': 1})]), Cone([Ray({'c': 1})]), Cone([Ray({'a': 1})])]))
 
     * Lower and upper (conditional) expectations can be calculated, using the
       ``*`` and ``**`` operators, respectively.
@@ -71,7 +71,7 @@ class DesirSet(MutableSet):
         DesirSet(set([]))
         >>> D.add({Gamble({'a': -.06, 'b': .14, 'c': 1.8, 'd': 0})})
         >>> D
-        DesirSet(set([Cone(frozenset([Ray({'a': '-1/30', 'c': 1, 'b': '7/90'})]))]))
+        DesirSet(set([Cone([Ray({'a': '-1/30', 'c': 1, 'b': '7/90'})])]))
 
         """
         self._set.add(Cone(data))
@@ -84,10 +84,10 @@ class DesirSet(MutableSet):
 
         >>> D = DesirSet({'a','b'})
         >>> D
-        DesirSet(set([Cone(frozenset([Ray({'b': 1})])), Cone(frozenset([Ray({'a': 1})]))]))
+        DesirSet(set([Cone([Ray({'b': 1})]), Cone([Ray({'a': 1})])]))
         >>> D.discard({Ray({'a'})})
         >>> D
-        DesirSet(set([Cone(frozenset([Ray({'b': 1})]))]))
+        DesirSet(set([Cone([Ray({'b': 1})])]))
 
         """
         self._set.discard(frozenset(Ray(element) for element in data))
@@ -129,7 +129,7 @@ class DesirSet(MutableSet):
         >>> D = DesirSet()
         >>> D.set_lower_pr(Gamble({'a', 'b'}) | {'a', 'b', 'c'}, .4)
         >>> D
-        DesirSet(set([Cone(frozenset([Ray({'a': 1, 'c': 1, 'b': 1}), Ray({'a': 1, 'c': '-2/3', 'b': 1})]))]))
+        DesirSet(set([Cone([Ray({'a': 1, 'c': 1, 'b': 1}), Ray({'a': 1, 'c': '-2/3', 'b': 1})])]))
 
         .. note::
 
@@ -154,7 +154,7 @@ class DesirSet(MutableSet):
         >>> D = DesirSet()
         >>> D.set_upper_pr(Gamble({'a', 'b'}) | {'a', 'b', 'c'}, .4)
         >>> D
-        DesirSet(set([Cone(frozenset([Ray({'a': 1, 'c': 1, 'b': 1}), Ray({'a': -1, 'c': '2/3', 'b': -1})]))]))
+        DesirSet(set([Cone([Ray({'a': 1, 'c': 1, 'b': 1}), Ray({'a': -1, 'c': '2/3', 'b': -1})])]))
 
         .. note::
 
@@ -178,7 +178,7 @@ class DesirSet(MutableSet):
         >>> D = DesirSet()
         >>> D.set_pr(Gamble({'a', 'b'}) | {'a', 'b', 'c'}, .4)
         >>> D
-        DesirSet(set([Cone(frozenset([Ray({'a': 1, 'c': 1, 'b': 1}), Ray({'a': 1, 'c': '-2/3', 'b': 1})])), Cone(frozenset([Ray({'a': 1, 'c': 1, 'b': 1}), Ray({'a': -1, 'c': '2/3', 'b': -1})]))]))
+        DesirSet(set([Cone([Ray({'a': 1, 'c': 1, 'b': 1}), Ray({'a': 1, 'c': '-2/3', 'b': 1})]), Cone([Ray({'a': 1, 'c': 1, 'b': 1}), Ray({'a': -1, 'c': '2/3', 'b': -1})])]))
 
         .. note::
 
@@ -340,15 +340,11 @@ class DesirSet(MutableSet):
         >>> D = DesirSet(set('abc'))
         >>> D.set_lower_pr({'a': 1, 'b': 0, 'c': 1}, .5)
         >>> D.get_credal()
-        CredalSet()
-
-        .. warning::
-
-          Currently, this method is broken.
+        CredalSet(set([PMFunc({'a': '1/2', 'b': '1/2'}), PMFunc({'c': '1/2', 'b': '1/2'}), PMFunc({'a': 1}), PMFunc({'c': 1})]))
 
         """
-        C = Cone().union(self) # does not work; create union method for Cone
-        pspace = C.domain()
+        C = Cone.union(*self)
+        pspace = list(C.domain())
         mat = Matrix(list([0] + list(ray[x] for x in pspace) for ray in C),
                      number_type='fraction')
         mat.rep_type = RepType.INEQUALITY

@@ -198,7 +198,7 @@ class CredalSet(MutableSet):
 
         >>> CredalSet(set([PMFunc({'a', 'b'}), PMFunc({'c', 'b'}),
         ...                PMFunc({'a'}), PMFunc({'c'})])).get_desir()
-        DesirSet(set([Cone(frozenset([Ray({'a': 1}), Ray({'b': 1}), Ray({'c': 1}), Ray({'a': 1, 'c': 1, 'b': -1})]))]))
+        DesirSet(set([Cone([Ray({'a': 1}), Ray({'b': 1}), Ray({'c': 1}), Ray({'a': 1, 'c': 1, 'b': -1})])]))
 
         """
         pspace = list(self.pspace())
