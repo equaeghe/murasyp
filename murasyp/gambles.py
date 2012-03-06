@@ -207,9 +207,21 @@ class Ray(Gamble):
 class Cone(frozenset):
     """A frozenset of rays
 
-      :type data: a non-:class:`~collections.Mapping`
+      :type `data`: a non-:class:`~collections.Mapping`
         :class:`~collections.Container` of arguments accepted by the
         :class:`~murasyp.gambles.Ray` constructor.
+
+      >>> Cone([{'a': 2, 'b': 3}, {'b': 1, 'c': 4}])
+      Cone([Ray({'a': '2/3', 'b': 1}), Ray({'c': 1, 'b': '1/4'})])
+      >>> Cone('abc')
+      Cone([Ray({'a': 1}), Ray({'b': 1}), Ray({'c': 1})])
+      >>> Cone({'ab', 'bc'})
+      Cone([Ray({'c': 1, 'b': 1}), Ray({'a': 1, 'b': 1})])
+
+    This class derives from :class:`~frozenset`, so its methods apply here as
+    well.
+
+    Additional and changed methods:
 
     """
     def __new__(cls, data=[]):
@@ -219,6 +231,10 @@ class Cone(frozenset):
                             + " but you passed it " + str(data))
         else:
             return frozenset.__new__(cls, (Ray(element) for element in data))
+
+    def __init__(self, data=[]): # only here for Sphinx to pick up the argument
+        """Initialize the cone"""
+        pass
 
     def domain(self):
         """The union of the domains of the element rays

@@ -4,8 +4,8 @@
 
   from murasyp.gambles import *
 
-Gambles & Rays
-==============
+Gambles, Rays & Cones
+=====================
 
 Gambles
 -------
