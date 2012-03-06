@@ -6,26 +6,36 @@ from murasyp import _make_rational
 from murasyp.gambles import Gamble, Ray, Cone
 from murasyp.massfuncs import PMFunc
 
-class DesirSet(MutableSet):
-    """A mutable set of cones
+class DesirSet(set):
+    """A set of cones
 
-      :type data: a :class:`~collections.Set` of arguments accepted by the
+      :type `data`: a non-:class:`~collections.Mapping`
+        :class:`~collections.Container` of arguments accepted by the
         :class:`~murasyp.gambles.Cone` constructor.
 
-    Features:
+      >>> DesirSet('abc')
+      DesirSet([Cone([Ray({'b': 1})]), Cone([Ray({'c': 1})]), Cone([Ray({'a': 1})])])
+      >>> DesirSet(['abc'])
+      DesirSet([Cone([Ray({'a': 1}), Ray({'b': 1}), Ray({'c': 1})])])
+      >>> DesirSet([['abc']])
+      DesirSet([Cone([Ray({'a': 1, 'c': 1, 'b': 1})])])
 
-    * There is an alternative constructor that accepts possibility spaces:
+    This class derives from :class:`~set`, so its methods apply here as
+    well.
 
-      >>> DesirSet(set('abc'))
-      DesirSet(set([Cone([Ray({'b': 1})]), Cone([Ray({'c': 1})]), Cone([Ray({'a': 1})])]))
+      .. todo::
+
+        test all set methods and fix, or elegantly deal with, broken ones
+
+    Additional and changed methods:
 
     * Lower and upper (conditional) expectations can be calculated, using the
       ``*`` and ``**`` operators, respectively.
 
-      >>> D = DesirSet(set([Gamble({'a': -1, 'c': '7/90'}),
-      ...                   Gamble({'a': 1, 'c': '-1/30'}),
-      ...                   Gamble({'a': -1, 'c': '1/9', 'b': -1}),
-      ...                   Gamble({'a': 1, 'c': '-1/9', 'b': 1})]))
+      >>> D = DesirSet([[Gamble({'a': -1, 'c': '7/90'}),
+      ...                Gamble({'a': 1, 'c': '-1/30'}),
+      ...                Gamble({'a': -1, 'c': '1/9', 'b': -1}),
+      ...                Gamble({'a': 1, 'c': '-1/9', 'b': 1})]])
       >>> f = Gamble({'a': -1, 'b': 1, 'c': 0})
       >>> D * f
       Fraction(-1, 25)
@@ -40,62 +50,58 @@ class DesirSet(MutableSet):
 
           The domain of the gamble determines the conditioning event.
 
-      .. admonition:: Algorithm
-
-          We have to solve an optimization problem:
-          ***todo***
-
       .. warning::
 
           Currently these methods are broken.
 
     """
-    def __init__(self, data=set()):
-        """Create a set of desirable gambles"""
-        if isinstance(data, Set):
-            try:
-                self._set = {Cone(element) for element in data}
-            except:
-                self._set = {Cone({element}) for element in data}
+    def __init__(self, data=[]):
+        """Initialize a set of desirable gambles"""
+        if isinstance(data, Mapping):
+            raise TypeError(type(self) + " does not accept a mapping,"
+                            + " but you passed it " + str(data))
         else:
-            raise TypeError("specify a Set instead of a " + type(data).__name__)
+            set.__init__(self, (Cone(element) for element in data))
 
     def add(self, data):
         """Add a cone to the set of desirable gambles
 
-          :type data: arguments accepted by the :class:`~murasyp.gambles.Cone`
+          :type `data`: arguments accepted by the :class:`~murasyp.gambles.Cone`
             constructor
 
         >>> D = DesirSet()
         >>> D
-        DesirSet(set([]))
-        >>> D.add({Gamble({'a': -.06, 'b': .14, 'c': 1.8, 'd': 0})})
+        DesirSet([])
+        >>> D.add([Gamble({'a': -.06, 'b': .14, 'c': 1.8, 'd': 0})])
         >>> D
-        DesirSet(set([Cone([Ray({'a': '-1/30', 'c': 1, 'b': '7/90'})])]))
+        DesirSet([Cone([Ray({'a': '-1/30', 'c': 1, 'b': '7/90'})])])
+
+          .. todo::
+
+            see whether all set functionality is carried over
 
         """
-        self._set.add(Cone(data))
+        set.add(self, Cone(data))
 
     def discard(self, data):
         """Remove a cone from the set of desirable gambles
 
-          :type data: arguments accepted by the :class:`~murasyp.gambles.Cone`
+          :type `data`: arguments accepted by the :class:`~murasyp.gambles.Cone`
             constructor
 
         >>> D = DesirSet({'a','b'})
         >>> D
-        DesirSet(set([Cone([Ray({'b': 1})]), Cone([Ray({'a': 1})])]))
-        >>> D.discard({Ray({'a'})})
+        DesirSet([Cone([Ray({'b': 1})]), Cone([Ray({'a': 1})])])
+        >>> D.discard([Ray({'a'})])
         >>> D
-        DesirSet(set([Cone([Ray({'b': 1})])]))
+        DesirSet([Cone([Ray({'b': 1})])])
+
+          .. todo::
+
+            see whether all set functionality is carried over
 
         """
-        self._set.discard(frozenset(Ray(element) for element in data))
-
-    __len__ = lambda self: self._set.__len__()
-    __iter__ = lambda self: self._set.__iter__()
-    __contains__ = lambda self: self._set.__contains__()
-    __repr__ = lambda self: type(self).__name__ + '(' + repr(self._set) + ')'
+        set.discard(self, frozenset(Ray(element) for element in data))
 
     def pspace(self):
         """The possibility space of the set of desirable gambles
@@ -104,10 +110,10 @@ class DesirSet(MutableSet):
             the union of the domains of the cones it contains
           :rtype: :class:`frozenset`
 
-        >>> D = DesirSet(set('abc'))
+        >>> D = DesirSet(['abc'])
         >>> r = Ray({'c': .03, 'd': -.07})
         >>> s = Ray({'a': .07, 'e': -.03})
-        >>> D .add({r, s})
+        >>> D.add([r, s])
         >>> D.pspace()
         frozenset(['a', 'c', 'b', 'e', 'd'])
 
@@ -117,11 +123,11 @@ class DesirSet(MutableSet):
     def set_lower_pr(self, data, val):
         """Set the lower probability/prevision (expectation) of an event/gamble
 
-          :arg data: the gamble for which a probability/prevision value is given
-          :type data: arguments accepted by the :class:`~murasyp.gambles.Gamble`
+          :arg `data`: the gamble for which a probability/prevision value is given
+          :type `data`: arguments accepted by the :class:`~murasyp.gambles.Gamble`
             constructor
-          :arg val: the probability/prevision value
-          :type val: a representation of :class:`~numbers.Real`
+          :arg `val`: the probability/prevision value
+          :type `val`: a representation of :class:`~numbers.Real`
 
         The nontrivial cone corresponing to the prevision specification is
         calculated and added to the set of desirable gambles.
@@ -129,7 +135,7 @@ class DesirSet(MutableSet):
         >>> D = DesirSet()
         >>> D.set_lower_pr(Gamble({'a', 'b'}) | {'a', 'b', 'c'}, .4)
         >>> D
-        DesirSet(set([Cone([Ray({'a': 1, 'c': 1, 'b': 1}), Ray({'a': 1, 'c': '-2/3', 'b': 1})])]))
+        DesirSet([Cone([Ray({'a': 1, 'c': 1, 'b': 1}), Ray({'a': 1, 'c': '-2/3', 'b': 1})])])
 
         .. note::
 
@@ -142,11 +148,11 @@ class DesirSet(MutableSet):
     def set_upper_pr(self, data, val):
         """Set the upper probability/prevision (expectation) of an event/gamble
 
-          :arg data: the gamble for which a probability/prevision value is given
-          :type data: arguments accepted by the :class:`~murasyp.gambles.Gamble`
+          :arg `data`: the gamble for which a probability/prevision value is given
+          :type `data`: arguments accepted by the :class:`~murasyp.gambles.Gamble`
             constructor
-          :arg val: the probability/prevision value
-          :type val: a representation of :class:`~numbers.Real`
+          :arg `val`: the probability/prevision value
+          :type `val`: a representation of :class:`~numbers.Real`
 
         The nontrivial cone corresponing to the prevision specification is
         calculated and added to the set of desirable gambles.
@@ -154,7 +160,7 @@ class DesirSet(MutableSet):
         >>> D = DesirSet()
         >>> D.set_upper_pr(Gamble({'a', 'b'}) | {'a', 'b', 'c'}, .4)
         >>> D
-        DesirSet(set([Cone([Ray({'a': 1, 'c': 1, 'b': 1}), Ray({'a': -1, 'c': '2/3', 'b': -1})])]))
+        DesirSet([Cone([Ray({'a': 1, 'c': 1, 'b': 1}), Ray({'a': -1, 'c': '2/3', 'b': -1})])])
 
         .. note::
 
@@ -166,11 +172,11 @@ class DesirSet(MutableSet):
     def set_pr(self, data, val):
         """Set the probability/prevision (expectation) of an event/gamble
 
-          :arg data: the gamble for which a probability/prevision value is given
-          :type data: arguments accepted by the :class:`~murasyp.gambles.Gamble`
+          :arg `data`: the gamble for which a probability/prevision value is given
+          :type `data`: arguments accepted by the :class:`~murasyp.gambles.Gamble`
             constructor
-          :arg val: the probability/prevision value
-          :type val: a representation of :class:`~numbers.Real`
+          :arg `val`: the probability/prevision value
+          :type `val`: a representation of :class:`~numbers.Real`
 
         This is identical to setting the lower and upper prevision to the same
         value.
@@ -178,7 +184,7 @@ class DesirSet(MutableSet):
         >>> D = DesirSet()
         >>> D.set_pr(Gamble({'a', 'b'}) | {'a', 'b', 'c'}, .4)
         >>> D
-        DesirSet(set([Cone([Ray({'a': 1, 'c': 1, 'b': 1}), Ray({'a': 1, 'c': '-2/3', 'b': 1})]), Cone([Ray({'a': 1, 'c': 1, 'b': 1}), Ray({'a': -1, 'c': '2/3', 'b': -1})])]))
+        DesirSet([Cone([Ray({'a': 1, 'c': 1, 'b': 1}), Ray({'a': 1, 'c': '-2/3', 'b': 1})]), Cone([Ray({'a': 1, 'c': 1, 'b': 1}), Ray({'a': -1, 'c': '2/3', 'b': -1})])])
 
         .. note::
 
@@ -198,18 +204,13 @@ class DesirSet(MutableSet):
         negative.
 
         >>> D = DesirSet(set('abc'))
-        >>> D.add({'a': -1, 'b': -1, 'c': 1})
-        >>> D.add({'a': 1, 'b': -1, 'c': -1})
+        >>> D.add([{'a': -1, 'b': -1, 'c': 1}])
+        >>> D.add([{'a': 1, 'b': -1, 'c': -1}])
         >>> D.asl()
         True
-        >>> D.add({'a': -1, 'b': 1, 'c': -1})
+        >>> D.add([{'a': -1, 'b': 1, 'c': -1}])
         >>> D.asl()
         False
-
-        .. admonition:: Algorithm
-
-          We have to solve a linear programming feasibility problem:
-          ***todo***
 
         .. warning::
 
@@ -235,28 +236,23 @@ class DesirSet(MutableSet):
         some nonnegative linear combination of desirable gambles is everywhere
         nonpositive and somewhere negative.
 
-        >>> D = DesirSet(set('abc'))
-        >>> D.add({'a': -1, 'b': -1, 'c': 1})
+        >>> D = DesirSet('abc')
+        >>> D.add([{'a': -1, 'b': -1, 'c': 1}])
         >>> D.apl()
         True
-        >>> D.add({'a': -1, 'b': 1, 'c': -1})
+        >>> D.add([{'a': -1, 'b': 1, 'c': -1}])
         >>> D.apl()
         False
 
         We can deal correctly with non-closed sets of desirable gambles, i.e.,
         containing non-singleton cones:
 
-        >>> D = DesirSet(set('abc'))
+        >>> D = DesirSet('abc')
         >>> D.set_upper_pr(Gamble({'a', 'b'}) | {'a', 'b', 'c'}, 0)
         >>> D
-        DesirSet()
+        DesirSet([Cone([Ray({'b': 1})]), Cone([Ray({'c': 1})]), Cone([Ray({'a': 1})]), Cone([Ray({'a': 1, 'c': 1, 'b': 1}), Ray({'a': -1, 'b': -1})])])
         >>> D.apl()
         True
-
-        .. admonition:: Algorithm
-
-          We have to solve a feasibility problem:
-          ***todo***
 
         .. warning::
 
@@ -337,7 +333,7 @@ class DesirSet(MutableSet):
             model
           :rtype: :class:`~murasyp.credalsets.CredalSet`
 
-        >>> D = DesirSet(set('abc'))
+        >>> D = DesirSet(['abc'])
         >>> D.set_lower_pr({'a': 1, 'b': 0, 'c': 1}, .5)
         >>> D.get_credal()
         CredalSet(set([PMFunc({'a': '1/2', 'b': '1/2'}), PMFunc({'c': '1/2', 'b': '1/2'}), PMFunc({'a': 1}), PMFunc({'c': 1})]))

@@ -221,6 +221,10 @@ class Cone(frozenset):
     This class derives from :class:`~frozenset`, so its methods apply here as
     well.
 
+      .. todo::
+
+        test all set methods and fix, or elegantly deal with, broken ones
+
     Additional and changed methods:
 
     """
