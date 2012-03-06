@@ -229,6 +229,7 @@ class Cone(Set, Hashable):
     __contains__ = lambda self: self._set.__contains__()
     __hash__ = lambda self: self._set.__hash__()
     __repr__ = lambda self: type(self).__name__ + '(' + repr(self._set) + ')'
+    __or__ = lambda self, other: Cone(self._set | other._set)
 
     def domain(self):
         """The union of the domains of the element rays
