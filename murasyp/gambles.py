@@ -1,5 +1,5 @@
 from itertools import repeat
-from collections import Set, Hashable
+from collections import Set, Mapping, Hashable
 from murasyp import _make_rational
 from murasyp.vectors import Vector
 
@@ -11,10 +11,10 @@ class Gamble(Vector):
 
     What has changed:
 
-    * There is a new constructor. If `data` is not accepted by the constructor
-      of :class:`~murasyp.vectors.Vector`, but is a
-      :class:`~collections.Hashable` :class:`~collections.Container`, then its
-      so-called indicator function is generated.
+    * There is a new constructor. If `data` is not a
+      :class:`~collections.Mapping`, but is a :class:`~collections.Hashable`
+      :class:`~collections.Container`, then its so-called indicator function is
+      generated.
 
       >>> Gamble('abc')
       Gamble({'a': 1, 'c': 1, 'b': 1})
@@ -41,9 +41,9 @@ class Gamble(Vector):
 
     def __init__(self, data={}):
         """Create a gamble"""
-        try:  # Hashable Mapping to Rational
+        if isinstance(data, Mapping):  # Hashable Mapping to Rational
             Vector.__init__(self, data)
-        except: # indicator over Hashable Container
+        else: # indicator over Hashable Container
             Vector.__init__(self, {component: 1 for component in data})
 
     def __add__(self, other):
@@ -204,37 +204,21 @@ class Ray(Gamble):
 
     __rmul__ = __mul__
 
+class Cone(frozenset):
+    """A frozenset of rays
 
-class Cone(Set, Hashable):
-    """An immutable, hashable set of rays
-
-      :type data: a :class:`~collections.Set` of arguments accepted by the
+      :type data: a non-:class:`~collections.Mapping`
+        :class:`~collections.Container` of arguments accepted by the
         :class:`~murasyp.gambles.Ray` constructor.
 
-    Features:
-
-    * There is an alternative constructor that accepts possibility spaces:
-
-      >>> Cone(set('abc'))
-      Cone(frozenset([Ray({'a': 1}), Ray({'b': 1}), Ray({'c': 1})]))
-
     """
-    def __init__(self, data=frozenset()):
-        """Create a set of desirable gambles"""
-        if isinstance(data, Set):
-            try:
-                self._set = frozenset(Ray(element) for element in data)
-            except:
-                self._set = frozenset(Ray({element}) for element in data)
+    def __new__(cls, data=[]):
+        """Create a frozenset of rays"""
+        if isinstance(data, Mapping):
+            raise TypeError(str(cls) + " does not accept a mapping,"
+                            + " but you passed it " + str(data))
         else:
-            raise TypeError("specify a Set instead of a " + type(data).__name__)
-
-    __len__ = lambda self: self._set.__len__()
-    __iter__ = lambda self: self._set.__iter__()
-    __contains__ = lambda self: self._set.__contains__()
-    __hash__ = lambda self: self._set.__hash__()
-    __repr__ = lambda self: type(self).__name__ + '(' + repr(self._set) + ')'
-    __or__ = lambda self, other: Cone(self._set | other._set)
+            return frozenset.__new__(cls, (Ray(element) for element in data))
 
     def domain(self):
         """The union of the domains of the element rays
@@ -244,8 +228,7 @@ class Cone(Set, Hashable):
 
         >>> r = Ray({'a': .03, 'b': -.07})
         >>> s = Ray({'a': .07, 'c': -.03})
-        >>> C = Cone(frozenset({r, s}))
-        >>> C.domain()
+        >>> Cone({r, s}).domain()
         frozenset(['a', 'c', 'b'])
 
         """
