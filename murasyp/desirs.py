@@ -1,6 +1,6 @@
 # coding: utf-8
 
-from collections import Set, MutableSet, Mapping
+from collections import Mapping
 from cdd import Matrix, LPObjType, LinProg, LPStatusType, RepType, Polyhedron
 from murasyp import _make_rational
 from murasyp.gambles import Gamble, Ray, Cone
