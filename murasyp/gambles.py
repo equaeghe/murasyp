@@ -11,11 +11,15 @@ class Gamble(Vector):
 
     What has changed:
 
-    * There is a new constructor. If `data` is a :class:`~collections.Set`,
-      then its so-called indicator function is generated.
+    * There is a new constructor. If `data` is not accepted by the constructor
+      of :class:`~murasyp.vectors.Vector`, but is a
+      :class:`~collections.Hashable` :class:`~collections.Container`, then its
+      so-called indicator function is generated.
 
-      >>> Gamble(set('abc'))
+      >>> Gamble('abc')
       Gamble({'a': 1, 'c': 1, 'b': 1})
+      >>> Gamble({'abc'})
+      Gamble({'abc': 1})
 
     * Pointwise multiplication and scalar addition & subtraction
       have been added.
@@ -37,9 +41,10 @@ class Gamble(Vector):
 
     def __init__(self, data={}):
         """Create a gamble"""
-        if isinstance(data, Set): # indicators
-            data = dict(zip(data, repeat(1)))
-        Vector.__init__(self, data)
+        try:  # Hashable Mapping to Rational
+            Vector.__init__(self, data)
+        except: # indicator over Hashable Container
+            Vector.__init__(self, {component: 1 for component in data})
 
     def __add__(self, other):
         """Also allow addition of gambles and scalars"""
