@@ -1,4 +1,4 @@
-from collections import Set, Hashable
+from collections import Set, Hashable, Mapping
 from murasyp.functions import Function
 
 class Vector(Function, Hashable):
@@ -111,3 +111,50 @@ class Vector(Function, Hashable):
 
         """
         return all(val >= 0 for val in self._mapping.itervalues())
+
+
+class Polytope(frozenset):
+    """A frozenset of vectors
+
+      :type `data`: a non-:class:`~collections.Mapping`
+        :class:`~collections.Iterable` :class:`~collections.Container` of
+        arguments accepted by the :class:`~murasyp.gambles.Vector` constructor.
+
+      >>> Polytope([{'a': 2, 'b': 3}, {'b': 1, 'c': 4}])
+      Polytope([Vector({'a': 2, 'b': 3}), Vector({'c': 4, 'b': 1})])
+
+    This class derives from :class:`~frozenset`, so its methods apply here as
+    well.
+
+      .. todo::
+
+        test all set methods and fix, or elegantly deal with, broken ones
+
+    Additional and changed methods:
+
+    """
+    def __new__(cls, data=[]):
+        """Create a polytope"""
+        if isinstance(data, Mapping):
+            raise TypeError(str(cls) + " does not accept a mapping,"
+                            + " but you passed it " + str(data))
+        else:
+            return frozenset.__new__(cls, (Vector(element) for element in data))
+
+    def __init__(self, data=[]): # only here for Sphinx to pick up the argument
+        """Initialize the polytope"""
+        pass
+
+    def domain(self):
+        """The union of the domains of the element vectors
+
+          :returns: the union of the domains of the vectors it contains
+          :rtype: :class:`frozenset`
+
+        >>> r = Vector({'a': .03, 'b': -.07})
+        >>> s = Vector({'a': .07, 'c': -.03})
+        >>> Polytope({r, s}).domain()
+        frozenset(['a', 'c', 'b'])
+
+        """
+        return frozenset.union(*(vector.domain() for vector in self))

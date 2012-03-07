@@ -1,7 +1,7 @@
 from itertools import repeat
 from collections import Set, Mapping
 from murasyp import _make_rational
-from murasyp.vectors import Vector
+from murasyp.vectors import Vector, Polytope
 
 class Gamble(Vector):
     """Gambles map states to utility payoffs
@@ -204,7 +204,7 @@ class Ray(Gamble):
 
     __rmul__ = __mul__
 
-class Cone(frozenset):
+class Cone(Polytope):
     """A frozenset of rays
 
       :type `data`: a non-:class:`~collections.Mapping`
@@ -218,14 +218,12 @@ class Cone(frozenset):
       >>> Cone({'ab', 'bc'})
       Cone([Ray({'c': 1, 'b': 1}), Ray({'a': 1, 'b': 1})])
 
-    This class derives from :class:`~frozenset`, so its methods apply here as
-    well.
+    This class derives from :class:`~murasyp.vectors.Polytope`, so its methods
+    apply here as well.
 
       .. todo::
 
         test all set methods and fix, or elegantly deal with, broken ones
-
-    Additional and changed methods:
 
     """
     def __new__(cls, data=[]):
@@ -239,17 +237,3 @@ class Cone(frozenset):
     def __init__(self, data=[]): # only here for Sphinx to pick up the argument
         """Initialize the cone"""
         pass
-
-    def domain(self):
-        """The union of the domains of the element rays
-
-          :returns: the union of the domains of the rays it contains
-          :rtype: :class:`frozenset`
-
-        >>> r = Ray({'a': .03, 'b': -.07})
-        >>> s = Ray({'a': .07, 'c': -.03})
-        >>> Cone({r, s}).domain()
-        frozenset(['a', 'c', 'b'])
-
-        """
-        return frozenset.union(*(ray.domain() for ray in self))
