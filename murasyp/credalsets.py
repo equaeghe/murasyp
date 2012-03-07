@@ -72,27 +72,6 @@ class CredalSet(set):
         else:
             set.__init__(self, (PMFunc(element) for element in data))
 
-    #def __init__(self, data=set([])):
-        #"""Create a credal set"""
-        #if isinstance(data, Set):
-            #are_mappings = [isinstance(elem, Mapping) for elem in data]
-            #if all(are_mappings):
-                #self._set = set(PMFunc(mapping) for mapping in data)
-            #elif not any(are_mappings):
-                #self._set = set(PMFunc({x}) for x in data) # vacuous
-            #else:
-                #raise TypeError("either all or none of the elements of the "
-                                #+ "specified Set " + str(data) + "must be "
-                                #+ "Mappings")
-        #else:
-            #raise TypeError("specify a Set instead of a "
-                            #+ type(data).__name__)
-
-    #__len__ = lambda self: self._set.__len__()
-    #__iter__ = lambda self: self._set.__iter__()
-    #__contains__ = lambda self: self._set.__contains__()
-    #__repr__ = lambda self: type(self).__name__ + '(' + repr(self._set) + ')'
-
     def add(self, data):
         """Add a probability mass function to the credal set
 
@@ -105,6 +84,10 @@ class CredalSet(set):
         >>> K.add({'a': .06, 'b': .14, 'c': 1.8, 'd': 0})
         >>> K
         CredalSet([PMFunc({'a': '3/100', 'c': '9/10', 'b': '7/100'})])
+
+          .. todo::
+
+            see whether all set functionality is carried over
 
         """
         set.add(self, PMFunc(data))
@@ -121,6 +104,10 @@ class CredalSet(set):
         >>> K.discard(PMFunc({'a'}))
         >>> K
         CredalSet([PMFunc({'b': 1})])
+
+          .. todo::
+
+            see whether all set functionality is carried over
 
         """
         set.discard(self, PMFunc(data))
