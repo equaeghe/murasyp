@@ -1,10 +1,11 @@
 # coding: utf-8
 
 from collections import Mapping
-from cdd import Matrix, LPObjType, LinProg, LPStatusType, RepType, Polyhedron
+from cdd import Matrix, LPObjType, LinProg, LPStatusType
 from murasyp import _make_rational
 from murasyp.gambles import Gamble, Ray, Cone
-from murasyp.massfuncs import PMFunc
+import murasyp.credalsets
+import murasyp.mathprog
 
 class DesirSet(set):
     """A set of cones
@@ -340,17 +341,5 @@ class DesirSet(set):
 
         """
         C = Cone.union(*self)
-        pspace = list(C.domain())
-        mat = Matrix(list([0] + list(ray[x] for x in pspace) for ray in C),
-                     number_type='fraction')
-        mat.rep_type = RepType.INEQUALITY
-        poly = Polyhedron(mat)
-        ext = poly.get_generators()
-        return CredalSet([PMFunc({pspace[j-1]: ext[i][j]
-                                  for j in range(1, ext.col_size)})
-                          for i in range(0, ext.row_size)] +
-                         [PMFunc({pspace[j-1]: -ext[i][j]
-                                  for j in range(1, ext.col_size)})
-                          for i in ext.lin_set])
+        return murasyp.credalsets.CredalSet(murasyp.mathprog.vf_enumeration(C))
 
-from murasyp.credalsets import CredalSet # avoid circular-dependency

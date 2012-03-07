@@ -1,7 +1,9 @@
 from collections import Mapping
-from cdd import Matrix, RepType, Polyhedron
+from cdd import Matrix, RepType
 from murasyp.massfuncs import PMFunc
 from murasyp.gambles import Gamble, Ray
+import murasyp.credalsets
+import murasyp.mathprog
 
 class CredalSet(set):
     """A set of probability mass functions
@@ -206,18 +208,4 @@ class CredalSet(set):
         DesirSet([Cone([Ray({'a': 1}), Ray({'b': 1}), Ray({'c': 1}), Ray({'a': 1, 'c': 1, 'b': -1})])])
 
         """
-        pspace = list(self.pspace())
-        K = list(self)
-        mat = Matrix(list([0] + list(pmf[x] for x in pspace) for pmf in K),
-                     number_type='fraction')
-        mat.rep_type = RepType.INEQUALITY
-        poly = Polyhedron(mat)
-        ext = poly.get_generators()
-        return DesirSet([[Ray({pspace[j-1]: ext[i][j]
-                               for j in range(1, ext.col_size)})
-                          for i in range(0, ext.row_size)] +
-                         [Ray({pspace[j-1]: -ext[i][j]
-                               for j in range(1, ext.col_size)})
-                          for i in ext.lin_set]])
-
-from murasyp.desirs import DesirSet # avoid circular-dependency
+        return murasyp.desirs.DesirSet([murasyp.mathprog.vf_enumeration(self)])

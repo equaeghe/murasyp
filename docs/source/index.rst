@@ -28,6 +28,15 @@ Main classes
   massfuncs
   credalsets
 
+
+Helper classes
+--------------
+
+.. toctree::
+  :maxdepth: 2
+
+  mathprog
+
 Indices and tables
 ------------------
 
