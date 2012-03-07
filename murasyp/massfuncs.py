@@ -1,4 +1,3 @@
-from itertools import repeat
 from collections import Set, Mapping
 from fractions import Fraction
 from murasyp import _make_rational
