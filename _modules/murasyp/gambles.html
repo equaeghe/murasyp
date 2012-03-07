@@ -3,13 +3,16 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
+
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>murasyp.gambles &mdash; murasyp v(git) documentation</title>
+    <title>murasyp.gambles &mdash; murasyp (git) documentation</title>
+    
     <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
@@ -23,7 +26,7 @@
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
     <link rel="author" title="About these documents" href="../../about.html" />
-    <link rel="top" title="murasyp v(git) documentation" href="../../index.html" />
+    <link rel="top" title="murasyp (git) documentation" href="../../index.html" />
     <link rel="up" title="Module code" href="../index.html" /> 
   </head>
   <body>
@@ -36,7 +39,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../index.html">murasyp v(git) documentation</a> &raquo;</li>
+        <li><a href="../../index.html">murasyp (git) documentation</a> &raquo;</li>
           <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
       </ul>
     </div>  
@@ -47,10 +50,9 @@
           <div class="body">
             
   <h1>Source code for murasyp.gambles</h1><div class="highlight"><pre>
-<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">repeat</span>
-<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Set</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Set</span><span class="p">,</span> <span class="n">Mapping</span>
 <span class="kn">from</span> <span class="nn">murasyp</span> <span class="kn">import</span> <span class="n">_make_rational</span>
-<span class="kn">from</span> <span class="nn">murasyp.vectors</span> <span class="kn">import</span> <span class="n">Vector</span>
+<span class="kn">from</span> <span class="nn">murasyp.vectors</span> <span class="kn">import</span> <span class="n">Vector</span><span class="p">,</span> <span class="n">Polytope</span>
 
 <div class="viewcode-block" id="Gamble"><a class="viewcode-back" href="../../gambles.html#murasyp.gambles.Gamble">[docs]</a><span class="k">class</span> <span class="nc">Gamble</span><span class="p">(</span><span class="n">Vector</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Gambles map states to utility payoffs</span>
@@ -60,16 +62,20 @@
 
 <span class="sd">    What has changed:</span>
 
-<span class="sd">    * There is a new constructor. If `data` is a :class:`~collections.Set`,</span>
-<span class="sd">      then its so-called indicator function is generated.</span>
+<span class="sd">    * There is a new constructor. If `data` is not a</span>
+<span class="sd">      :class:`~collections.Mapping`, but is a :class:`~collections.Iterable`</span>
+<span class="sd">      :class:`~collections.Hashable` :class:`~collections.Container`, then its</span>
+<span class="sd">      so-called indicator function is generated.</span>
 
-<span class="sd">      &gt;&gt;&gt; Gamble(set(&#39;abc&#39;))</span>
+<span class="sd">      &gt;&gt;&gt; Gamble(&#39;abc&#39;)</span>
 <span class="sd">      Gamble({&#39;a&#39;: 1, &#39;c&#39;: 1, &#39;b&#39;: 1})</span>
+<span class="sd">      &gt;&gt;&gt; Gamble({&#39;abc&#39;})</span>
+<span class="sd">      Gamble({&#39;abc&#39;: 1})</span>
 
 <span class="sd">    * Pointwise multiplication and scalar addition &amp; subtraction</span>
 <span class="sd">      have been added.</span>
 
-<span class="sd">      &gt;&gt;&gt; f = Gamble({&#39;a&#39;: 1.1, &#39;b&#39;: &#39;-1/2&#39;,&#39;c&#39;: 0})</span>
+<span class="sd">      &gt;&gt;&gt; f = Gamble({&#39;a&#39;: 1.1, &#39;b&#39;: &#39;-1/2&#39;, &#39;c&#39;: 0})</span>
 <span class="sd">      &gt;&gt;&gt; g = Gamble({&#39;b&#39;: &#39;.6&#39;, &#39;c&#39;: -2, &#39;d&#39;: 0.0})</span>
 <span class="sd">      &gt;&gt;&gt; f * g</span>
 <span class="sd">      Gamble({&#39;a&#39;: 0, &#39;c&#39;: 0, &#39;b&#39;: &#39;-3/10&#39;, &#39;d&#39;: 0})</span>
@@ -84,11 +90,12 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="p">{}):</span>
         <span class="sd">&quot;&quot;&quot;Create a gamble&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">Set</span><span class="p">):</span> <span class="c"># indicators</span>
-            <span class="n">data</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">repeat</span><span class="p">(</span><span class="mi">1</span><span class="p">)))</span>
-        <span class="n">Vector</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">):</span>  <span class="c"># Hashable Mapping to Rational</span>
+            <span class="n">Vector</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span> <span class="c"># indicator over Hashable Container</span>
+            <span class="n">Vector</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">{</span><span class="n">component</span><span class="p">:</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">component</span> <span class="ow">in</span> <span class="n">data</span><span class="p">})</span>
 
     <span class="k">def</span> <span class="nf">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Also allow addition of gambles and scalars&quot;&quot;&quot;</span>
@@ -192,21 +199,19 @@
 
 </div></div>
 <div class="viewcode-block" id="Ray"><a class="viewcode-back" href="../../gambles.html#murasyp.gambles.Ray">[docs]</a><span class="k">class</span> <span class="nc">Ray</span><span class="p">(</span><span class="n">Gamble</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Rays are directions in gamble space, i.e., normalized gambles</span>
+    <span class="sd">&quot;&quot;&quot;Rays are the origin or directions in gamble space</span>
 
 <span class="sd">    This class derives from :class:`~murasyp.gambles.Gamble`, so its methods</span>
 <span class="sd">    apply here as well.</span>
 
 <span class="sd">    What has changed:</span>
 
-<span class="sd">    * Its max-norm is one and its domain coincides with its support.</span>
+<span class="sd">    * Its domain coincides with its support and it is max-normalized.</span>
 
 <span class="sd">      &gt;&gt;&gt; Ray({&#39;a&#39;: 5, &#39;b&#39;: -1, &#39;c&#39;: 0})</span>
 <span class="sd">      Ray({&#39;a&#39;: 1, &#39;b&#39;: &#39;-1/5&#39;})</span>
 <span class="sd">      &gt;&gt;&gt; Ray({&#39;a&#39;: 0})</span>
-<span class="sd">      Traceback (most recent call last):</span>
-<span class="sd">        ...</span>
-<span class="sd">      ValueError: no Ray can be constructed from the identically zero Mapping {&#39;a&#39;: 0}</span>
+<span class="sd">      Ray({})</span>
 
 <span class="sd">    * Ray-arithmetic results in gambles (which can be converted to rays).</span>
 
@@ -216,25 +221,25 @@
 <span class="sd">      &gt;&gt;&gt; Ray(r * r)</span>
 <span class="sd">      Ray({&#39;a&#39;: &#39;1/4&#39;, &#39;b&#39;: 1})</span>
 
-<span class="sd">    .. warning:</span>
+<span class="sd">      .. warning::</span>
 
-<span class="sd">      Currently, ray addition incorrectly returns rays:</span>
+<span class="sd">        Currently, ray addition incorrectly returns rays:</span>
 
-<span class="sd">      &gt;&gt;&gt; r = Ray({&#39;b&#39;, &#39;c&#39;})</span>
-<span class="sd">      &gt;&gt;&gt; r + r</span>
-<span class="sd">      Ray({&#39;c&#39;: 1, &#39;b&#39;: 1})</span>
-<span class="sd">      &gt;&gt;&gt; 2 * r</span>
-<span class="sd">      Gamble({&#39;c&#39;: 2, &#39;b&#39;: 2})</span>
+<span class="sd">        &gt;&gt;&gt; r = Ray({&#39;b&#39;, &#39;c&#39;})</span>
+<span class="sd">        &gt;&gt;&gt; r + r</span>
+<span class="sd">        Ray({&#39;c&#39;: 1, &#39;b&#39;: 1})</span>
+<span class="sd">        &gt;&gt;&gt; 2 * r</span>
+<span class="sd">        Gamble({&#39;c&#39;: 2, &#39;b&#39;: 2})</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="p">{}):</span>
         <span class="sd">&quot;&quot;&quot;Create a ray&quot;&quot;&quot;</span>
         <span class="n">gamble</span> <span class="o">=</span> <span class="n">Gamble</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">normalized</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">gamble</span> <span class="o">==</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;no Ray can be constructed from &quot;</span>
-                             <span class="o">+</span> <span class="s">&quot;the identically zero Mapping &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
-        <span class="n">Gamble</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gamble</span> <span class="o">|</span> <span class="n">gamble</span><span class="o">.</span><span class="n">support</span><span class="p">())</span>
+            <span class="n">Gamble</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">Gamble</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gamble</span> <span class="o">|</span> <span class="n">gamble</span><span class="o">.</span><span class="n">support</span><span class="p">())</span>
 
     <span class="k">def</span> <span class="nf">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Multiplication of rays (and other types)&quot;&quot;&quot;</span>
@@ -249,85 +254,40 @@
         <span class="k">return</span> <span class="n">Gamble</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">/</span> <span class="n">other</span>
 
     <span class="n">__rmul__</span> <span class="o">=</span> <span class="n">__mul__</span>
-
 </div>
-<div class="viewcode-block" id="Origin"><a class="viewcode-back" href="../../gambles.html#murasyp.gambles.Origin">[docs]</a><span class="k">class</span> <span class="nc">Origin</span><span class="p">(</span><span class="n">Gamble</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;The origin is a zero gamble</span>
+<div class="viewcode-block" id="Cone"><a class="viewcode-back" href="../../gambles.html#murasyp.gambles.Cone">[docs]</a><span class="k">class</span> <span class="nc">Cone</span><span class="p">(</span><span class="n">Polytope</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A frozenset of rays</span>
 
-<span class="sd">    This class derives from :class:`~murasyp.gambles.Gamble`, so its methods</span>
+<span class="sd">      :type `data`: a non-:class:`~collections.Mapping`</span>
+<span class="sd">        :class:`~collections.Iterable` :class:`~collections.Container` of</span>
+<span class="sd">        arguments accepted by the :class:`~murasyp.gambles.Ray` constructor.</span>
+
+<span class="sd">      &gt;&gt;&gt; Cone([{&#39;a&#39;: 2, &#39;b&#39;: 3}, {&#39;b&#39;: 1, &#39;c&#39;: 4}])</span>
+<span class="sd">      Cone([Ray({&#39;a&#39;: &#39;2/3&#39;, &#39;b&#39;: 1}), Ray({&#39;c&#39;: 1, &#39;b&#39;: &#39;1/4&#39;})])</span>
+<span class="sd">      &gt;&gt;&gt; Cone(&#39;abc&#39;)</span>
+<span class="sd">      Cone([Ray({&#39;a&#39;: 1}), Ray({&#39;b&#39;: 1}), Ray({&#39;c&#39;: 1})])</span>
+<span class="sd">      &gt;&gt;&gt; Cone({&#39;ab&#39;, &#39;bc&#39;})</span>
+<span class="sd">      Cone([Ray({&#39;c&#39;: 1, &#39;b&#39;: 1}), Ray({&#39;a&#39;: 1, &#39;b&#39;: 1})])</span>
+
+<span class="sd">    This class derives from :class:`~murasyp.vectors.Polytope`, so its methods</span>
 <span class="sd">    apply here as well.</span>
 
-<span class="sd">    What has changed:</span>
+<span class="sd">      .. todo::</span>
 
-<span class="sd">    * Its constructor does not accept any arguments, because only the zero</span>
-<span class="sd">      gamble is created.</span>
-
-<span class="sd">      &gt;&gt;&gt; o = Origin()</span>
-<span class="sd">      &gt;&gt;&gt; o[&#39;a&#39;]</span>
-<span class="sd">      0</span>
-<span class="sd">      &gt;&gt;&gt; o[50]</span>
-<span class="sd">      0</span>
-<span class="sd">      &gt;&gt;&gt; o[&quot;any valid argument&quot;]</span>
-<span class="sd">      0</span>
-<span class="sd">      &gt;&gt;&gt; Origin({&#39;a&#39;})</span>
-<span class="sd">      Traceback (most recent call last):</span>
-<span class="sd">        ...</span>
-<span class="sd">      TypeError: __init__() takes exactly 1 argument (2 given)</span>
-
+<span class="sd">        test all set methods and fix, or elegantly deal with, broken ones</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Create an origin&quot;&quot;&quot;</span>
-        <span class="n">Gamble</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">{})</span>
-</div>
-<div class="viewcode-block" id="DiRay"><a class="viewcode-back" href="../../gambles.html#murasyp.gambles.DiRay">[docs]</a><span class="k">class</span> <span class="nc">DiRay</span><span class="p">(</span><span class="n">Ray</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Dirays are two-tier lexicographical rays</span>
-
-<span class="sd">    This class derives from :class:`~murasyp.gambles.Ray`, so its</span>
-<span class="sd">    methods apply here as well.</span>
-
-<span class="sd">    What has changed:</span>
-
-<span class="sd">    * The constructor has changed: it now accepts a second argument that would</span>
-<span class="sd">      be accepted by the :class:`~murasyp.gambles.Ray` constructor, but it need</span>
-<span class="sd">      not be given explicitly.</span>
-
-<span class="sd">      &gt;&gt;&gt; DiRay({&#39;a&#39;, &#39;b&#39;}, {&#39;a&#39;, &#39;c&#39;})</span>
-<span class="sd">      DiRay({&#39;a&#39;: 1, &#39;b&#39;: 1}, {&#39;a&#39;: 1, &#39;c&#39;: 1})</span>
-<span class="sd">      &gt;&gt;&gt; DiRay({&#39;a&#39;, &#39;b&#39;})</span>
-<span class="sd">      DiRay({&#39;a&#39;: 1, &#39;b&#39;: 1}, {})</span>
-<span class="sd">      &gt;&gt;&gt; DiRay({&#39;a&#39;, &#39;b&#39;}, {})</span>
-<span class="sd">      DiRay({&#39;a&#39;: 1, &#39;b&#39;: 1}, {})</span>
-
-<span class="sd">    * The second tier ray can be accessed through the `dir` variable.</span>
-
-<span class="sd">      &gt;&gt;&gt; DiRay({&#39;a&#39;, &#39;b&#39;}, {&#39;a&#39;, &#39;c&#39;}).dir</span>
-<span class="sd">      Ray({&#39;a&#39;: 1, &#39;c&#39;: 1})</span>
-<span class="sd">      &gt;&gt;&gt; DiRay({&#39;a&#39;, &#39;b&#39;}).dir</span>
-<span class="sd">      Origin({})</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">dir_data</span><span class="o">=</span><span class="p">{}):</span>
-        <span class="sd">&quot;&quot;&quot;Create a diray&quot;&quot;&quot;</span>
-        <span class="n">Ray</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">dir_data</span> <span class="o">==</span> <span class="p">{}:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">dir</span> <span class="o">=</span> <span class="n">Origin</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="p">[]):</span>
+        <span class="sd">&quot;&quot;&quot;Create a frozenset of rays&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">cls</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot; does not accept a mapping,&quot;</span>
+                            <span class="o">+</span> <span class="s">&quot; but you passed it &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">dir</span> <span class="o">=</span> <span class="n">Ray</span><span class="p">(</span><span class="n">dir_data</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">frozenset</span><span class="o">.</span><span class="n">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="p">(</span><span class="n">Ray</span><span class="p">(</span><span class="n">element</span><span class="p">)</span> <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">data</span><span class="p">))</span>
 
-    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return a readable string representation&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__name__</span> <span class="o">+</span> <span class="s">&#39;({&#39;</span>
-                <span class="o">+</span> <span class="s">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span> <span class="o">+</span> <span class="s">&#39;: &#39;</span>
-                         <span class="o">+</span> <span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">val</span><span class="p">))</span> <span class="k">if</span> <span class="s">&#39;/&#39;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="k">else</span> <span class="nb">str</span><span class="p">(</span><span class="n">val</span><span class="p">))</span>
-                         <span class="k">for</span> <span class="n">arg</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mapping</span><span class="o">.</span><span class="n">iteritems</span><span class="p">())</span>
-                <span class="o">+</span> <span class="s">&#39;}, {&#39;</span>
-                <span class="o">+</span> <span class="s">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span> <span class="o">+</span> <span class="s">&#39;: &#39;</span>
-                         <span class="o">+</span> <span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">val</span><span class="p">))</span> <span class="k">if</span> <span class="s">&#39;/&#39;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="k">else</span> <span class="nb">str</span><span class="p">(</span><span class="n">val</span><span class="p">))</span>
-                         <span class="k">for</span> <span class="n">arg</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dir</span><span class="o">.</span><span class="n">_mapping</span><span class="o">.</span><span class="n">iteritems</span><span class="p">())</span>
-                <span class="o">+</span> <span class="s">&#39;})&#39;</span><span class="p">)</span>
-
-    <span class="n">__str__</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">:</span> <span class="nb">str</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">_mapping</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dir</span><span class="o">.</span><span class="n">_mapping</span><span class="p">))</span></div>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="p">[]):</span> <span class="c"># only here for Sphinx to pick up the argument</span>
+        <span class="sd">&quot;&quot;&quot;Initialize the cone&quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
 </pre></div>
 
           </div>
@@ -338,7 +298,7 @@
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../../search.html" method="get">
-      <input type="text" name="q" size="18" />
+      <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
@@ -361,13 +321,13 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../index.html">murasyp v(git) documentation</a> &raquo;</li>
+        <li><a href="../../index.html">murasyp (git) documentation</a> &raquo;</li>
           <li><a href="../index.html" >Module code</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2011–2012, Erik Quaeghebeur.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
     </div>
   </body>
 </html>

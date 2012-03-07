@@ -3,13 +3,16 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
+
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>murasyp.desirs &mdash; murasyp v(git) documentation</title>
+    <title>murasyp.desirs &mdash; murasyp (git) documentation</title>
+    
     <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
@@ -23,7 +26,7 @@
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
     <link rel="author" title="About these documents" href="../../about.html" />
-    <link rel="top" title="murasyp v(git) documentation" href="../../index.html" />
+    <link rel="top" title="murasyp (git) documentation" href="../../index.html" />
     <link rel="up" title="Module code" href="../index.html" /> 
   </head>
   <body>
@@ -36,7 +39,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../index.html">murasyp v(git) documentation</a> &raquo;</li>
+        <li><a href="../../index.html">murasyp (git) documentation</a> &raquo;</li>
           <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
       </ul>
     </div>  
@@ -47,35 +50,45 @@
           <div class="body">
             
   <h1>Source code for murasyp.desirs</h1><div class="highlight"><pre>
-<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Set</span><span class="p">,</span> <span class="n">MutableSet</span><span class="p">,</span> <span class="n">Mapping</span>
-<span class="kn">from</span> <span class="nn">cdd</span> <span class="kn">import</span> <span class="n">Matrix</span><span class="p">,</span> <span class="n">LPObjType</span><span class="p">,</span> <span class="n">LinProg</span><span class="p">,</span> <span class="n">LPStatusType</span><span class="p">,</span> <span class="n">RepType</span><span class="p">,</span> <span class="n">Polyhedron</span>
+<span class="c"># coding: utf-8</span>
+
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Mapping</span>
+<span class="kn">from</span> <span class="nn">cdd</span> <span class="kn">import</span> <span class="n">Matrix</span><span class="p">,</span> <span class="n">LPObjType</span><span class="p">,</span> <span class="n">LinProg</span><span class="p">,</span> <span class="n">LPStatusType</span>
 <span class="kn">from</span> <span class="nn">murasyp</span> <span class="kn">import</span> <span class="n">_make_rational</span>
-<span class="kn">from</span> <span class="nn">murasyp.gambles</span> <span class="kn">import</span> <span class="n">Gamble</span><span class="p">,</span> <span class="n">Ray</span>
-<span class="kn">from</span> <span class="nn">murasyp.massfuncs</span> <span class="kn">import</span> <span class="n">PMFunc</span>
+<span class="kn">from</span> <span class="nn">murasyp.gambles</span> <span class="kn">import</span> <span class="n">Gamble</span><span class="p">,</span> <span class="n">Ray</span><span class="p">,</span> <span class="n">Cone</span>
+<span class="kn">import</span> <span class="nn">murasyp.credalsets</span>
+<span class="kn">import</span> <span class="nn">murasyp.mathprog</span>
 
-<div class="viewcode-block" id="DesirSet"><a class="viewcode-back" href="../../desirs.html#murasyp.desirs.DesirSet">[docs]</a><span class="k">class</span> <span class="nc">DesirSet</span><span class="p">(</span><span class="n">MutableSet</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;A mutable set of rays</span>
+<div class="viewcode-block" id="DesirSet"><a class="viewcode-back" href="../../desirs.html#murasyp.desirs.DesirSet">[docs]</a><span class="k">class</span> <span class="nc">DesirSet</span><span class="p">(</span><span class="nb">set</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A set of cones</span>
 
-<span class="sd">      :type data: a :class:`~collections.Set` of :class:`~collections.Mapping`,</span>
-<span class="sd">          each of which can be normalized to a :class:`~murasyp.gambles.Ray`,</span>
-<span class="sd">          i.e., it must be nonconstant.</span>
+<span class="sd">      :type `data`: a non-:class:`~collections.Mapping`</span>
+<span class="sd">        :class:`~collections.Iterable` :class:`~collections.Container` of</span>
+<span class="sd">        arguments accepted by the :class:`~murasyp.gambles.Cone` constructor.</span>
 
-<span class="sd">    Features:</span>
+<span class="sd">      &gt;&gt;&gt; DesirSet(&#39;abc&#39;)</span>
+<span class="sd">      DesirSet([Cone([Ray({&#39;b&#39;: 1})]), Cone([Ray({&#39;c&#39;: 1})]), Cone([Ray({&#39;a&#39;: 1})])])</span>
+<span class="sd">      &gt;&gt;&gt; DesirSet([&#39;abc&#39;])</span>
+<span class="sd">      DesirSet([Cone([Ray({&#39;a&#39;: 1}), Ray({&#39;b&#39;: 1}), Ray({&#39;c&#39;: 1})])])</span>
+<span class="sd">      &gt;&gt;&gt; DesirSet([[&#39;abc&#39;]])</span>
+<span class="sd">      DesirSet([Cone([Ray({&#39;a&#39;: 1, &#39;c&#39;: 1, &#39;b&#39;: 1})])])</span>
 
-<span class="sd">    * There is an alternate constructor. If `data` is a</span>
-<span class="sd">      :class:`~collections.Set` without :class:`~collections.Mapping`-members,</span>
-<span class="sd">      then a relative set of desirable gambles is generated.</span>
+<span class="sd">    This class derives from :class:`~set`, so its methods apply here as</span>
+<span class="sd">    well.</span>
 
-<span class="sd">      &gt;&gt;&gt; DesirSet(set(&#39;abc&#39;))</span>
-<span class="sd">      DesirSet(set([Ray({&#39;a&#39;: 1}), Ray({&#39;b&#39;: 1}), Ray({&#39;c&#39;: 1})]))</span>
+<span class="sd">      .. todo::</span>
+
+<span class="sd">        test all set methods and fix, or elegantly deal with, broken ones</span>
+
+<span class="sd">    Additional and changed methods:</span>
 
 <span class="sd">    * Lower and upper (conditional) expectations can be calculated, using the</span>
 <span class="sd">      ``*`` and ``**`` operators, respectively.</span>
 
-<span class="sd">      &gt;&gt;&gt; D = DesirSet(set([Ray({&#39;a&#39;: -1, &#39;c&#39;: &#39;7/90&#39;}),</span>
-<span class="sd">      ...                   Ray({&#39;a&#39;: 1, &#39;c&#39;: &#39;-1/30&#39;}),</span>
-<span class="sd">      ...                   Ray({&#39;a&#39;: -1, &#39;c&#39;: &#39;1/9&#39;, &#39;b&#39;: -1}),</span>
-<span class="sd">      ...                   Ray({&#39;a&#39;: 1, &#39;c&#39;: &#39;-1/9&#39;, &#39;b&#39;: 1})]))</span>
+<span class="sd">      &gt;&gt;&gt; D = DesirSet([[Gamble({&#39;a&#39;: -1, &#39;c&#39;: &#39;7/90&#39;}),</span>
+<span class="sd">      ...                Gamble({&#39;a&#39;: 1, &#39;c&#39;: &#39;-1/30&#39;}),</span>
+<span class="sd">      ...                Gamble({&#39;a&#39;: -1, &#39;c&#39;: &#39;1/9&#39;, &#39;b&#39;: -1}),</span>
+<span class="sd">      ...                Gamble({&#39;a&#39;: 1, &#39;c&#39;: &#39;-1/9&#39;, &#39;b&#39;: 1})]])</span>
 <span class="sd">      &gt;&gt;&gt; f = Gamble({&#39;a&#39;: -1, &#39;b&#39;: 1, &#39;c&#39;: 0})</span>
 <span class="sd">      &gt;&gt;&gt; D * f</span>
 <span class="sd">      Fraction(-1, 25)</span>
@@ -88,173 +101,135 @@
 
 <span class="sd">      .. note::</span>
 
-<span class="sd">        The domain of the gamble determines the conditioning event.</span>
+<span class="sd">          The domain of the gamble determines the conditioning event.</span>
 
 <span class="sd">      .. warning::</span>
 
-<span class="sd">        These operations are not dependable when dealing with a set of</span>
-<span class="sd">        almost desirable gambles.</span>
+<span class="sd">          Currently these methods are broken.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="nb">set</span><span class="p">([])):</span>
-        <span class="sd">&quot;&quot;&quot;Create a set of desirable gambles&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">Set</span><span class="p">):</span>
-            <span class="n">are_mappings</span> <span class="o">=</span> <span class="p">[</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">elem</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">)</span> <span class="k">for</span> <span class="n">elem</span> <span class="ow">in</span> <span class="n">data</span><span class="p">]</span>
-            <span class="k">if</span> <span class="nb">all</span><span class="p">(</span><span class="n">are_mappings</span><span class="p">):</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">Ray</span><span class="p">(</span><span class="n">mapping</span><span class="p">)</span> <span class="k">for</span> <span class="n">mapping</span> <span class="ow">in</span> <span class="n">data</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="n">are_mappings</span><span class="p">):</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">Ray</span><span class="p">({</span><span class="n">x</span><span class="p">})</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">data</span><span class="p">)</span> <span class="c"># vacuous</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s">&quot;either all or none of the elements of the &quot;</span>
-                                <span class="o">+</span> <span class="s">&quot;specified Set &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot;must be &quot;</span>
-                                <span class="o">+</span> <span class="s">&quot;Mappings&quot;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="p">[]):</span>
+        <span class="sd">&quot;&quot;&quot;Initialize a set of desirable gambles&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot; does not accept a mapping,&quot;</span>
+                            <span class="o">+</span> <span class="s">&quot; but you passed it &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s">&quot;specify a Set instead of a &quot;</span>
-                            <span class="o">+</span> <span class="nb">type</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">__name__</span><span class="p">)</span>
+            <span class="nb">set</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">(</span><span class="n">Cone</span><span class="p">(</span><span class="n">element</span><span class="p">)</span> <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">data</span><span class="p">))</span>
 
 <div class="viewcode-block" id="DesirSet.add"><a class="viewcode-back" href="../../desirs.html#murasyp.desirs.DesirSet.add">[docs]</a>    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Add a ray to the set of desirable gambles</span>
+        <span class="sd">&quot;&quot;&quot;Add a cone to the set of desirable gambles</span>
 
-<span class="sd">          :type data: arguments accepted by the :class:`~murasyp.gambles.Ray`</span>
+<span class="sd">          :type `data`: arguments accepted by the :class:`~murasyp.gambles.Cone`</span>
 <span class="sd">            constructor</span>
 
 <span class="sd">        &gt;&gt;&gt; D = DesirSet()</span>
 <span class="sd">        &gt;&gt;&gt; D</span>
-<span class="sd">        DesirSet(set([]))</span>
-<span class="sd">        &gt;&gt;&gt; D.add({&#39;a&#39;: -.06, &#39;b&#39;: .14, &#39;c&#39;: 1.8, &#39;d&#39;: 0})</span>
+<span class="sd">        DesirSet([])</span>
+<span class="sd">        &gt;&gt;&gt; D.add([Gamble({&#39;a&#39;: -.06, &#39;b&#39;: .14, &#39;c&#39;: 1.8, &#39;d&#39;: 0})])</span>
 <span class="sd">        &gt;&gt;&gt; D</span>
-<span class="sd">        DesirSet(set([Ray({&#39;a&#39;: &#39;-1/30&#39;, &#39;c&#39;: 1, &#39;b&#39;: &#39;7/90&#39;})]))</span>
+<span class="sd">        DesirSet([Cone([Ray({&#39;a&#39;: &#39;-1/30&#39;, &#39;c&#39;: 1, &#39;b&#39;: &#39;7/90&#39;})])])</span>
+
+<span class="sd">          .. todo::</span>
+
+<span class="sd">            see whether all set functionality is carried over</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_set</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Ray</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+        <span class="nb">set</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Cone</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
 </div>
 <div class="viewcode-block" id="DesirSet.discard"><a class="viewcode-back" href="../../desirs.html#murasyp.desirs.DesirSet.discard">[docs]</a>    <span class="k">def</span> <span class="nf">discard</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Remove a ray from the credal set</span>
+        <span class="sd">&quot;&quot;&quot;Remove a cone from the set of desirable gambles</span>
 
-<span class="sd">          :type data: arguments accepted by the :class:`~murasyp.gambles.Ray`</span>
+<span class="sd">          :type `data`: arguments accepted by the :class:`~murasyp.gambles.Cone`</span>
 <span class="sd">            constructor</span>
 
 <span class="sd">        &gt;&gt;&gt; D = DesirSet({&#39;a&#39;,&#39;b&#39;})</span>
 <span class="sd">        &gt;&gt;&gt; D</span>
-<span class="sd">        DesirSet(set([Ray({&#39;a&#39;: 1}), Ray({&#39;b&#39;: 1})]))</span>
-<span class="sd">        &gt;&gt;&gt; D.discard(Ray({&#39;a&#39;}))</span>
+<span class="sd">        DesirSet([Cone([Ray({&#39;b&#39;: 1})]), Cone([Ray({&#39;a&#39;: 1})])])</span>
+<span class="sd">        &gt;&gt;&gt; D.discard([Ray({&#39;a&#39;})])</span>
 <span class="sd">        &gt;&gt;&gt; D</span>
-<span class="sd">        DesirSet(set([Ray({&#39;b&#39;: 1})]))</span>
+<span class="sd">        DesirSet([Cone([Ray({&#39;b&#39;: 1})])])</span>
+
+<span class="sd">          .. todo::</span>
+
+<span class="sd">            see whether all set functionality is carried over</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_set</span><span class="o">.</span><span class="n">discard</span><span class="p">(</span><span class="n">Ray</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+        <span class="nb">set</span><span class="o">.</span><span class="n">discard</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">frozenset</span><span class="p">(</span><span class="n">Ray</span><span class="p">(</span><span class="n">element</span><span class="p">)</span> <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">data</span><span class="p">))</span>
 </div>
-    <span class="n">__len__</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_set</span><span class="o">.</span><span class="n">__len__</span><span class="p">()</span>
-    <span class="n">__iter__</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_set</span><span class="o">.</span><span class="n">__iter__</span><span class="p">()</span>
-    <span class="n">__contains__</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_set</span><span class="o">.</span><span class="n">__contains__</span><span class="p">()</span>
-    <span class="n">__repr__</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">:</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__name__</span> <span class="o">+</span> <span class="s">&#39;(&#39;</span> <span class="o">+</span> <span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_set</span><span class="p">)</span> <span class="o">+</span> <span class="s">&#39;)&#39;</span>
-
 <div class="viewcode-block" id="DesirSet.pspace"><a class="viewcode-back" href="../../desirs.html#murasyp.desirs.DesirSet.pspace">[docs]</a>    <span class="k">def</span> <span class="nf">pspace</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;The possibility space of the set of desirable gambles</span>
 
 <span class="sd">          :returns: the possibility space of the set of desirable gambles, i.e.,</span>
-<span class="sd">            the union of the domains of the rays it contains</span>
+<span class="sd">            the union of the domains of the cones it contains</span>
 <span class="sd">          :rtype: :class:`frozenset`</span>
 
-<span class="sd">        &gt;&gt;&gt; r = Ray({&#39;a&#39;: .03, &#39;b&#39;: -.07})</span>
-<span class="sd">        &gt;&gt;&gt; s = Ray({&#39;a&#39;: .07, &#39;c&#39;: -.03})</span>
-<span class="sd">        &gt;&gt;&gt; D = DesirSet({r, s})</span>
+<span class="sd">        &gt;&gt;&gt; D = DesirSet([&#39;abc&#39;])</span>
+<span class="sd">        &gt;&gt;&gt; r = Ray({&#39;c&#39;: .03, &#39;d&#39;: -.07})</span>
+<span class="sd">        &gt;&gt;&gt; s = Ray({&#39;a&#39;: .07, &#39;e&#39;: -.03})</span>
+<span class="sd">        &gt;&gt;&gt; D.add([r, s])</span>
 <span class="sd">        &gt;&gt;&gt; D.pspace()</span>
-<span class="sd">        frozenset([&#39;a&#39;, &#39;c&#39;, &#39;b&#39;])</span>
+<span class="sd">        frozenset([&#39;a&#39;, &#39;c&#39;, &#39;b&#39;, &#39;e&#39;, &#39;d&#39;])</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="nb">frozenset</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="n">ray</span><span class="o">.</span><span class="n">domain</span><span class="p">()</span> <span class="k">for</span> <span class="n">ray</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">))</span>
-</div>
-<div class="viewcode-block" id="DesirSet.discard_redundant"><a class="viewcode-back" href="../../desirs.html#murasyp.desirs.DesirSet.discard_redundant">[docs]</a>    <span class="k">def</span> <span class="nf">discard_redundant</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Remove redundant elements from the set of desirable gambles</span>
-
-<span class="sd">        Redundant elements are those that are not extreme rays of set of</span>
-<span class="sd">        desirable gambles&#39;s convex conical hull.</span>
-
-<span class="sd">        &gt;&gt;&gt; D = DesirSet(set(&#39;abc&#39;))</span>
-<span class="sd">        &gt;&gt;&gt; D.add({&#39;a&#39;: 1, &#39;b&#39;: 1, &#39;c&#39;: 1})</span>
-<span class="sd">        &gt;&gt;&gt; D</span>
-<span class="sd">        DesirSet(set([Ray({&#39;a&#39;: 1, &#39;c&#39;: 1, &#39;b&#39;: 1}), ...]))</span>
-<span class="sd">        &gt;&gt;&gt; D.discard_redundant()</span>
-<span class="sd">        &gt;&gt;&gt; D</span>
-<span class="sd">        DesirSet(set([Ray({&#39;a&#39;: 1}), Ray({&#39;b&#39;: 1}), Ray({&#39;c&#39;: 1})]))</span>
-
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">pspace</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pspace</span><span class="p">())</span>
-        <span class="n">D</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="n">mat</span> <span class="o">=</span> <span class="n">Matrix</span><span class="p">(</span><span class="nb">list</span><span class="p">([</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">ray</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">pspace</span><span class="p">)</span> <span class="k">for</span> <span class="n">ray</span> <span class="ow">in</span> <span class="n">D</span><span class="p">),</span>
-                     <span class="n">number_type</span><span class="o">=</span><span class="s">&#39;fraction&#39;</span><span class="p">)</span>
-        <span class="n">mat</span><span class="o">.</span><span class="n">rep_type</span> <span class="o">=</span> <span class="n">RepType</span><span class="o">.</span><span class="n">GENERATOR</span>
-        <span class="n">lin</span><span class="p">,</span> <span class="n">red</span> <span class="o">=</span> <span class="n">mat</span><span class="o">.</span><span class="n">canonicalize</span><span class="p">()</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">red</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">discard</span><span class="p">(</span><span class="n">D</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="k">return</span> <span class="nb">frozenset</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="n">cone</span><span class="o">.</span><span class="n">domain</span><span class="p">()</span> <span class="k">for</span> <span class="n">cone</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">))</span>
 </div>
 <div class="viewcode-block" id="DesirSet.set_lower_pr"><a class="viewcode-back" href="../../desirs.html#murasyp.desirs.DesirSet.set_lower_pr">[docs]</a>    <span class="k">def</span> <span class="nf">set_lower_pr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Set the lower probability/prevision (expectation) of an event/gamble</span>
 
-<span class="sd">          :arg data: the gamble for which a probability/prevision value is given</span>
-<span class="sd">          :type data: arguments accepted by the :class:`~murasyp.gambles.Ray`</span>
+<span class="sd">          :arg `data`: the gamble for which a probability/prevision value is given</span>
+<span class="sd">          :type `data`: arguments accepted by the :class:`~murasyp.gambles.Gamble`</span>
 <span class="sd">            constructor</span>
-<span class="sd">          :arg val: the probability/prevision value</span>
-<span class="sd">          :type val: a representation of :class:`~numbers.Real`</span>
+<span class="sd">          :arg `val`: the probability/prevision value</span>
+<span class="sd">          :type `val`: a representation of :class:`~numbers.Real`</span>
 
-<span class="sd">        The marginal gamble corresponing to the prevision specification is</span>
+<span class="sd">        The nontrivial cone corresponing to the prevision specification is</span>
 <span class="sd">        calculated and added to the set of desirable gambles.</span>
 
 <span class="sd">        &gt;&gt;&gt; D = DesirSet()</span>
 <span class="sd">        &gt;&gt;&gt; D.set_lower_pr(Gamble({&#39;a&#39;, &#39;b&#39;}) | {&#39;a&#39;, &#39;b&#39;, &#39;c&#39;}, .4)</span>
 <span class="sd">        &gt;&gt;&gt; D</span>
-<span class="sd">        DesirSet(set([Ray({&#39;a&#39;: 1, &#39;c&#39;: &#39;-2/3&#39;, &#39;b&#39;: 1})]))</span>
+<span class="sd">        DesirSet([Cone([Ray({&#39;a&#39;: 1, &#39;c&#39;: 1, &#39;b&#39;: 1}), Ray({&#39;a&#39;: 1, &#39;c&#39;: &#39;-2/3&#39;, &#39;b&#39;: 1})])])</span>
 
 <span class="sd">        .. note::</span>
 
 <span class="sd">          The domain of the input gamble determines the conditioning event.</span>
 
-<span class="sd">        .. warning::</span>
-
-<span class="sd">          The set of desirable gambles becomes a set of *almost* desirable</span>
-<span class="sd">          gambles.</span>
-
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Gamble</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">-</span> <span class="n">_make_rational</span><span class="p">(</span><span class="n">val</span><span class="p">))</span>
+        <span class="n">gamble</span> <span class="o">=</span> <span class="n">Gamble</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">({</span><span class="n">gamble</span> <span class="o">-</span> <span class="n">_make_rational</span><span class="p">(</span><span class="n">val</span><span class="p">),</span> <span class="n">Ray</span><span class="p">(</span><span class="n">gamble</span><span class="o">.</span><span class="n">domain</span><span class="p">())})</span>
 </div>
 <div class="viewcode-block" id="DesirSet.set_upper_pr"><a class="viewcode-back" href="../../desirs.html#murasyp.desirs.DesirSet.set_upper_pr">[docs]</a>    <span class="k">def</span> <span class="nf">set_upper_pr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Set the upper probability/prevision (expectation) of an event/gamble</span>
 
-<span class="sd">          :arg data: the gamble for which a probability/prevision value is given</span>
-<span class="sd">          :type data: arguments accepted by the :class:`~murasyp.gambles.Ray`</span>
+<span class="sd">          :arg `data`: the gamble for which a probability/prevision value is given</span>
+<span class="sd">          :type `data`: arguments accepted by the :class:`~murasyp.gambles.Gamble`</span>
 <span class="sd">            constructor</span>
-<span class="sd">          :arg val: the probability/prevision value</span>
-<span class="sd">          :type val: a representation of :class:`~numbers.Real`</span>
+<span class="sd">          :arg `val`: the probability/prevision value</span>
+<span class="sd">          :type `val`: a representation of :class:`~numbers.Real`</span>
 
-<span class="sd">        The marginal gamble corresponing to the prevision specification is</span>
+<span class="sd">        The nontrivial cone corresponing to the prevision specification is</span>
 <span class="sd">        calculated and added to the set of desirable gambles.</span>
 
 <span class="sd">        &gt;&gt;&gt; D = DesirSet()</span>
 <span class="sd">        &gt;&gt;&gt; D.set_upper_pr(Gamble({&#39;a&#39;, &#39;b&#39;}) | {&#39;a&#39;, &#39;b&#39;, &#39;c&#39;}, .4)</span>
 <span class="sd">        &gt;&gt;&gt; D</span>
-<span class="sd">        DesirSet(set([Ray({&#39;a&#39;: -1, &#39;c&#39;: &#39;2/3&#39;, &#39;b&#39;: -1})]))</span>
+<span class="sd">        DesirSet([Cone([Ray({&#39;a&#39;: 1, &#39;c&#39;: 1, &#39;b&#39;: 1}), Ray({&#39;a&#39;: -1, &#39;c&#39;: &#39;2/3&#39;, &#39;b&#39;: -1})])])</span>
 
 <span class="sd">        .. note::</span>
 
 <span class="sd">          The domain of the input gamble determines the conditioning event.</span>
 
-<span class="sd">        .. warning::</span>
-
-<span class="sd">          The set of desirable gambles becomes a set of *almost* desirable</span>
-<span class="sd">          gambles.</span>
-
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">_make_rational</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="o">-</span> <span class="n">Gamble</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_lower_pr</span><span class="p">(</span><span class="o">-</span><span class="n">Gamble</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="o">-</span><span class="n">val</span><span class="p">)</span>
 </div>
 <div class="viewcode-block" id="DesirSet.set_pr"><a class="viewcode-back" href="../../desirs.html#murasyp.desirs.DesirSet.set_pr">[docs]</a>    <span class="k">def</span> <span class="nf">set_pr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Set the probability/prevision (expectation) of an event/gamble</span>
 
-<span class="sd">          :arg data: the gamble for which a probability/prevision value is given</span>
-<span class="sd">          :type data: arguments accepted by the :class:`~murasyp.gambles.Ray`</span>
+<span class="sd">          :arg `data`: the gamble for which a probability/prevision value is given</span>
+<span class="sd">          :type `data`: arguments accepted by the :class:`~murasyp.gambles.Gamble`</span>
 <span class="sd">            constructor</span>
-<span class="sd">          :arg val: the probability/prevision value</span>
-<span class="sd">          :type val: a representation of :class:`~numbers.Real`</span>
+<span class="sd">          :arg `val`: the probability/prevision value</span>
+<span class="sd">          :type `val`: a representation of :class:`~numbers.Real`</span>
 
 <span class="sd">        This is identical to setting the lower and upper prevision to the same</span>
 <span class="sd">        value.</span>
@@ -262,16 +237,11 @@
 <span class="sd">        &gt;&gt;&gt; D = DesirSet()</span>
 <span class="sd">        &gt;&gt;&gt; D.set_pr(Gamble({&#39;a&#39;, &#39;b&#39;}) | {&#39;a&#39;, &#39;b&#39;, &#39;c&#39;}, .4)</span>
 <span class="sd">        &gt;&gt;&gt; D</span>
-<span class="sd">        DesirSet(set([Ray({&#39;a&#39;: -1, &#39;c&#39;: &#39;2/3&#39;, &#39;b&#39;: -1}), Ray({&#39;a&#39;: 1, &#39;c&#39;: &#39;-2/3&#39;, &#39;b&#39;: 1})]))</span>
+<span class="sd">        DesirSet([Cone([Ray({&#39;a&#39;: 1, &#39;c&#39;: 1, &#39;b&#39;: 1}), Ray({&#39;a&#39;: 1, &#39;c&#39;: &#39;-2/3&#39;, &#39;b&#39;: 1})]), Cone([Ray({&#39;a&#39;: 1, &#39;c&#39;: 1, &#39;b&#39;: 1}), Ray({&#39;a&#39;: -1, &#39;c&#39;: &#39;2/3&#39;, &#39;b&#39;: -1})])])</span>
 
 <span class="sd">        .. note::</span>
 
 <span class="sd">          The domain of the input gamble determines the conditioning event.</span>
-
-<span class="sd">        .. warning::</span>
-
-<span class="sd">          The set of desirable gambles becomes a set of *almost* desirable</span>
-<span class="sd">          gambles.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_lower_pr</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
@@ -282,20 +252,22 @@
 
 <span class="sd">          :rtype: :class:`bool`</span>
 
-<span class="sd">        We solve a feasibility (linear programming) problem: If we can find</span>
-<span class="sd">        a vector :math:`\lambda\in(\mathbb{R}_{\geq0})^{\mathcal{D}}`</span>
-<span class="sd">        such that :math:`\sum_{f\in\mathcal{D}}\lambda_f\cdot f\leq-1`,</span>
-<span class="sd">        then the set of desirable gambles :math:`\mathcal{D}`</span>
-<span class="sd">        incurs sure loss.</span>
+<span class="sd">        A set of desirable gambles does not avoid sure loss if and only if some</span>
+<span class="sd">        nonnegative linear combination of desirable gambles is everywhere</span>
+<span class="sd">        negative.</span>
 
 <span class="sd">        &gt;&gt;&gt; D = DesirSet(set(&#39;abc&#39;))</span>
-<span class="sd">        &gt;&gt;&gt; D.add({&#39;a&#39;: -1, &#39;b&#39;: -1, &#39;c&#39;: 1})</span>
-<span class="sd">        &gt;&gt;&gt; D.add({&#39;a&#39;: 1, &#39;b&#39;: -1, &#39;c&#39;: -1})</span>
+<span class="sd">        &gt;&gt;&gt; D.add([{&#39;a&#39;: -1, &#39;b&#39;: -1, &#39;c&#39;: 1}])</span>
+<span class="sd">        &gt;&gt;&gt; D.add([{&#39;a&#39;: 1, &#39;b&#39;: -1, &#39;c&#39;: -1}])</span>
 <span class="sd">        &gt;&gt;&gt; D.asl()</span>
 <span class="sd">        True</span>
-<span class="sd">        &gt;&gt;&gt; D.add({&#39;a&#39;: -1, &#39;b&#39;: 1, &#39;c&#39;: -1})</span>
+<span class="sd">        &gt;&gt;&gt; D.add([{&#39;a&#39;: -1, &#39;b&#39;: 1, &#39;c&#39;: -1}])</span>
 <span class="sd">        &gt;&gt;&gt; D.asl()</span>
 <span class="sd">        False</span>
+
+<span class="sd">        .. warning::</span>
+
+<span class="sd">          Currently, this method is broken.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">pspace</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pspace</span><span class="p">())</span>
@@ -313,49 +285,73 @@
 
 <span class="sd">          :rtype: :class:`bool`</span>
 
-<span class="sd">        We solve a feasibility (linear programming) problem:</span>
-<span class="sd">        If we can find a vector :math:`(\lambda,\\tau)</span>
-<span class="sd">        \in(\mathbb{R}_{\geq0})^{\mathcal{D}\\times\Omega}` such that</span>
-<span class="sd">        :math:`\sum_{f\in\mathcal{D}}\lambda_f\cdot f</span>
-<span class="sd">        \leq-\sum_{\omega\in\Omega}\\tau_\omega\cdot I_{\omega}`</span>
-<span class="sd">        and :math:`\sum_{\omega\in\Omega}\\tau_\omega\geq1`,</span>
-<span class="sd">        where :math:`I_\omega` is the ray corresponding to</span>
-<span class="sd">        the :math:`\omega`-axis, then the set of desirable gambles</span>
-<span class="sd">        :math:`\mathcal{D}` incurs partial loss.</span>
+<span class="sd">        A set of desirable gambles does not avoid partial loss if and only if</span>
+<span class="sd">        some nonnegative linear combination of desirable gambles is everywhere</span>
+<span class="sd">        nonpositive and somewhere negative.</span>
 
-<span class="sd">        &gt;&gt;&gt; D = DesirSet(set(&#39;abc&#39;))</span>
-<span class="sd">        &gt;&gt;&gt; D.add({&#39;a&#39;: -1, &#39;b&#39;: -1, &#39;c&#39;: 1})</span>
+<span class="sd">        &gt;&gt;&gt; D = DesirSet(&#39;abc&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; D.add([{&#39;a&#39;: -1, &#39;b&#39;: -1, &#39;c&#39;: 1}])</span>
 <span class="sd">        &gt;&gt;&gt; D.apl()</span>
 <span class="sd">        True</span>
-<span class="sd">        &gt;&gt;&gt; D.add({&#39;a&#39;: -1, &#39;b&#39;: 1, &#39;c&#39;: -1})</span>
+<span class="sd">        &gt;&gt;&gt; D.add([{&#39;a&#39;: -1, &#39;b&#39;: 1, &#39;c&#39;: -1}])</span>
 <span class="sd">        &gt;&gt;&gt; D.apl()</span>
 <span class="sd">        False</span>
 
+<span class="sd">        We can deal correctly with non-closed sets of desirable gambles, i.e.,</span>
+<span class="sd">        containing non-singleton cones:</span>
+
+<span class="sd">        &gt;&gt;&gt; D = DesirSet(&#39;abc&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; D.set_upper_pr(Gamble({&#39;a&#39;, &#39;b&#39;}) | {&#39;a&#39;, &#39;b&#39;, &#39;c&#39;}, 0)</span>
+<span class="sd">        &gt;&gt;&gt; D</span>
+<span class="sd">        DesirSet([Cone([Ray({&#39;b&#39;: 1})]), Cone([Ray({&#39;c&#39;: 1})]), Cone([Ray({&#39;a&#39;: 1})]), Cone([Ray({&#39;a&#39;: 1, &#39;c&#39;: 1, &#39;b&#39;: 1}), Ray({&#39;a&#39;: -1, &#39;b&#39;: -1})])])</span>
+<span class="sd">        &gt;&gt;&gt; D.apl()</span>
+<span class="sd">        True</span>
+
+<span class="sd">        .. warning::</span>
+
+<span class="sd">          Currently, this method is broken.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">pspace</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pspace</span><span class="p">())</span>
-        <span class="n">D</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="n">E</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">DesirSet</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pspace</span><span class="p">()))</span>
-        <span class="n">mat</span> <span class="o">=</span> <span class="n">Matrix</span><span class="p">(</span><span class="nb">list</span><span class="p">([</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">oray</span> <span class="o">==</span> <span class="n">ray</span><span class="p">)</span> <span class="k">for</span> <span class="n">oray</span> <span class="ow">in</span> <span class="n">D</span><span class="p">]</span>
-                              <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">E</span><span class="p">)</span> <span class="o">*</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">ray</span> <span class="ow">in</span> <span class="n">D</span><span class="p">)</span> <span class="o">+</span>
-                     <span class="nb">list</span><span class="p">([</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">D</span><span class="p">)</span> <span class="o">*</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-                              <span class="o">+</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">oray</span> <span class="o">==</span> <span class="n">ray</span><span class="p">)</span> <span class="k">for</span> <span class="n">oray</span> <span class="ow">in</span> <span class="n">E</span><span class="p">]</span> <span class="k">for</span> <span class="n">ray</span> <span class="ow">in</span> <span class="n">E</span><span class="p">)</span> <span class="o">+</span>
-                     <span class="nb">list</span><span class="p">([</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="o">-</span><span class="n">ray</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="k">for</span> <span class="n">ray</span> <span class="ow">in</span> <span class="n">D</span> <span class="o">+</span> <span class="n">E</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">pspace</span><span class="p">)</span> <span class="o">+</span>
-                     <span class="nb">list</span><span class="p">([[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">D</span><span class="p">)</span> <span class="o">*</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">E</span><span class="p">)</span> <span class="o">*</span> <span class="p">[</span><span class="mi">1</span><span class="p">]]),</span>
-                     <span class="n">number_type</span><span class="o">=</span><span class="s">&#39;fraction&#39;</span><span class="p">)</span>
-        <span class="n">mat</span><span class="o">.</span><span class="n">obj_type</span> <span class="o">=</span> <span class="n">LPObjType</span><span class="o">.</span><span class="n">MIN</span>
-        <span class="n">lp</span> <span class="o">=</span> <span class="n">LinProg</span><span class="p">(</span><span class="n">mat</span><span class="p">)</span>
-        <span class="n">lp</span><span class="o">.</span><span class="n">solve</span><span class="p">()</span>
-        <span class="k">return</span> <span class="n">lp</span><span class="o">.</span><span class="n">status</span> <span class="o">!=</span> <span class="n">LPStatusType</span><span class="o">.</span><span class="n">OPTIMAL</span>
+        <span class="n">pspace</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pspace</span><span class="p">()</span>
+        <span class="n">A</span> <span class="o">=</span> <span class="n">pspace</span>
+        <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">A</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">D</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+            <span class="n">I</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">DesirSet</span><span class="p">(</span><span class="n">A</span><span class="p">))</span>
+            <span class="n">mat</span> <span class="o">=</span> <span class="n">Matrix</span><span class="p">([[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">oray</span> <span class="o">==</span> <span class="n">ray</span><span class="p">)</span> <span class="k">for</span> <span class="n">oray</span> <span class="ow">in</span> <span class="n">D</span><span class="p">]</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">I</span><span class="p">)</span> <span class="o">*</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                          <span class="k">for</span> <span class="n">ray</span> <span class="ow">in</span> <span class="n">D</span><span class="p">]</span> <span class="c"># λ &gt;= 0</span>
+                       <span class="o">+</span> <span class="p">[[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">D</span><span class="p">)</span> <span class="o">*</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">oray</span> <span class="o">==</span> <span class="n">ray</span><span class="p">)</span> <span class="k">for</span> <span class="n">oray</span> <span class="ow">in</span> <span class="n">I</span><span class="p">]</span>
+                          <span class="k">for</span> <span class="n">ray</span> <span class="ow">in</span> <span class="n">I</span><span class="p">]</span> <span class="c"># τ &gt;= 0</span>
+                       <span class="o">+</span> <span class="p">[[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">D</span><span class="p">)</span> <span class="o">*</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="o">-</span><span class="nb">int</span><span class="p">(</span><span class="n">oray</span> <span class="o">==</span> <span class="n">ray</span><span class="p">)</span> <span class="k">for</span> <span class="n">oray</span> <span class="ow">in</span> <span class="n">I</span><span class="p">]</span>
+                          <span class="k">for</span> <span class="n">ray</span> <span class="ow">in</span> <span class="n">I</span><span class="p">]</span> <span class="c"># τ &lt;= 1</span>
+                       <span class="o">+</span> <span class="p">[[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="o">-</span><span class="n">ray</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="k">for</span> <span class="n">ray</span> <span class="ow">in</span> <span class="n">D</span> <span class="o">+</span> <span class="n">I</span><span class="p">]</span>
+                          <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">pspace</span><span class="p">]</span> <span class="c"># &lt;λ,id&gt;_D &lt;= -&lt;τ,id&gt;_I</span>
+                       <span class="o">+</span> <span class="p">[[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="o">-</span><span class="n">ray</span><span class="o">.</span><span class="n">dir</span><span class="p">[</span><span class="n">x</span><span class="p">]</span><span class="o">*</span><span class="nb">int</span><span class="p">(</span><span class="n">oray</span> <span class="o">==</span> <span class="n">ray</span><span class="p">)</span> <span class="k">for</span> <span class="n">oray</span> <span class="ow">in</span> <span class="n">D</span><span class="p">]</span>
+                              <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">I</span><span class="p">)</span> <span class="o">*</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="c"># λ_g⋅g&#39;(ω) &lt;= 0</span>
+                          <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">pspace</span> <span class="o">-</span> <span class="n">A</span> <span class="k">for</span> <span class="n">ray</span> <span class="ow">in</span> <span class="n">D</span><span class="p">],</span> <span class="c"># for ω s.t. τ_ω=0</span>
+                         <span class="n">number_type</span><span class="o">=</span><span class="s">&#39;fraction&#39;</span><span class="p">)</span>
+            <span class="n">mat</span><span class="o">.</span><span class="n">obj_type</span> <span class="o">=</span> <span class="n">LPObjType</span><span class="o">.</span><span class="n">MAX</span>
+            <span class="n">mat</span><span class="o">.</span><span class="n">obj_func</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">([</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">D</span><span class="p">)</span> <span class="o">*</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">I</span><span class="p">)</span> <span class="o">*</span> <span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">lp</span> <span class="o">=</span> <span class="n">LinProg</span><span class="p">(</span><span class="n">mat</span><span class="p">)</span>
+            <span class="n">lp</span><span class="o">.</span><span class="n">solve</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">lp</span><span class="o">.</span><span class="n">status</span> <span class="o">!=</span> <span class="n">LPStatusType</span><span class="o">.</span><span class="n">OPTIMAL</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;No solution found for linear program. &quot;</span> <span class="o">+</span>
+                                 <span class="s">&quot;pycddlib returned status code &quot;</span> <span class="o">+</span>
+                                 <span class="s">&quot;&#39;&quot;</span> <span class="o">+</span> <span class="n">lp</span><span class="o">.</span><span class="n">status</span> <span class="o">+</span> <span class="s">&quot;&#39;.&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">tau</span> <span class="o">=</span> <span class="n">lp</span><span class="o">.</span><span class="n">primal_solution</span><span class="p">[</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">I</span><span class="p">):]</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="n">tau</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="bp">True</span>
+                <span class="k">elif</span> <span class="nb">all</span><span class="p">(</span><span class="n">tau</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="bp">False</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">A</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">Gamble</span><span class="p">(</span><span class="n">I</span><span class="p">[</span><span class="n">k</span><span class="p">])</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">tau</span><span class="p">))</span>
+                                         <span class="k">if</span> <span class="n">tau</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">support</span><span class="p">()</span>
 </div>
     <span class="k">def</span> <span class="nf">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Lower expectation of a gamble&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Gamble</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">other</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot; is not a gamble&quot;</span><span class="p">)</span>
         <span class="n">dom</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="n">domain</span><span class="p">()</span>
-        <span class="n">pspace</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pspace</span><span class="p">()</span>
-        <span class="c">#if not (dom &lt;= pspace):</span>
-            <span class="c">#raise ValueError(&quot;The gamble&#39;s domain (conditioning event) &quot; +</span>
-                             <span class="c">#&quot;is not a subset of the possibility space&quot;)</span>
         <span class="n">pspace</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pspace</span><span class="p">())</span>
         <span class="n">D</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="n">mat</span> <span class="o">=</span> <span class="n">Matrix</span><span class="p">(</span><span class="nb">list</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">oray</span> <span class="o">==</span> <span class="n">ray</span><span class="p">)</span> <span class="k">for</span> <span class="n">oray</span> <span class="ow">in</span> <span class="n">D</span><span class="p">]</span>
@@ -384,33 +380,21 @@
         <span class="k">return</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">__mul__</span><span class="p">(</span><span class="o">-</span> <span class="n">other</span><span class="p">)</span>
 
 <div class="viewcode-block" id="DesirSet.get_credal"><a class="viewcode-back" href="../../desirs.html#murasyp.desirs.DesirSet.get_credal">[docs]</a>    <span class="k">def</span> <span class="nf">get_credal</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Generate the equivalent credal set</span>
+        <span class="sd">&quot;&quot;&quot;Generate the corresponding (closed) credal set</span>
 
-<span class="sd">          :returns: the credal set that is equivalent as an uncertainty model</span>
+<span class="sd">          :returns: the (closed) credal set that corresponds as an uncertainty</span>
+<span class="sd">            model</span>
 <span class="sd">          :rtype: :class:`~murasyp.credalsets.CredalSet`</span>
 
-<span class="sd">        &gt;&gt;&gt; D = DesirSet(set(&#39;abc&#39;))</span>
+<span class="sd">        &gt;&gt;&gt; D = DesirSet([&#39;abc&#39;])</span>
 <span class="sd">        &gt;&gt;&gt; D.set_lower_pr({&#39;a&#39;: 1, &#39;b&#39;: 0, &#39;c&#39;: 1}, .5)</span>
 <span class="sd">        &gt;&gt;&gt; D.get_credal()</span>
-<span class="sd">        CredalSet(set([PMFunc({&#39;a&#39;: &#39;1/2&#39;, &#39;b&#39;: &#39;1/2&#39;}), PMFunc({&#39;c&#39;: &#39;1/2&#39;, &#39;b&#39;: &#39;1/2&#39;}), ...</span>
+<span class="sd">        CredalSet([PMFunc({&#39;a&#39;: &#39;1/2&#39;, &#39;b&#39;: &#39;1/2&#39;}), PMFunc({&#39;c&#39;: &#39;1/2&#39;, &#39;b&#39;: &#39;1/2&#39;}), PMFunc({&#39;a&#39;: 1}), PMFunc({&#39;c&#39;: 1})])</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">pspace</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pspace</span><span class="p">())</span>
-        <span class="n">D</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="n">mat</span> <span class="o">=</span> <span class="n">Matrix</span><span class="p">(</span><span class="nb">list</span><span class="p">([</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">ray</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">pspace</span><span class="p">)</span> <span class="k">for</span> <span class="n">ray</span> <span class="ow">in</span> <span class="n">D</span><span class="p">),</span>
-                     <span class="n">number_type</span><span class="o">=</span><span class="s">&#39;fraction&#39;</span><span class="p">)</span>
-        <span class="n">mat</span><span class="o">.</span><span class="n">rep_type</span> <span class="o">=</span> <span class="n">RepType</span><span class="o">.</span><span class="n">INEQUALITY</span>
-        <span class="n">poly</span> <span class="o">=</span> <span class="n">Polyhedron</span><span class="p">(</span><span class="n">mat</span><span class="p">)</span>
-        <span class="n">ext</span> <span class="o">=</span> <span class="n">poly</span><span class="o">.</span><span class="n">get_generators</span><span class="p">()</span>
-        <span class="k">return</span> <span class="n">CredalSet</span><span class="p">(</span><span class="nb">set</span><span class="p">([</span><span class="n">PMFunc</span><span class="p">({</span><span class="n">pspace</span><span class="p">[</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span> <span class="n">ext</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span>
-                                     <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">ext</span><span class="o">.</span><span class="n">col_size</span><span class="p">)})</span>
-                              <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">ext</span><span class="o">.</span><span class="n">row_size</span><span class="p">)]</span> <span class="o">+</span>
-                             <span class="p">[</span><span class="n">PMFunc</span><span class="p">({</span><span class="n">pspace</span><span class="p">[</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span> <span class="o">-</span><span class="n">ext</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span>
-                                     <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">ext</span><span class="o">.</span><span class="n">col_size</span><span class="p">)})</span>
-                              <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ext</span><span class="o">.</span><span class="n">lin_set</span><span class="p">]))</span>
-</div></div>
-<span class="kn">from</span> <span class="nn">murasyp.credalsets</span> <span class="kn">import</span> <span class="n">CredalSet</span> <span class="c"># avoid circular-dependency</span>
-</pre></div>
+        <span class="n">C</span> <span class="o">=</span> <span class="n">Cone</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">murasyp</span><span class="o">.</span><span class="n">credalsets</span><span class="o">.</span><span class="n">CredalSet</span><span class="p">(</span><span class="n">murasyp</span><span class="o">.</span><span class="n">mathprog</span><span class="o">.</span><span class="n">vf_enumeration</span><span class="p">(</span><span class="n">C</span><span class="p">))</span>
+</pre></div></div></div>
 
           </div>
         </div>
@@ -420,7 +404,7 @@
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../../search.html" method="get">
-      <input type="text" name="q" size="18" />
+      <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
@@ -443,13 +427,13 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../index.html">murasyp v(git) documentation</a> &raquo;</li>
+        <li><a href="../../index.html">murasyp (git) documentation</a> &raquo;</li>
           <li><a href="../index.html" >Module code</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2011–2012, Erik Quaeghebeur.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
     </div>
   </body>
 </html>

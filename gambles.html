@@ -3,13 +3,16 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
+
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Gambles &amp; Rays &mdash; murasyp v(git) documentation</title>
+    <title>Gambles, Rays &amp; Cones &mdash; murasyp (git) documentation</title>
+    
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
@@ -23,9 +26,9 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="author" title="About these documents" href="about.html" />
-    <link rel="top" title="murasyp v(git) documentation" href="index.html" />
-    <link rel="next" title="Mass Functions" href="massfuncs.html" />
-    <link rel="prev" title="Vectors" href="vectors.html" /> 
+    <link rel="top" title="murasyp (git) documentation" href="index.html" />
+    <link rel="next" title="Sets of desirable gambles" href="desirs.html" />
+    <link rel="prev" title="Vectors &amp; Polytopes" href="vectors.html" /> 
   </head>
   <body>
     <div class="related">
@@ -38,12 +41,12 @@
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="massfuncs.html" title="Mass Functions"
+          <a href="desirs.html" title="Sets of desirable gambles"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="vectors.html" title="Vectors"
+          <a href="vectors.html" title="Vectors &amp; Polytopes"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">murasyp v(git) documentation</a> &raquo;</li> 
+        <li><a href="index.html">murasyp (git) documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -52,28 +55,32 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <span class="target" id="module-murasyp.gambles"></span><div class="section" id="gambles-rays">
-<h1>Gambles &amp; Rays<a class="headerlink" href="#gambles-rays" title="Permalink to this headline">¶</a></h1>
+  <span class="target" id="module-murasyp.gambles"></span><div class="section" id="gambles-rays-cones">
+<h1>Gambles, Rays &amp; Cones<a class="headerlink" href="#gambles-rays-cones" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="gambles">
 <h2>Gambles<a class="headerlink" href="#gambles" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="murasyp.gambles.Gamble">
-<em class="property">class </em><tt class="descclassname">murasyp.gambles.</tt><tt class="descname">Gamble</tt><big>(</big><em>data</em><big>)</big><a class="reference internal" href="_modules/murasyp/gambles.html#Gamble"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#murasyp.gambles.Gamble" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">murasyp.gambles.</tt><tt class="descname">Gamble</tt><big>(</big><em>data={}</em><big>)</big><a class="reference internal" href="_modules/murasyp/gambles.html#Gamble"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#murasyp.gambles.Gamble" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gambles map states to utility payoffs</p>
 <p>This class derives from <a class="reference internal" href="vectors.html#murasyp.vectors.Vector" title="murasyp.vectors.Vector"><tt class="xref py py-class docutils literal"><span class="pre">Vector</span></tt></a>, so its methods
 apply here as well.</p>
 <p>What has changed:</p>
 <ul>
-<li><p class="first">There is a new constructor. If <cite>data</cite> is a <a class="reference external" href="http://docs.python.org/library/collections.html#collections.Set" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">Set</span></tt></a>,
-then its so-called indicator function is generated.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Gamble</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="s">&#39;abc&#39;</span><span class="p">))</span>
+<li><p class="first">There is a new constructor. If <cite>data</cite> is not a
+<a class="reference external" href="http://docs.python.org/library/collections.html#collections.Mapping" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">Mapping</span></tt></a>, but is a <a class="reference external" href="http://docs.python.org/library/collections.html#collections.Iterable" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">Iterable</span></tt></a>
+<a class="reference external" href="http://docs.python.org/library/collections.html#collections.Hashable" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">Hashable</span></tt></a> <a class="reference external" href="http://docs.python.org/library/collections.html#collections.Container" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">Container</span></tt></a>, then its
+so-called indicator function is generated.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Gamble</span><span class="p">(</span><span class="s">&#39;abc&#39;</span><span class="p">)</span>
 <span class="go">Gamble({&#39;a&#39;: 1, &#39;c&#39;: 1, &#39;b&#39;: 1})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Gamble</span><span class="p">({</span><span class="s">&#39;abc&#39;</span><span class="p">})</span>
+<span class="go">Gamble({&#39;abc&#39;: 1})</span>
 </pre></div>
 </div>
 </li>
 <li><p class="first">Pointwise multiplication and scalar addition &amp; subtraction
 have been added.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">Gamble</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="mf">1.1</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="s">&#39;-1/2&#39;</span><span class="p">,</span><span class="s">&#39;c&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">})</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">Gamble</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="mf">1.1</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="s">&#39;-1/2&#39;</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">g</span> <span class="o">=</span> <span class="n">Gamble</span><span class="p">({</span><span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="s">&#39;.6&#39;</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="s">&#39;d&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">*</span> <span class="n">g</span>
 <span class="go">Gamble({&#39;a&#39;: 0, &#39;c&#39;: 0, &#39;b&#39;: &#39;-3/10&#39;, &#39;d&#39;: 0})</span>
@@ -99,9 +106,9 @@ of its domain and a specified <a class="reference external" href="http://docs.py
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">returns:</th><td class="field-body">the minimum and maximum values of the gamble</td>
+<tr class="field-odd field"><th class="field-name">returns:</th><td class="field-body">the minimum and maximum values of the gamble</td>
 </tr>
-<tr class="field"><th class="field-name">rtype:</th><td class="field-body">a pair (<tt class="xref py py-class docutils literal"><span class="pre">tuple</span></tt>) of <a class="reference external" href="http://docs.python.org/library/fractions.html#fractions.Fraction" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">Fraction</span></tt></a></td>
+<tr class="field-even field"><th class="field-name">rtype:</th><td class="field-body">a pair (<tt class="xref py py-class docutils literal"><span class="pre">tuple</span></tt>) of <a class="reference external" href="http://docs.python.org/library/fractions.html#fractions.Fraction" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">Fraction</span></tt></a></td>
 </tr>
 </tbody>
 </table>
@@ -123,10 +130,10 @@ of its domain and a specified <a class="reference external" href="http://docs.py
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">returns:</th><td class="field-body">a scaled and shifted version
+<tr class="field-odd field"><th class="field-name">returns:</th><td class="field-body">a scaled and shifted version
 <img class="math" src="_images/math/f060589e13bb4ebb1c0480188ccc0f443c1025b9.png" alt="(f-\min f)/(\max f-\min f)"/> of the gamble <img class="math" src="_images/math/bb2c93730dbb48558bb3c4738c956c4e8f816437.png" alt="f"/></td>
 </tr>
-<tr class="field"><th class="field-name">rtype:</th><td class="field-body"><a class="reference internal" href="#murasyp.gambles.Gamble" title="murasyp.gambles.Gamble"><tt class="xref py py-class docutils literal"><span class="pre">Gamble</span></tt></a></td>
+<tr class="field-even field"><th class="field-name">rtype:</th><td class="field-body"><a class="reference internal" href="#murasyp.gambles.Gamble" title="murasyp.gambles.Gamble"><tt class="xref py py-class docutils literal"><span class="pre">Gamble</span></tt></a></td>
 </tr>
 </tbody>
 </table>
@@ -150,11 +157,11 @@ of its domain and a specified <a class="reference external" href="http://docs.py
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">returns:</th><td class="field-body">the max-norm
+<tr class="field-odd field"><th class="field-name">returns:</th><td class="field-body">the max-norm
 <img class="math" src="_images/math/38554bce9b044a75dd5c02c6572fd67a236cd896.png" alt="\|f\|_\infty=\max_{x\in\mathcal{X}}|f(x)|"/> of the
 gamble <img class="math" src="_images/math/bb2c93730dbb48558bb3c4738c956c4e8f816437.png" alt="f"/></td>
 </tr>
-<tr class="field"><th class="field-name">rtype:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/library/fractions.html#fractions.Fraction" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">Fraction</span></tt></a></td>
+<tr class="field-even field"><th class="field-name">rtype:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/library/fractions.html#fractions.Fraction" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">Fraction</span></tt></a></td>
 </tr>
 </tbody>
 </table>
@@ -174,10 +181,10 @@ gamble <img class="math" src="_images/math/bb2c93730dbb48558bb3c4738c956c4e8f816
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">returns:</th><td class="field-body">a normalized version <img class="math" src="_images/math/af92e639fad4bc371e6574e3cdb7cce9d7263a29.png" alt="f/\|f\|_\infty"/> of the gamble
+<tr class="field-odd field"><th class="field-name">returns:</th><td class="field-body">a normalized version <img class="math" src="_images/math/af92e639fad4bc371e6574e3cdb7cce9d7263a29.png" alt="f/\|f\|_\infty"/> of the gamble
 <img class="math" src="_images/math/bb2c93730dbb48558bb3c4738c956c4e8f816437.png" alt="f"/></td>
 </tr>
-<tr class="field"><th class="field-name">rtype:</th><td class="field-body"><a class="reference internal" href="#murasyp.gambles.Gamble" title="murasyp.gambles.Gamble"><tt class="xref py py-class docutils literal"><span class="pre">Gamble</span></tt></a></td>
+<tr class="field-even field"><th class="field-name">rtype:</th><td class="field-body"><a class="reference internal" href="#murasyp.gambles.Gamble" title="murasyp.gambles.Gamble"><tt class="xref py py-class docutils literal"><span class="pre">Gamble</span></tt></a></td>
 </tr>
 </tbody>
 </table>
@@ -190,40 +197,10 @@ gamble <img class="math" src="_images/math/bb2c93730dbb48558bb3c4738c956c4e8f816
 </div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last"><tt class="xref docutils literal"><span class="pre">None</span></tt> is returned in case the the gamble&#8217;s norm is zero.</p>
+<p class="last"><tt class="docutils literal"><span class="pre">None</span></tt> is returned in case the the gamble&#8217;s norm is zero.</p>
 </div>
 </dd></dl>
 
-</dd></dl>
-
-</div>
-<div class="section" id="origin">
-<h2>Origin<a class="headerlink" href="#origin" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="murasyp.gambles.Origin">
-<em class="property">class </em><tt class="descclassname">murasyp.gambles.</tt><tt class="descname">Origin</tt><a class="reference internal" href="_modules/murasyp/gambles.html#Origin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#murasyp.gambles.Origin" title="Permalink to this definition">¶</a></dt>
-<dd><p>The origin is a zero gamble</p>
-<p>This class derives from <a class="reference internal" href="#murasyp.gambles.Gamble" title="murasyp.gambles.Gamble"><tt class="xref py py-class docutils literal"><span class="pre">Gamble</span></tt></a>, so its methods
-apply here as well.</p>
-<p>What has changed:</p>
-<ul>
-<li><p class="first">Its constructor does not accept any arguments, because only the zero
-gamble is created.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">o</span> <span class="o">=</span> <span class="n">Origin</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">o</span><span class="p">[</span><span class="s">&#39;a&#39;</span><span class="p">]</span>
-<span class="go">0</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">o</span><span class="p">[</span><span class="mi">50</span><span class="p">]</span>
-<span class="go">0</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">o</span><span class="p">[</span><span class="s">&quot;any valid argument&quot;</span><span class="p">]</span>
-<span class="go">0</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">Origin</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">})</span>
-<span class="gt">Traceback (most recent call last):</span>
-  <span class="c">...</span>
-<span class="gr">TypeError</span>: <span class="n">__init__() takes exactly 1 argument (2 given)</span>
-</pre></div>
-</div>
-</li>
-</ul>
 </dd></dl>
 
 </div>
@@ -231,19 +208,17 @@ gamble is created.</p>
 <h2>Rays<a class="headerlink" href="#rays" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="murasyp.gambles.Ray">
-<em class="property">class </em><tt class="descclassname">murasyp.gambles.</tt><tt class="descname">Ray</tt><big>(</big><em>data</em><big>)</big><a class="reference internal" href="_modules/murasyp/gambles.html#Ray"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#murasyp.gambles.Ray" title="Permalink to this definition">¶</a></dt>
-<dd><p>Rays are directions in gamble space, i.e., normalized gambles</p>
+<em class="property">class </em><tt class="descclassname">murasyp.gambles.</tt><tt class="descname">Ray</tt><big>(</big><em>data={}</em><big>)</big><a class="reference internal" href="_modules/murasyp/gambles.html#Ray"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#murasyp.gambles.Ray" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rays are the origin or directions in gamble space</p>
 <p>This class derives from <a class="reference internal" href="#murasyp.gambles.Gamble" title="murasyp.gambles.Gamble"><tt class="xref py py-class docutils literal"><span class="pre">Gamble</span></tt></a>, so its methods
 apply here as well.</p>
 <p>What has changed:</p>
 <ul>
-<li><p class="first">Its max-norm is one and its domain coincides with its support.</p>
+<li><p class="first">Its domain coincides with its support and it is max-normalized.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Ray</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">})</span>
 <span class="go">Ray({&#39;a&#39;: 1, &#39;b&#39;: &#39;-1/5&#39;})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">Ray</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">})</span>
-<span class="gt">Traceback (most recent call last):</span>
-  <span class="c">...</span>
-<span class="gr">ValueError: no Ray can be constructed from the identically zero Mapping {&#39;a&#39;</span>: <span class="n">0}</span>
+<span class="go">Ray({})</span>
 </pre></div>
 </div>
 </li>
@@ -255,42 +230,56 @@ apply here as well.</p>
 <span class="go">Ray({&#39;a&#39;: &#39;1/4&#39;, &#39;b&#39;: 1})</span>
 </pre></div>
 </div>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p>Currently, ray addition incorrectly returns rays:</p>
+<div class="last highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span> <span class="o">=</span> <span class="n">Ray</span><span class="p">({</span><span class="s">&#39;b&#39;</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span> <span class="o">+</span> <span class="n">r</span>
+<span class="go">Ray({&#39;c&#39;: 1, &#39;b&#39;: 1})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="mi">2</span> <span class="o">*</span> <span class="n">r</span>
+<span class="go">Gamble({&#39;c&#39;: 2, &#39;b&#39;: 2})</span>
+</pre></div>
+</div>
+</div>
 </li>
 </ul>
 </dd></dl>
 
 </div>
-<div class="section" id="dirays">
-<h2>DiRays<a class="headerlink" href="#dirays" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="cones">
+<h2>Cones<a class="headerlink" href="#cones" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
-<dt id="murasyp.gambles.DiRay">
-<em class="property">class </em><tt class="descclassname">murasyp.gambles.</tt><tt class="descname">DiRay</tt><big>(</big><em>data</em>, <em>dir_data={}</em><big>)</big><a class="reference internal" href="_modules/murasyp/gambles.html#DiRay"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#murasyp.gambles.DiRay" title="Permalink to this definition">¶</a></dt>
-<dd><p>Dirays are two-tier lexicographical rays</p>
-<p>This class derives from <a class="reference internal" href="#murasyp.gambles.Ray" title="murasyp.gambles.Ray"><tt class="xref py py-class docutils literal"><span class="pre">Ray</span></tt></a>, so its
-methods apply here as well.</p>
-<p>What has changed:</p>
-<ul>
-<li><p class="first">The constructor has changed: it now accepts a second argument that would
-be accepted by the <a class="reference internal" href="#murasyp.gambles.Ray" title="murasyp.gambles.Ray"><tt class="xref py py-class docutils literal"><span class="pre">Ray</span></tt></a> constructor, but it need
-not be given explicitly.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">DiRay</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">},</span> <span class="p">{</span><span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">})</span>
-<span class="go">DiRay({&#39;a&#39;: 1, &#39;b&#39;: 1}, {&#39;a&#39;: 1, &#39;c&#39;: 1})</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">DiRay</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">})</span>
-<span class="go">DiRay({&#39;a&#39;: 1, &#39;b&#39;: 1}, {})</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">DiRay</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">},</span> <span class="p">{})</span>
-<span class="go">DiRay({&#39;a&#39;: 1, &#39;b&#39;: 1}, {})</span>
+<dt id="murasyp.gambles.Cone">
+<em class="property">class </em><tt class="descclassname">murasyp.gambles.</tt><tt class="descname">Cone</tt><big>(</big><em>data=</em><span class="optional">[</span><span class="optional">]</span><big>)</big><a class="reference internal" href="_modules/murasyp/gambles.html#Cone"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#murasyp.gambles.Cone" title="Permalink to this definition">¶</a></dt>
+<dd><p>A frozenset of rays</p>
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">type <cite>data</cite>:</th><td class="field-body">a non-<a class="reference external" href="http://docs.python.org/library/collections.html#collections.Mapping" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">Mapping</span></tt></a>
+<a class="reference external" href="http://docs.python.org/library/collections.html#collections.Iterable" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">Iterable</span></tt></a> <a class="reference external" href="http://docs.python.org/library/collections.html#collections.Container" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">Container</span></tt></a> of
+arguments accepted by the <a class="reference internal" href="#murasyp.gambles.Ray" title="murasyp.gambles.Ray"><tt class="xref py py-class docutils literal"><span class="pre">Ray</span></tt></a> constructor.</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Cone</span><span class="p">([{</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">},</span> <span class="p">{</span><span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">}])</span>
+<span class="go">Cone([Ray({&#39;a&#39;: &#39;2/3&#39;, &#39;b&#39;: 1}), Ray({&#39;c&#39;: 1, &#39;b&#39;: &#39;1/4&#39;})])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Cone</span><span class="p">(</span><span class="s">&#39;abc&#39;</span><span class="p">)</span>
+<span class="go">Cone([Ray({&#39;a&#39;: 1}), Ray({&#39;b&#39;: 1}), Ray({&#39;c&#39;: 1})])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Cone</span><span class="p">({</span><span class="s">&#39;ab&#39;</span><span class="p">,</span> <span class="s">&#39;bc&#39;</span><span class="p">})</span>
+<span class="go">Cone([Ray({&#39;c&#39;: 1, &#39;b&#39;: 1}), Ray({&#39;a&#39;: 1, &#39;b&#39;: 1})])</span>
 </pre></div>
 </div>
-</li>
-<li><p class="first">The second tier ray can be accessed through the <cite>dir</cite> variable.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">DiRay</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">},</span> <span class="p">{</span><span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">})</span><span class="o">.</span><span class="n">dir</span>
-<span class="go">Ray({&#39;a&#39;: 1, &#39;c&#39;: 1})</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">DiRay</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">})</span><span class="o">.</span><span class="n">dir</span>
-<span class="go">Origin({})</span>
-</pre></div>
+</div></blockquote>
+<p>This class derives from <a class="reference internal" href="vectors.html#murasyp.vectors.Polytope" title="murasyp.vectors.Polytope"><tt class="xref py py-class docutils literal"><span class="pre">Polytope</span></tt></a>, so its methods
+apply here as well.</p>
+<blockquote>
+<div><div class="admonition-todo admonition" id="index-0">
+<p class="first admonition-title">Todo</p>
+<p class="last">test all set methods and fix, or elegantly deal with, broken ones</p>
 </div>
-</li>
-</ul>
+</div></blockquote>
 </dd></dl>
 
 </div>
@@ -304,21 +293,20 @@ not be given explicitly.</p>
         <div class="sphinxsidebarwrapper">
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">Gambles &amp; Rays</a><ul>
+<li><a class="reference internal" href="#">Gambles, Rays &amp; Cones</a><ul>
 <li><a class="reference internal" href="#gambles">Gambles</a></li>
-<li><a class="reference internal" href="#origin">Origin</a></li>
 <li><a class="reference internal" href="#rays">Rays</a></li>
-<li><a class="reference internal" href="#dirays">DiRays</a></li>
+<li><a class="reference internal" href="#cones">Cones</a></li>
 </ul>
 </li>
 </ul>
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="vectors.html"
-                        title="previous chapter">Vectors</a></p>
+                        title="previous chapter">Vectors &amp; Polytopes</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="massfuncs.html"
-                        title="next chapter">Mass Functions</a></p>
+  <p class="topless"><a href="desirs.html"
+                        title="next chapter">Sets of desirable gambles</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/gambles.txt"
@@ -327,7 +315,7 @@ not be given explicitly.</p>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" size="18" />
+      <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
@@ -351,17 +339,17 @@ not be given explicitly.</p>
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="massfuncs.html" title="Mass Functions"
+          <a href="desirs.html" title="Sets of desirable gambles"
              >next</a> |</li>
         <li class="right" >
-          <a href="vectors.html" title="Vectors"
+          <a href="vectors.html" title="Vectors &amp; Polytopes"
              >previous</a> |</li>
-        <li><a href="index.html">murasyp v(git) documentation</a> &raquo;</li> 
+        <li><a href="index.html">murasyp (git) documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2011–2012, Erik Quaeghebeur.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
     </div>
   </body>
 </html>

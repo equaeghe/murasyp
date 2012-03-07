@@ -13,6 +13,7 @@ Welcome to murasyp's documentation!
   :maxdepth: 2
 
   about
+  references
 
 Main classes
 ------------
@@ -23,9 +24,18 @@ Main classes
   functions
   vectors
   gambles
+  desirs
   massfuncs
   credalsets
-  desirs
+
+
+Helper classes
+--------------
+
+.. toctree::
+  :maxdepth: 2
+
+  mathprog
 
 Indices and tables
 ------------------

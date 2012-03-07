@@ -4,25 +4,20 @@
 
   from murasyp.gambles import *
 
-Gambles & Rays
-==============
+Gambles, Rays & Cones
+=====================
 
 Gambles
 -------
 
 .. autoclass:: Gamble
 
-Origin
-------
-
-.. autoclass:: Origin
-
 Rays
 ----
 
 .. autoclass:: Ray
 
-DiRays
-------
+Cones
+-----
 
-.. autoclass:: DiRay
+.. autoclass:: Cone

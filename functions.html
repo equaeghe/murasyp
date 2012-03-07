@@ -3,13 +3,16 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
+
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Rational-Valued Functions &mdash; murasyp v(git) documentation</title>
+    <title>Rational-Valued Functions &mdash; murasyp (git) documentation</title>
+    
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
@@ -23,9 +26,9 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="author" title="About these documents" href="about.html" />
-    <link rel="top" title="murasyp v(git) documentation" href="index.html" />
-    <link rel="next" title="Vectors" href="vectors.html" />
-    <link rel="prev" title="About murasyp" href="about.html" /> 
+    <link rel="top" title="murasyp (git) documentation" href="index.html" />
+    <link rel="next" title="Vectors &amp; Polytopes" href="vectors.html" />
+    <link rel="prev" title="References" href="references.html" /> 
   </head>
   <body>
     <div class="related">
@@ -38,12 +41,12 @@
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="vectors.html" title="Vectors"
+          <a href="vectors.html" title="Vectors &amp; Polytopes"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="about.html" title="About murasyp"
+          <a href="references.html" title="References"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">murasyp v(git) documentation</a> &raquo;</li> 
+        <li><a href="index.html">murasyp (git) documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -56,14 +59,14 @@
 <h1>Rational-Valued Functions<a class="headerlink" href="#rational-valued-functions" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="murasyp.functions.Function">
-<em class="property">class </em><tt class="descclassname">murasyp.functions.</tt><tt class="descname">Function</tt><big>(</big><em>mapping</em><big>)</big><a class="reference internal" href="_modules/murasyp/functions.html#Function"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#murasyp.functions.Function" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">murasyp.functions.</tt><tt class="descname">Function</tt><big>(</big><em>mapping={}</em><big>)</big><a class="reference internal" href="_modules/murasyp/functions.html#Function"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#murasyp.functions.Function" title="Permalink to this definition">¶</a></dt>
 <dd><p>Rational-valued functions</p>
 <blockquote>
 <div><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">type mapping:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/library/collections.html#collections.Mapping" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">Mapping</span></tt></a> (such as a <a class="reference external" href="http://docs.python.org/library/stdtypes.html#dict" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">dict</span></tt></a>)
+<tr class="field-odd field"><th class="field-name">type mapping:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/library/collections.html#collections.Mapping" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">Mapping</span></tt></a> (such as a <a class="reference external" href="http://docs.python.org/library/stdtypes.html#dict" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">dict</span></tt></a>)
 to a representation of <a class="reference external" href="http://docs.python.org/library/numbers.html#numbers.Real" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">Real</span></tt></a></td>
 </tr>
 </tbody>
@@ -111,10 +114,10 @@ the respective domains.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">returns:</th><td class="field-body">the domain of the function, i.e., those values for which the
+<tr class="field-odd field"><th class="field-name">returns:</th><td class="field-body">the domain of the function, i.e., those values for which the
 function is defined</td>
 </tr>
-<tr class="field"><th class="field-name">rtype:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/library/stdtypes.html#frozenset" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">frozenset</span></tt></a></td>
+<tr class="field-even field"><th class="field-name">rtype:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/library/stdtypes.html#frozenset" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">frozenset</span></tt></a></td>
 </tr>
 </tbody>
 </table>
@@ -134,10 +137,10 @@ function is defined</td>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">returns:</th><td class="field-body">the range of the function, i.e., the set of all values
+<tr class="field-odd field"><th class="field-name">returns:</th><td class="field-body">the range of the function, i.e., the set of all values
 returned by the function</td>
 </tr>
-<tr class="field"><th class="field-name">rtype:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/library/stdtypes.html#frozenset" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">frozenset</span></tt></a></td>
+<tr class="field-even field"><th class="field-name">rtype:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/library/stdtypes.html#frozenset" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">frozenset</span></tt></a></td>
 </tr>
 </tbody>
 </table>
@@ -157,10 +160,10 @@ returned by the function</td>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">returns:</th><td class="field-body">the support of the function, i.e., that part of the domain
+<tr class="field-odd field"><th class="field-name">returns:</th><td class="field-body">the support of the function, i.e., that part of the domain
 for which the function is nonzero</td>
 </tr>
-<tr class="field"><th class="field-name">rtype:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/library/stdtypes.html#frozenset" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">frozenset</span></tt></a></td>
+<tr class="field-even field"><th class="field-name">rtype:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/library/stdtypes.html#frozenset" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">frozenset</span></tt></a></td>
 </tr>
 </tbody>
 </table>
@@ -182,11 +185,11 @@ for which the function is nonzero</td>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
   <h4>Previous topic</h4>
-  <p class="topless"><a href="about.html"
-                        title="previous chapter">About murasyp</a></p>
+  <p class="topless"><a href="references.html"
+                        title="previous chapter">References</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="vectors.html"
-                        title="next chapter">Vectors</a></p>
+                        title="next chapter">Vectors &amp; Polytopes</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/functions.txt"
@@ -195,7 +198,7 @@ for which the function is nonzero</td>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" size="18" />
+      <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
@@ -219,17 +222,17 @@ for which the function is nonzero</td>
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="vectors.html" title="Vectors"
+          <a href="vectors.html" title="Vectors &amp; Polytopes"
              >next</a> |</li>
         <li class="right" >
-          <a href="about.html" title="About murasyp"
+          <a href="references.html" title="References"
              >previous</a> |</li>
-        <li><a href="index.html">murasyp v(git) documentation</a> &raquo;</li> 
+        <li><a href="index.html">murasyp (git) documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2011–2012, Erik Quaeghebeur.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
     </div>
   </body>
 </html>

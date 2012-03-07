@@ -3,13 +3,16 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
+
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Welcome to murasyp’s documentation! &mdash; murasyp v(git) documentation</title>
+    <title>Welcome to murasyp’s documentation! &mdash; murasyp (git) documentation</title>
+    
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
@@ -23,7 +26,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="author" title="About these documents" href="about.html" />
-    <link rel="top" title="murasyp v(git) documentation" href="#" />
+    <link rel="top" title="murasyp (git) documentation" href="#" />
     <link rel="next" title="About murasyp" href="about.html" /> 
   </head>
   <body>
@@ -39,7 +42,7 @@
         <li class="right" >
           <a href="about.html" title="About murasyp"
              accesskey="N">next</a> |</li>
-        <li><a href="#">murasyp v(git) documentation</a> &raquo;</li> 
+        <li><a href="#">murasyp (git) documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -54,15 +57,16 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Release:</th><td class="field-body">(git)</td>
+<tr class="field-odd field"><th class="field-name">Release:</th><td class="field-body">(git)</td>
 </tr>
-<tr class="field"><th class="field-name">Date:</th><td class="field-body">February 03, 2012</td>
+<tr class="field-even field"><th class="field-name">Date:</th><td class="field-body">March 07, 2012</td>
 </tr>
 </tbody>
 </table>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="about.html">About murasyp</a></li>
+<li class="toctree-l1"><a class="reference internal" href="references.html">References</a></li>
 </ul>
 </div>
 <div class="section" id="main-classes">
@@ -70,21 +74,32 @@
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="functions.html">Rational-Valued Functions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="vectors.html">Vectors</a></li>
-<li class="toctree-l1"><a class="reference internal" href="gambles.html">Gambles &amp; Rays</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="gambles.html#gambles">Gambles</a></li>
-<li class="toctree-l2"><a class="reference internal" href="gambles.html#origin">Origin</a></li>
-<li class="toctree-l2"><a class="reference internal" href="gambles.html#rays">Rays</a></li>
-<li class="toctree-l2"><a class="reference internal" href="gambles.html#dirays">DiRays</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vectors.html">Vectors &amp; Polytopes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="vectors.html#vectors">Vectors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vectors.html#polytopes">Polytopes</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="gambles.html">Gambles, Rays &amp; Cones</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="gambles.html#gambles">Gambles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gambles.html#rays">Rays</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gambles.html#cones">Cones</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="desirs.html">Sets of desirable gambles</a></li>
 <li class="toctree-l1"><a class="reference internal" href="massfuncs.html">Mass Functions</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="massfuncs.html#unit-mass-functions">Unit Mass Functions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="massfuncs.html#probability-mass-functions">Probability Mass Functions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="credalsets.html">Credal Sets</a></li>
-<li class="toctree-l1"><a class="reference internal" href="desirs.html">Sets of desirable gambles</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="helper-classes">
+<h2>Helper classes<a class="headerlink" href="#helper-classes" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="mathprog.html">Mathematical programming &amp; polytope theory</a></li>
 </ul>
 </div>
 </div>
@@ -110,6 +125,9 @@
 <li><a class="reference internal" href="#main-classes">Main classes</a><ul>
 </ul>
 </li>
+<li><a class="reference internal" href="#helper-classes">Helper classes</a><ul>
+</ul>
+</li>
 <li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
 </ul>
 </li>
@@ -126,7 +144,7 @@
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" size="18" />
+      <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
@@ -152,12 +170,12 @@
         <li class="right" >
           <a href="about.html" title="About murasyp"
              >next</a> |</li>
-        <li><a href="#">murasyp v(git) documentation</a> &raquo;</li> 
+        <li><a href="#">murasyp (git) documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2011–2012, Erik Quaeghebeur.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
     </div>
   </body>
 </html>

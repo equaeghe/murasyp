@@ -3,13 +3,16 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
+
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Credal Sets &mdash; murasyp v(git) documentation</title>
+    <title>Credal Sets &mdash; murasyp (git) documentation</title>
+    
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
@@ -23,8 +26,8 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="author" title="About these documents" href="about.html" />
-    <link rel="top" title="murasyp v(git) documentation" href="index.html" />
-    <link rel="next" title="Sets of desirable gambles" href="desirs.html" />
+    <link rel="top" title="murasyp (git) documentation" href="index.html" />
+    <link rel="next" title="Mathematical programming &amp; polytope theory" href="mathprog.html" />
     <link rel="prev" title="Mass Functions" href="massfuncs.html" /> 
   </head>
   <body>
@@ -38,12 +41,12 @@
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="desirs.html" title="Sets of desirable gambles"
+          <a href="mathprog.html" title="Mathematical programming &amp; polytope theory"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="massfuncs.html" title="Mass Functions"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">murasyp v(git) documentation</a> &raquo;</li> 
+        <li><a href="index.html">murasyp (git) documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -56,35 +59,40 @@
 <h1>Credal Sets<a class="headerlink" href="#credal-sets" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="murasyp.credalsets.CredalSet">
-<em class="property">class </em><tt class="descclassname">murasyp.credalsets.</tt><tt class="descname">CredalSet</tt><big>(</big><em>data=set([])</em><big>)</big><a class="reference internal" href="_modules/murasyp/credalsets.html#CredalSet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#murasyp.credalsets.CredalSet" title="Permalink to this definition">¶</a></dt>
-<dd><p>A mutable set of probability mass functions</p>
+<em class="property">class </em><tt class="descclassname">murasyp.credalsets.</tt><tt class="descname">CredalSet</tt><big>(</big><em>data=</em><span class="optional">[</span><span class="optional">]</span><big>)</big><a class="reference internal" href="_modules/murasyp/credalsets.html#CredalSet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#murasyp.credalsets.CredalSet" title="Permalink to this definition">¶</a></dt>
+<dd><p>A set of probability mass functions</p>
 <blockquote>
 <div><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">type data:</th><td class="field-body">a <a class="reference external" href="http://docs.python.org/library/collections.html#collections.Set" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">Set</span></tt></a> of <a class="reference external" href="http://docs.python.org/library/collections.html#collections.Mapping" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">Mapping</span></tt></a>,
-each of which must be accepted by the <a class="reference internal" href="massfuncs.html#murasyp.massfuncs.PMFunc" title="murasyp.massfuncs.PMFunc"><tt class="xref py py-class docutils literal"><span class="pre">PMFunc</span></tt></a>
-constructor</td>
+<tr class="field-odd field"><th class="field-name">type <cite>data</cite>:</th><td class="field-body">a non-<a class="reference external" href="http://docs.python.org/library/collections.html#collections.Mapping" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">Mapping</span></tt></a>
+<a class="reference external" href="http://docs.python.org/library/collections.html#collections.Iterable" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">Iterable</span></tt></a> <a class="reference external" href="http://docs.python.org/library/collections.html#collections.Container" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">Container</span></tt></a> of
+arguments accepted by the  <a class="reference internal" href="massfuncs.html#murasyp.massfuncs.PMFunc" title="murasyp.massfuncs.PMFunc"><tt class="xref py py-class docutils literal"><span class="pre">PMFunc</span></tt></a>
+constructor.</td>
 </tr>
 </tbody>
 </table>
-</div></blockquote>
-<p>Features:</p>
-<ul>
-<li><p class="first">There is an alternate constructor. If <cite>data</cite> is a
-<a class="reference external" href="http://docs.python.org/library/collections.html#collections.Set" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">Set</span></tt></a> without <a class="reference external" href="http://docs.python.org/library/collections.html#collections.Mapping" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">Mapping</span></tt></a>-members,
-then a relative vacuous credal set is generated.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">CredalSet</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="s">&#39;abc&#39;</span><span class="p">))</span>
-<span class="go">CredalSet(set([PMFunc({&#39;a&#39;: 1}), PMFunc({&#39;b&#39;: 1}), PMFunc({&#39;c&#39;: 1})]))</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">CredalSet</span><span class="p">(</span><span class="s">&#39;abc&#39;</span><span class="p">)</span>
+<span class="go">CredalSet([PMFunc({&#39;a&#39;: 1}), PMFunc({&#39;b&#39;: 1}), PMFunc({&#39;c&#39;: 1})])</span>
 </pre></div>
 </div>
-</li>
+</div></blockquote>
+<p>This class derives from <a class="reference external" href="http://docs.python.org/library/stdtypes.html#set" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">set</span></tt></a>, so its methods apply here as
+well.</p>
+<blockquote>
+<div><div class="admonition-todo admonition" id="index-0">
+<p class="first admonition-title">Todo</p>
+<p class="last">test all set methods and fix, or elegantly deal with, broken ones</p>
+</div>
+</div></blockquote>
+<p>Additional and changed methods:</p>
+<ul>
 <li><p class="first">Lower and upper (conditional) expectations can be calculated, using the
 <tt class="docutils literal"><span class="pre">*</span></tt> and <tt class="docutils literal"><span class="pre">**</span></tt> operators, respectively.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">PMFunc</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="o">.</span><span class="mo">03</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="o">.</span><span class="mo">07</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">:</span> <span class="o">.</span><span class="mi">9</span><span class="p">})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">q</span> <span class="o">=</span> <span class="n">PMFunc</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="o">.</span><span class="mo">07</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="o">.</span><span class="mo">03</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">:</span> <span class="o">.</span><span class="mi">9</span><span class="p">})</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">K</span> <span class="o">=</span> <span class="n">CredalSet</span><span class="p">({</span><span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">K</span> <span class="o">=</span> <span class="n">CredalSet</span><span class="p">([</span><span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">Gamble</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">K</span> <span class="o">*</span> <span class="n">f</span>
 <span class="go">Fraction(-1, 25)</span>
@@ -105,7 +113,7 @@ then a relative vacuous credal set is generated.</p>
 is).</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">PMFunc</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="o">.</span><span class="mo">03</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="o">.</span><span class="mo">07</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">:</span> <span class="o">.</span><span class="mi">9</span><span class="p">})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">q</span> <span class="o">=</span> <span class="n">PMFunc</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="o">.</span><span class="mo">07</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="o">.</span><span class="mo">03</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">:</span> <span class="o">.</span><span class="mi">9</span><span class="p">})</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">K</span> <span class="o">=</span> <span class="n">CredalSet</span><span class="p">({</span><span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">K</span> <span class="o">=</span> <span class="n">CredalSet</span><span class="p">([</span><span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">Gamble</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;a&#39;</span><span class="p">,</span><span class="s">&#39;b&#39;</span><span class="p">}</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="p">(</span><span class="n">K</span> <span class="o">|</span> <span class="n">A</span><span class="p">)</span> <span class="o">*</span> <span class="n">f</span>
@@ -115,13 +123,9 @@ is).</p>
 </pre></div>
 </div>
 <p>This does not impede the classical union of sets.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">CredalSet</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="s">&#39;a&#39;</span><span class="p">))</span> <span class="o">|</span> <span class="n">CredalSet</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="s">&#39;b&#39;</span><span class="p">))</span>
-<span class="go">CredalSet(set([PMFunc({&#39;a&#39;: 1}), PMFunc({&#39;b&#39;: 1})]))</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">CredalSet</span><span class="p">(</span><span class="s">&#39;a&#39;</span><span class="p">)</span> <span class="o">|</span> <span class="n">CredalSet</span><span class="p">(</span><span class="s">&#39;b&#39;</span><span class="p">)</span>
+<span class="go">CredalSet([PMFunc({&#39;a&#39;: 1}), PMFunc({&#39;b&#39;: 1})])</span>
 </pre></div>
-</div>
-<div class="admonition warning">
-<p class="first admonition-title">Warning</p>
-<p class="last">Most (all?) other set-operations are still broken.</p>
 </div>
 </li>
 </ul>
@@ -134,7 +138,7 @@ is).</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">type data:</th><td class="field-body">arguments accepted by the
+<tr class="field-odd field"><th class="field-name">type data:</th><td class="field-body">arguments accepted by the
 <a class="reference internal" href="massfuncs.html#murasyp.massfuncs.PMFunc" title="murasyp.massfuncs.PMFunc"><tt class="xref py py-class docutils literal"><span class="pre">PMFunc</span></tt></a> constructor</td>
 </tr>
 </tbody>
@@ -142,10 +146,10 @@ is).</p>
 </div></blockquote>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">K</span> <span class="o">=</span> <span class="n">CredalSet</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">K</span>
-<span class="go">CredalSet(set([]))</span>
+<span class="go">CredalSet([])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">K</span><span class="o">.</span><span class="n">add</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="o">.</span><span class="mo">06</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="o">.</span><span class="mi">14</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">:</span> <span class="mf">1.8</span><span class="p">,</span> <span class="s">&#39;d&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">K</span>
-<span class="go">CredalSet(set([PMFunc({&#39;a&#39;: &#39;3/100&#39;, &#39;c&#39;: &#39;9/10&#39;, &#39;b&#39;: &#39;7/100&#39;})]))</span>
+<span class="go">CredalSet([PMFunc({&#39;a&#39;: &#39;3/100&#39;, &#39;c&#39;: &#39;9/10&#39;, &#39;b&#39;: &#39;7/100&#39;})])</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -159,18 +163,18 @@ is).</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">type data:</th><td class="field-body">arguments accepted by the
+<tr class="field-odd field"><th class="field-name">type data:</th><td class="field-body">arguments accepted by the
 <a class="reference internal" href="massfuncs.html#murasyp.massfuncs.PMFunc" title="murasyp.massfuncs.PMFunc"><tt class="xref py py-class docutils literal"><span class="pre">PMFunc</span></tt></a> constructor</td>
 </tr>
 </tbody>
 </table>
 </div></blockquote>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">K</span> <span class="o">=</span> <span class="n">CredalSet</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">,</span><span class="s">&#39;b&#39;</span><span class="p">})</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">K</span> <span class="o">=</span> <span class="n">CredalSet</span><span class="p">(</span><span class="s">&#39;ab&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">K</span>
-<span class="go">CredalSet(set([PMFunc({&#39;a&#39;: 1}), PMFunc({&#39;b&#39;: 1})]))</span>
+<span class="go">CredalSet([PMFunc({&#39;a&#39;: 1}), PMFunc({&#39;b&#39;: 1})])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">K</span><span class="o">.</span><span class="n">discard</span><span class="p">(</span><span class="n">PMFunc</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">}))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">K</span>
-<span class="go">CredalSet(set([PMFunc({&#39;b&#39;: 1})]))</span>
+<span class="go">CredalSet([PMFunc({&#39;b&#39;: 1})])</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -184,17 +188,17 @@ is).</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">returns:</th><td class="field-body">the possibility space of the credal set, i.e., the union of
+<tr class="field-odd field"><th class="field-name">returns:</th><td class="field-body">the possibility space of the credal set, i.e., the union of
 the domains of the probability mass functions it contains</td>
 </tr>
-<tr class="field"><th class="field-name">rtype:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/library/stdtypes.html#frozenset" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">frozenset</span></tt></a></td>
+<tr class="field-even field"><th class="field-name">rtype:</th><td class="field-body"><a class="reference external" href="http://docs.python.org/library/stdtypes.html#frozenset" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">frozenset</span></tt></a></td>
 </tr>
 </tbody>
 </table>
 </div></blockquote>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">PMFunc</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="o">.</span><span class="mo">03</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="o">.</span><span class="mo">07</span><span class="p">})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">q</span> <span class="o">=</span> <span class="n">PMFunc</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="o">.</span><span class="mo">07</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">:</span> <span class="o">.</span><span class="mo">03</span><span class="p">})</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">K</span> <span class="o">=</span> <span class="n">CredalSet</span><span class="p">({</span><span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">K</span> <span class="o">=</span> <span class="n">CredalSet</span><span class="p">([</span><span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">K</span><span class="o">.</span><span class="n">pspace</span><span class="p">()</span>
 <span class="go">frozenset([&#39;a&#39;, &#39;c&#39;, &#39;b&#39;])</span>
 </pre></div>
@@ -207,13 +211,13 @@ the domains of the probability mass functions it contains</td>
 <dd><p>Remove redundant elements from the credal set</p>
 <p>Redundant elements are those that are not vertices of the credal set&#8217;s
 convex hull.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">K</span> <span class="o">=</span> <span class="n">CredalSet</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="s">&#39;abc&#39;</span><span class="p">))</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">K</span> <span class="o">=</span> <span class="n">CredalSet</span><span class="p">(</span><span class="s">&#39;abc&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">K</span><span class="o">.</span><span class="n">add</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">K</span>
-<span class="go">CredalSet(set([..., PMFunc({&#39;a&#39;: &#39;1/3&#39;, &#39;c&#39;: &#39;1/3&#39;, &#39;b&#39;: &#39;1/3&#39;})]))</span>
+<span class="go">CredalSet([..., PMFunc({&#39;a&#39;: &#39;1/3&#39;, &#39;c&#39;: &#39;1/3&#39;, &#39;b&#39;: &#39;1/3&#39;})])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">K</span><span class="o">.</span><span class="n">discard_redundant</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">K</span>
-<span class="go">CredalSet(set([PMFunc({&#39;a&#39;: 1}), PMFunc({&#39;b&#39;: 1}), PMFunc({&#39;c&#39;: 1})]))</span>
+<span class="go">CredalSet([PMFunc({&#39;a&#39;: 1}), PMFunc({&#39;b&#39;: 1}), PMFunc({&#39;c&#39;: 1})])</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -221,23 +225,23 @@ convex hull.</p>
 <dl class="method">
 <dt id="murasyp.credalsets.CredalSet.get_desir">
 <tt class="descname">get_desir</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/murasyp/credalsets.html#CredalSet.get_desir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#murasyp.credalsets.CredalSet.get_desir" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generate the equivalent set of desirable gambles</p>
+<dd><p>Generate the corresponding open set of desirable gambles</p>
 <blockquote>
 <div><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">returns:</th><td class="field-body">the set of desirable gambles that is equivalent as an
+<tr class="field-odd field"><th class="field-name">returns:</th><td class="field-body">the set of desirable gambles that corresponds as an
 uncertainty model</td>
 </tr>
-<tr class="field"><th class="field-name">rtype:</th><td class="field-body"><a class="reference internal" href="desirs.html#murasyp.desirs.DesirSet" title="murasyp.desirs.DesirSet"><tt class="xref py py-class docutils literal"><span class="pre">DesirSet</span></tt></a></td>
+<tr class="field-even field"><th class="field-name">rtype:</th><td class="field-body"><a class="reference internal" href="desirs.html#murasyp.desirs.DesirSet" title="murasyp.desirs.DesirSet"><tt class="xref py py-class docutils literal"><span class="pre">DesirSet</span></tt></a></td>
 </tr>
 </tbody>
 </table>
 </div></blockquote>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">CredalSet</span><span class="p">(</span><span class="nb">set</span><span class="p">([</span><span class="n">PMFunc</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">}),</span> <span class="n">PMFunc</span><span class="p">({</span><span class="s">&#39;c&#39;</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">}),</span>
-<span class="gp">... </span>               <span class="n">PMFunc</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">}),</span> <span class="n">PMFunc</span><span class="p">({</span><span class="s">&#39;c&#39;</span><span class="p">})]))</span><span class="o">.</span><span class="n">get_desir</span><span class="p">()</span>
-<span class="go">DesirSet(set([Ray({&#39;a&#39;: 1}), Ray({&#39;b&#39;: 1}), Ray({&#39;c&#39;: 1}), Ray({&#39;a&#39;: 1, &#39;c&#39;: 1, &#39;b&#39;: -1})]))</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">CredalSet</span><span class="p">([</span><span class="n">PMFunc</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">}),</span> <span class="n">PMFunc</span><span class="p">({</span><span class="s">&#39;c&#39;</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">}),</span>
+<span class="gp">... </span>           <span class="n">PMFunc</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">}),</span> <span class="n">PMFunc</span><span class="p">({</span><span class="s">&#39;c&#39;</span><span class="p">})])</span><span class="o">.</span><span class="n">get_desir</span><span class="p">()</span>
+<span class="go">DesirSet([Cone([Ray({&#39;a&#39;: 1}), Ray({&#39;b&#39;: 1}), Ray({&#39;c&#39;: 1}), Ray({&#39;a&#39;: 1, &#39;c&#39;: 1, &#39;b&#39;: -1})])])</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -256,8 +260,8 @@ uncertainty model</td>
   <p class="topless"><a href="massfuncs.html"
                         title="previous chapter">Mass Functions</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="desirs.html"
-                        title="next chapter">Sets of desirable gambles</a></p>
+  <p class="topless"><a href="mathprog.html"
+                        title="next chapter">Mathematical programming &amp; polytope theory</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/credalsets.txt"
@@ -266,7 +270,7 @@ uncertainty model</td>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" size="18" />
+      <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
@@ -290,17 +294,17 @@ uncertainty model</td>
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="desirs.html" title="Sets of desirable gambles"
+          <a href="mathprog.html" title="Mathematical programming &amp; polytope theory"
              >next</a> |</li>
         <li class="right" >
           <a href="massfuncs.html" title="Mass Functions"
              >previous</a> |</li>
-        <li><a href="index.html">murasyp v(git) documentation</a> &raquo;</li> 
+        <li><a href="index.html">murasyp (git) documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2011–2012, Erik Quaeghebeur.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
     </div>
   </body>
 </html>
