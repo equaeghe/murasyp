@@ -213,11 +213,11 @@ class CredalSet(set):
         mat.rep_type = RepType.INEQUALITY
         poly = Polyhedron(mat)
         ext = poly.get_generators()
-        return DesirSet({frozenset(Ray({pspace[j-1]: ext[i][j]
-                                        for j in range(1, ext.col_size)})
-                                   for i in range(0, ext.row_size)) |
-                         frozenset(Ray({pspace[j-1]: -ext[i][j]
-                                        for j in range(1, ext.col_size)})
-                                   for i in ext.lin_set)})
+        return DesirSet([[Ray({pspace[j-1]: ext[i][j]
+                               for j in range(1, ext.col_size)})
+                          for i in range(0, ext.row_size)] +
+                         [Ray({pspace[j-1]: -ext[i][j]
+                               for j in range(1, ext.col_size)})
+                          for i in ext.lin_set]])
 
 from murasyp.desirs import DesirSet # avoid circular-dependency
