@@ -7,8 +7,9 @@ class CredalSet(set):
     """A set of probability mass functions
 
       :type `data`: a non-:class:`~collections.Mapping`
-        :class:`~collections.Container` of arguments accepted by the
-        :class:`~murasyp.massfuncs.PMFunc` constructor.
+        :class:`~collections.Iterable` :class:`~collections.Container` of
+        arguments accepted by the  :class:`~murasyp.massfuncs.PMFunc`
+        constructor.
 
       >>> CredalSet('abc')
       CredalSet([PMFunc({'a': 1}), PMFunc({'b': 1}), PMFunc({'c': 1})])

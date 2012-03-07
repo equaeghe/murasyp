@@ -12,9 +12,9 @@ class Gamble(Vector):
     What has changed:
 
     * There is a new constructor. If `data` is not a
-      :class:`~collections.Mapping`, but is a :class:`~collections.Hashable`
-      :class:`~collections.Container`, then its so-called indicator function is
-      generated.
+      :class:`~collections.Mapping`, but is a :class:`~collections.Iterable`
+      :class:`~collections.Hashable` :class:`~collections.Container`, then its
+      so-called indicator function is generated.
 
       >>> Gamble('abc')
       Gamble({'a': 1, 'c': 1, 'b': 1})
@@ -208,8 +208,8 @@ class Cone(frozenset):
     """A frozenset of rays
 
       :type `data`: a non-:class:`~collections.Mapping`
-        :class:`~collections.Container` of arguments accepted by the
-        :class:`~murasyp.gambles.Ray` constructor.
+        :class:`~collections.Iterable` :class:`~collections.Container` of
+        arguments accepted by the :class:`~murasyp.gambles.Ray` constructor.
 
       >>> Cone([{'a': 2, 'b': 3}, {'b': 1, 'c': 4}])
       Cone([Ray({'a': '2/3', 'b': 1}), Ray({'c': 1, 'b': '1/4'})])

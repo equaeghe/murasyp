@@ -10,8 +10,8 @@ class DesirSet(set):
     """A set of cones
 
       :type `data`: a non-:class:`~collections.Mapping`
-        :class:`~collections.Container` of arguments accepted by the
-        :class:`~murasyp.gambles.Cone` constructor.
+        :class:`~collections.Iterable` :class:`~collections.Container` of
+        arguments accepted by the :class:`~murasyp.gambles.Cone` constructor.
 
       >>> DesirSet('abc')
       DesirSet([Cone([Ray({'b': 1})]), Cone([Ray({'c': 1})]), Cone([Ray({'a': 1})])])
