@@ -94,6 +94,7 @@ pygments_style = 'sphinx'
 # -- Autodoc options -----------------------------------------------------------
 autodoc_member_order = 'bysource'
 autodoc_default_flags = ['members', 'undoc-members']
+todo_include_todos = True
 
 # -- Options for HTML output ---------------------------------------------------
 
