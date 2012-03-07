@@ -336,7 +336,7 @@ class DesirSet(set):
         >>> D = DesirSet(['abc'])
         >>> D.set_lower_pr({'a': 1, 'b': 0, 'c': 1}, .5)
         >>> D.get_credal()
-        CredalSet(set([PMFunc({'a': '1/2', 'b': '1/2'}), PMFunc({'c': '1/2', 'b': '1/2'}), PMFunc({'a': 1}), PMFunc({'c': 1})]))
+        CredalSet([PMFunc({'a': '1/2', 'b': '1/2'}), PMFunc({'c': '1/2', 'b': '1/2'}), PMFunc({'a': 1}), PMFunc({'c': 1})])
 
         """
         C = Cone.union(*self)
@@ -346,11 +346,11 @@ class DesirSet(set):
         mat.rep_type = RepType.INEQUALITY
         poly = Polyhedron(mat)
         ext = poly.get_generators()
-        return CredalSet(set([PMFunc({pspace[j-1]: ext[i][j]
-                                     for j in range(1, ext.col_size)})
-                              for i in range(0, ext.row_size)] +
-                             [PMFunc({pspace[j-1]: -ext[i][j]
-                                     for j in range(1, ext.col_size)})
-                              for i in ext.lin_set]))
+        return CredalSet([PMFunc({pspace[j-1]: ext[i][j]
+                                  for j in range(1, ext.col_size)})
+                          for i in range(0, ext.row_size)] +
+                         [PMFunc({pspace[j-1]: -ext[i][j]
+                                  for j in range(1, ext.col_size)})
+                          for i in ext.lin_set])
 
 from murasyp.credalsets import CredalSet # avoid circular-dependency
