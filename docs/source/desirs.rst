@@ -9,4 +9,3 @@ Sets of desirable gambles
 =========================
 
 .. autoclass:: DesirSet
-
