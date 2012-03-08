@@ -44,13 +44,13 @@ class DesirSet(set):
       >>> D ** (f | f.support())
       Fraction(2, 5)
 
+      .. todo::
+
+        add example (from [WPV2004]_?) that taxes CONEstrip
+
       .. note::
 
           The domain of the gamble determines the conditioning event.
-
-      .. warning::
-
-          Currently these methods are broken.
 
     """
     def __init__(self, data=[]):
@@ -251,31 +251,12 @@ class DesirSet(set):
 
     def __mul__(self, other):
         """Lower expectation of a gamble"""
-        if not isinstance(other, Gamble):
-            raise TypeError(str(other) + " is not a gamble")
-        dom = other.domain()
-        pspace = list(self.pspace())
-        D = list(self)
-        mat = Matrix(list([0, 0] + [int(oray == ray) for oray in D]
-                          for ray in D) +
-                     list([other[x], -int(x in dom)] + [-ray[x] for ray in D]
-                          for x in pspace),
-                      number_type='fraction')
-        mat.obj_type = LPObjType.MAX
-        mat.obj_func = tuple([0, 1] + len(D) * [0])
-        lp = LinProg(mat)
-        lp.solve()
-        if lp.status == LPStatusType.OPTIMAL:
-            return lp.obj_value
-        elif lp.status == LPStatusType.UNDECIDED:
-            status = "undecided"
-        elif lp.status == LPStatusType.INCONSISTENT:
-            status = "inconsistent"
-        elif lp.status == LPStatusType.UNBOUNDED:
-            status = "unbounded"
-        else:
-            status = "of unknown status"
-        raise ValueError("The linear program is " + str(status) + '.')
+        gamble = Gamble(other)
+        indicator = Gamble(gamble.domain())
+        return murasyp.mathprog.maximize(
+                  self | DesirSet(self.pspace())
+                       | DesirSet([{indicator}, {-indicator}, {()}]),
+                  gamble, (0, {indicator: 1, -indicator: -1}))
 
     def __pow__(self, other):
         """Upper expectation of a gamble"""
