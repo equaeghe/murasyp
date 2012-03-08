@@ -1,5 +1,3 @@
-# coding: utf-8
-
 from collections import Mapping
 from murasyp import _make_rational
 from murasyp.gambles import Gamble, Ray, Cone

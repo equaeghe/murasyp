@@ -1,5 +1,3 @@
-# coding: utf-8
-
 from murasyp.vectors import Vector, Polytope
 from cdd import Matrix, RepType, Polyhedron, LPObjType, LinProg, LPStatusType
 
