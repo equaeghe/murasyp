@@ -91,3 +91,43 @@ def feasible(data, mapping=None):
             return set()
     else:
         return set()
+
+def maximize(data, mapping={}, objective=(0, {})):
+    """Maximization using the CONEstrip algorithm
+
+      .. todo::
+
+        document, test more and clean up
+
+    """
+    E = feasible(data, mapping)
+    if E == set():
+        raise ValueError("The linear program is infeasible.")
+    l = sum(len(A) for A in E)
+    h = Vector(mapping)
+    goal = (objective[0], Vector(objective[1]))
+    coordinates = list(frozenset.union(*(A.domain() for A in E)))
+    E = [[vector for vector in A] for A in E]
+    mat = Matrix([[0] + l * [0]], number_type='fraction')
+    mat.extend([[h[x]] + [v[x] for A in E for v in A]
+                for x in coordinates], linear=True) # cone-constraints
+    mat.extend([[0] + [int(w == v) for B in E for w in B]
+                for A in E for v in A]) # mu >= 0
+    mat.obj_type = LPObjType.MAX
+    mat.obj_func = tuple([goal[0]] + [goal[1][v] for A in E for v in A])
+                      # (constant, mu)
+    #print(mat)
+    lp = LinProg(mat)
+    lp.solve()
+    if lp.status == LPStatusType.OPTIMAL:
+        #print(lp.primal_solution)
+        return lp.obj_value
+    elif lp.status == LPStatusType.UNDECIDED:
+        status = "undecided"
+    elif lp.status == LPStatusType.INCONSISTENT:
+        status = "inconsistent"
+    elif lp.status == LPStatusType.UNBOUNDED:
+        status = "unbounded"
+    else:
+        status = "of unknown status"
+    raise ValueError("The linear program is " + str(status) + '.')
