@@ -1,7 +1,6 @@
 # coding: utf-8
 
 from collections import Mapping
-from cdd import Matrix, LPObjType, LinProg, LPStatusType
 from murasyp import _make_rational
 from murasyp.gambles import Gamble, Ray, Cone
 import murasyp.credalsets
@@ -204,7 +203,7 @@ class DesirSet(set):
         nonnegative linear combination of desirable gambles is everywhere
         negative.
 
-        >>> D = DesirSet(set('abc'))
+        >>> D = DesirSet()
         >>> D.add([{'a': -1, 'b': -1, 'c': 1}])
         >>> D.add([{'a': 1, 'b': -1, 'c': -1}])
         >>> D.asl()
@@ -212,21 +211,14 @@ class DesirSet(set):
         >>> D.add([{'a': -1, 'b': 1, 'c': -1}])
         >>> D.asl()
         False
-
-        .. warning::
-
-          Currently, this method is broken.
+        >>> D = DesirSet('ab')
+        >>> D.add([{'b': -1}])
+        >>> D.asl()
+        True
 
         """
-        pspace = list(self.pspace())
-        D = list(self)
-        mat = Matrix(list([0] + [int(oray == ray) for oray in D] for ray in D) +
-                     list([-1] + [-ray[x] for ray in D] for x in pspace),
-                     number_type='fraction')
-        mat.obj_type = LPObjType.MIN
-        lp = LinProg(mat)
-        lp.solve()
-        return lp.status != LPStatusType.OPTIMAL
+        D = DesirSet([Cone.union(*(self | DesirSet([self.pspace()])))])
+        return murasyp.mathprog.feasible(D) == set()
 
     def apl(self):
         """Check whether the set of desirable gambles avoids partial loss
@@ -237,13 +229,17 @@ class DesirSet(set):
         some nonnegative linear combination of desirable gambles is everywhere
         nonpositive and somewhere negative.
 
-        >>> D = DesirSet('abc')
+        >>> D = DesirSet()
         >>> D.add([{'a': -1, 'b': -1, 'c': 1}])
         >>> D.apl()
         True
         >>> D.add([{'a': -1, 'b': 1, 'c': -1}])
         >>> D.apl()
         False
+        >>> D = DesirSet()
+        >>> D.set_pr(Gamble('b') | {'a', 'b'}, 0)
+        >>> D.apl()
+        True
 
         We can deal correctly with non-closed sets of desirable gambles, i.e.,
         containing non-singleton cones:
@@ -255,45 +251,9 @@ class DesirSet(set):
         >>> D.apl()
         True
 
-        .. warning::
-
-          Currently, this method is broken.
-
         """
-        pspace = self.pspace()
-        A = pspace
-        while len(A) > 0:
-            D = list(self)
-            I = list(DesirSet(A))
-            mat = Matrix([[0] + [int(oray == ray) for oray in D] + len(I) * [0]
-                          for ray in D] # λ >= 0
-                       + [[0] + len(D) * [0] + [int(oray == ray) for oray in I]
-                          for ray in I] # τ >= 0
-                       + [[1] + len(D) * [0] + [-int(oray == ray) for oray in I]
-                          for ray in I] # τ <= 1
-                       + [[0] + [-ray[x] for ray in D + I]
-                          for x in pspace] # <λ,id>_D <= -<τ,id>_I
-                       + [[0] + [-ray.dir[x]*int(oray == ray) for oray in D]
-                              + len(I) * [0] # λ_g⋅g'(ω) <= 0
-                          for x in pspace - A for ray in D], # for ω s.t. τ_ω=0
-                         number_type='fraction')
-            mat.obj_type = LPObjType.MAX
-            mat.obj_func = tuple([0] + len(D) * [0] + len(I) * [1])
-            lp = LinProg(mat)
-            lp.solve()
-            if lp.status != LPStatusType.OPTIMAL:
-                raise ValueError("No solution found for linear program. " +
-                                 "pycddlib returned status code " +
-                                 "'" + lp.status + "'.")
-            else:
-                tau = lp.primal_solution[-len(I):]
-                if not any(tau):
-                    return True
-                elif all(tau):
-                    return False
-                else:
-                    A = sum(Gamble(I[k]) for k in range(0, len(tau))
-                                         if tau[k] == 1).support()
+        D = self | DesirSet(self.pspace())
+        return murasyp.mathprog.feasible(D) == set()
 
     def __mul__(self, other):
         """Lower expectation of a gamble"""
