@@ -29,13 +29,19 @@ def vf_enumeration(data=[]):
     return fv_poly
 
 def feasible(data, mapping=None):
-    """Check feasibility using the CONEstrip algorithm"""
+    """Check feasibility using the CONEstrip algorithm
+
+      .. todo::
+
+        document, test more and clean up
+
+    """
     D = set(Polytope(A) for A in data)
-    if (mapping == None) or all(mapping[x] != 0 for x in h):
+    if (mapping == None) or all(mapping[x] != 0 for x in mapping):
         h = None
     else:
         h = Vector(mapping)
-        D.add([-h])
+        D.add(Polytope({-h}))
     coordinates = list(frozenset.union(*(A.domain() for A in D)))
     E = [[vector for vector in A] for A in D]
     #print(E)
@@ -44,7 +50,7 @@ def feasible(data, mapping=None):
         L = [len(A) for A in E]
         l = sum(L)
         mat = Matrix([[0] + l * [0] + k * [0]], number_type='fraction')
-        mat.extend([[0] + [v[x] for A in E for v in A  ] + k * [0]
+        mat.extend([[0] + [v[x] for A in E for v in A] + k * [0]
                     for x in coordinates], linear=True) # cone-constraints
         mat.extend([[0] + [int(w == v) for B in E for w in B] + k * [0]
                     for A in E for v in A]) # mu >= 0
