@@ -234,18 +234,14 @@ class DesirSet(set):
         >>> D.add([{'a': -1, 'b': 1, 'c': -1}])
         >>> D.apl()
         False
-        >>> D = DesirSet()
-        >>> D.set_pr(Gamble('b') | {'a', 'b'}, 0)
-        >>> D.apl()
-        True
 
         We can deal correctly with non-closed sets of desirable gambles, i.e.,
         containing non-singleton cones:
 
-        >>> D = DesirSet('abc')
-        >>> D.set_upper_pr(Gamble({'a', 'b'}) | {'a', 'b', 'c'}, 0)
+        >>> D = DesirSet()
+        >>> D.set_pr(Gamble('b') | {'a', 'b'}, 0)
         >>> D
-        DesirSet([Cone([Ray({'b': 1})]), Cone([Ray({'c': 1})]), Cone([Ray({'a': 1})]), Cone([Ray({'a': 1, 'c': 1, 'b': 1}), Ray({'a': -1, 'b': -1})])])
+        DesirSet([Cone([Ray({'a': 1, 'b': 1}), Ray({'b': 1})]), Cone([Ray({'a': 1, 'b': 1}), Ray({'b': -1})])])
         >>> D.apl()
         True
 
