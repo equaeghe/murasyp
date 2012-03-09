@@ -2,7 +2,7 @@ About murasyp
 =============
 murasyp is Python software for accept/reject statement-based uncertainty modeling.
 Or at least, that is what it is going to be.
-Currently, murasyp consists of some code for dealing with simpler imprecise probabilistic models: credal sets, sets of almost desirable gambles.
+Currently, murasyp consists of code for dealing with simpler imprecise probabilistic models: (closed convex) credal sets and sets of (really) desirable gambles, which can also used as (conditional) lower previsions.
 It will be extended to support my (Erik Quaeghebeur's) research.
 It is publically available in case somebody else wishes to test it out; feel free to contact me via `my GitHub page <https://github.com/equaeghe>`_ or using the contact details on `my personal website <http://users.ugent.be/~equaeghe>`_.
 
@@ -10,7 +10,7 @@ Currently, murasyp cannot really be installed; it can be tested by installing `P
 
     git clone git://github.com/equaeghe/murasyp
 
-and running the `Python <http://python.org/>`_ shell in the source code directory.
+and running the `Python <http://python.org/>`_ shell in the directory in which the repository is cloned.
 Examples of how to use murasyp can be found in this documentation.
 You can also browse the source code on GitHub: `equaeghe/murasyp <http://github.com/equaeghe/murasyp>`_.
 Note that you need `Sphinx <http://sphinx.pocoo.org/>`_ to generate the documentation and to run the doctests.
