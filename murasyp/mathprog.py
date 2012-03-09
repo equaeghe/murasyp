@@ -51,19 +51,22 @@ def feasible(data, mapping=None):
         l = sum(L)
         mat = Matrix([[0] + l * [0] + k * [0]], number_type='fraction')
         mat.extend([[0] + [v[x] for A in E for v in A] + k * [0]
-                    for x in coordinates], linear=True) # cone-constraints
-        mat.extend([[0] + [int(w == v) for B in E for w in B] + k * [0]
+                    for x in coordinates],
+                   linear=True) # cone-constraints
+        mat.extend([[0] + [int(B == A and w == v) for B in E for w in B]
+                        + k * [0]
                     for A in E for v in A]) # mu >= 0
         mat.extend([[1] + l * [0] + [-int(B == A) for B in E]
                     for A in E]) # tau <= 1
         mat.extend([[0] + l * [0] + [int(B == A) for B in E]
                     for A in E]) # tau >= 0
         mat.extend([[-1] + l * [0] + k * [1]]) # (sum of tau_A) >= 1
-        mat.extend([[0] + [int(w == v) for B in E for w in B]
+        mat.extend([[0] + [int(B == A and w == v) for B in E for w in B]
                         + [-int(B == A) for B in E]
                     for A in E for v in A]) # tau_A <= mu_A for all A
         if h != None: # mu_{-h} >= 1
-            mat.extend([[-1] + [int(w == -h) for A in E for w in A] + k * [0]])
+            mat.extend([[-1] + [int(A == [-h]) for A in E for w in A]
+                             + k * [0]])
         mat.obj_type = LPObjType.MAX
         mat.obj_func = tuple([0] + l * [0] + k * [1]) # (constant, mu, tau)
         #print(mat)
@@ -103,15 +106,18 @@ def maximize(data, mapping={}, objective=(0, {})):
     E = feasible(data, mapping)
     if E == set():
         raise ValueError("The linear program is infeasible.")
+        #print("The linear program is infeasible.")
+        #return 0
     l = sum(len(A) for A in E)
     h = Vector(mapping)
     goal = (objective[0], Vector(objective[1]))
+    #print(goal)
     coordinates = list(frozenset.union(*(A.domain() for A in E)))
     E = [[vector for vector in A] for A in E]
     mat = Matrix([[0] + l * [0]], number_type='fraction')
-    mat.extend([[h[x]] + [v[x] for A in E for v in A]
+    mat.extend([[-h[x]] + [v[x] for A in E for v in A]
                 for x in coordinates], linear=True) # cone-constraints
-    mat.extend([[0] + [int(w == v) for B in E for w in B]
+    mat.extend([[0] + [int(B == A and w == v) for B in E for w in B]
                 for A in E for v in A]) # mu >= 0
     mat.obj_type = LPObjType.MAX
     mat.obj_func = tuple([goal[0]] + [goal[1][v] for A in E for v in A])

@@ -44,13 +44,23 @@ class DesirSet(set):
       >>> D ** (f | f.support())
       Fraction(2, 5)
 
-      .. todo::
-
-        add example (from [WPV2004]_?) that taxes CONEstrip
-
       .. note::
 
           The domain of the gamble determines the conditioning event.
+
+      We can deal with situations in which the gamble lies on a facet of the set
+      of desirable gambles that corresponds to a conditioning event of (lower
+      and/or upper) probability zero.
+
+      >>> D = DesirSet()
+      >>> D.set_pr('a', 1)
+      >>> D * (Gamble('c') | {'b', 'c'})
+      0
+      >>> D * (Gamble('c') | {'a', 'b', 'c'})
+      0
+      >>> D.set_pr(Gamble('b') | {'b', 'c'}, '1/2')
+      >>> D * (Gamble('c') | {'b', 'c'})
+      Fraction(1, 2)
 
     """
     def __init__(self, data=[]):
@@ -165,7 +175,7 @@ class DesirSet(set):
           The domain of the input gamble determines the conditioning event.
 
         """
-        self.set_lower_pr(-Gamble(data), -val)
+        self.set_lower_pr(-Gamble(data), -_make_rational(val))
 
     def set_pr(self, data, val):
         """Set the probability/prevision (expectation) of an event/gamble
@@ -254,7 +264,8 @@ class DesirSet(set):
         gamble = Gamble(other)
         indicator = Gamble(gamble.domain())
         return murasyp.mathprog.maximize(
-                  self | DesirSet(self.pspace())
+                  self | DesirSet(self.pspace() | gamble.domain()
+                                                | indicator.domain())
                        | DesirSet([{indicator}, {-indicator}, {()}]),
                   gamble, (0, {indicator: 1, -indicator: -1}))
 
