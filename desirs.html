@@ -112,9 +112,19 @@ well.</p>
 <p class="first admonition-title">Note</p>
 <p class="last">The domain of the gamble determines the conditioning event.</p>
 </div>
-<div class="admonition warning">
-<p class="first admonition-title">Warning</p>
-<p class="last">Currently these methods are broken.</p>
+<p>We can deal with situations in which the gamble lies on a facet of the set
+of desirable gambles that corresponds to a conditioning event of (lower
+and/or upper) probability zero.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">D</span> <span class="o">=</span> <span class="n">DesirSet</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">D</span><span class="o">.</span><span class="n">set_pr</span><span class="p">(</span><span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">D</span> <span class="o">*</span> <span class="p">(</span><span class="n">Gamble</span><span class="p">(</span><span class="s">&#39;c&#39;</span><span class="p">)</span> <span class="o">|</span> <span class="p">{</span><span class="s">&#39;b&#39;</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">})</span>
+<span class="go">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">D</span> <span class="o">*</span> <span class="p">(</span><span class="n">Gamble</span><span class="p">(</span><span class="s">&#39;c&#39;</span><span class="p">)</span> <span class="o">|</span> <span class="p">{</span><span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">})</span>
+<span class="go">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">D</span><span class="o">.</span><span class="n">set_pr</span><span class="p">(</span><span class="n">Gamble</span><span class="p">(</span><span class="s">&#39;b&#39;</span><span class="p">)</span> <span class="o">|</span> <span class="p">{</span><span class="s">&#39;b&#39;</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">},</span> <span class="s">&#39;1/2&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">D</span> <span class="o">*</span> <span class="p">(</span><span class="n">Gamble</span><span class="p">(</span><span class="s">&#39;c&#39;</span><span class="p">)</span> <span class="o">|</span> <span class="p">{</span><span class="s">&#39;b&#39;</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">})</span>
+<span class="go">Fraction(1, 2)</span>
+</pre></div>
 </div>
 </li>
 </ul>
@@ -329,7 +339,7 @@ value.</p>
 <p>A set of desirable gambles does not avoid sure loss if and only if some
 nonnegative linear combination of desirable gambles is everywhere
 negative.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">D</span> <span class="o">=</span> <span class="n">DesirSet</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="s">&#39;abc&#39;</span><span class="p">))</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">D</span> <span class="o">=</span> <span class="n">DesirSet</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">D</span><span class="o">.</span><span class="n">add</span><span class="p">([{</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">D</span><span class="o">.</span><span class="n">add</span><span class="p">([{</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">}])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">D</span><span class="o">.</span><span class="n">asl</span><span class="p">()</span>
@@ -337,11 +347,11 @@ negative.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">D</span><span class="o">.</span><span class="n">add</span><span class="p">([{</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">}])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">D</span><span class="o">.</span><span class="n">asl</span><span class="p">()</span>
 <span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">D</span> <span class="o">=</span> <span class="n">DesirSet</span><span class="p">(</span><span class="s">&#39;ab&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">D</span><span class="o">.</span><span class="n">add</span><span class="p">([{</span><span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">}])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">D</span><span class="o">.</span><span class="n">asl</span><span class="p">()</span>
+<span class="go">True</span>
 </pre></div>
-</div>
-<div class="admonition warning">
-<p class="first admonition-title">Warning</p>
-<p class="last">Currently, this method is broken.</p>
 </div>
 </dd></dl>
 
@@ -362,7 +372,7 @@ negative.</p>
 <p>A set of desirable gambles does not avoid partial loss if and only if
 some nonnegative linear combination of desirable gambles is everywhere
 nonpositive and somewhere negative.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">D</span> <span class="o">=</span> <span class="n">DesirSet</span><span class="p">(</span><span class="s">&#39;abc&#39;</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">D</span> <span class="o">=</span> <span class="n">DesirSet</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">D</span><span class="o">.</span><span class="n">add</span><span class="p">([{</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">D</span><span class="o">.</span><span class="n">apl</span><span class="p">()</span>
 <span class="go">True</span>
@@ -373,17 +383,13 @@ nonpositive and somewhere negative.</p>
 </div>
 <p>We can deal correctly with non-closed sets of desirable gambles, i.e.,
 containing non-singleton cones:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">D</span> <span class="o">=</span> <span class="n">DesirSet</span><span class="p">(</span><span class="s">&#39;abc&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">D</span><span class="o">.</span><span class="n">set_upper_pr</span><span class="p">(</span><span class="n">Gamble</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">})</span> <span class="o">|</span> <span class="p">{</span><span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">},</span> <span class="mi">0</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">D</span> <span class="o">=</span> <span class="n">DesirSet</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">D</span><span class="o">.</span><span class="n">set_pr</span><span class="p">(</span><span class="n">Gamble</span><span class="p">(</span><span class="s">&#39;b&#39;</span><span class="p">)</span> <span class="o">|</span> <span class="p">{</span><span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">},</span> <span class="mi">0</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">D</span>
-<span class="go">DesirSet([Cone([Ray({&#39;b&#39;: 1})]), Cone([Ray({&#39;c&#39;: 1})]), Cone([Ray({&#39;a&#39;: 1})]), Cone([Ray({&#39;a&#39;: 1, &#39;c&#39;: 1, &#39;b&#39;: 1}), Ray({&#39;a&#39;: -1, &#39;b&#39;: -1})])])</span>
+<span class="go">DesirSet([Cone([Ray({&#39;a&#39;: 1, &#39;b&#39;: 1}), Ray({&#39;b&#39;: 1})]), Cone([Ray({&#39;a&#39;: 1, &#39;b&#39;: 1}), Ray({&#39;b&#39;: -1})])])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">D</span><span class="o">.</span><span class="n">apl</span><span class="p">()</span>
 <span class="go">True</span>
 </pre></div>
-</div>
-<div class="admonition warning">
-<p class="first admonition-title">Warning</p>
-<p class="last">Currently, this method is broken.</p>
 </div>
 </dd></dl>
 

@@ -124,27 +124,6 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="nb">set</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">(</span><span class="n">PMFunc</span><span class="p">(</span><span class="n">element</span><span class="p">)</span> <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">data</span><span class="p">))</span>
 
-    <span class="c">#def __init__(self, data=set([])):</span>
-        <span class="c">#&quot;&quot;&quot;Create a credal set&quot;&quot;&quot;</span>
-        <span class="c">#if isinstance(data, Set):</span>
-            <span class="c">#are_mappings = [isinstance(elem, Mapping) for elem in data]</span>
-            <span class="c">#if all(are_mappings):</span>
-                <span class="c">#self._set = set(PMFunc(mapping) for mapping in data)</span>
-            <span class="c">#elif not any(are_mappings):</span>
-                <span class="c">#self._set = set(PMFunc({x}) for x in data) # vacuous</span>
-            <span class="c">#else:</span>
-                <span class="c">#raise TypeError(&quot;either all or none of the elements of the &quot;</span>
-                                <span class="c">#+ &quot;specified Set &quot; + str(data) + &quot;must be &quot;</span>
-                                <span class="c">#+ &quot;Mappings&quot;)</span>
-        <span class="c">#else:</span>
-            <span class="c">#raise TypeError(&quot;specify a Set instead of a &quot;</span>
-                            <span class="c">#+ type(data).__name__)</span>
-
-    <span class="c">#__len__ = lambda self: self._set.__len__()</span>
-    <span class="c">#__iter__ = lambda self: self._set.__iter__()</span>
-    <span class="c">#__contains__ = lambda self: self._set.__contains__()</span>
-    <span class="c">#__repr__ = lambda self: type(self).__name__ + &#39;(&#39; + repr(self._set) + &#39;)&#39;</span>
-
 <div class="viewcode-block" id="CredalSet.add"><a class="viewcode-back" href="../../credalsets.html#murasyp.credalsets.CredalSet.add">[docs]</a>    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Add a probability mass function to the credal set</span>
 
@@ -157,6 +136,10 @@
 <span class="sd">        &gt;&gt;&gt; K.add({&#39;a&#39;: .06, &#39;b&#39;: .14, &#39;c&#39;: 1.8, &#39;d&#39;: 0})</span>
 <span class="sd">        &gt;&gt;&gt; K</span>
 <span class="sd">        CredalSet([PMFunc({&#39;a&#39;: &#39;3/100&#39;, &#39;c&#39;: &#39;9/10&#39;, &#39;b&#39;: &#39;7/100&#39;})])</span>
+
+<span class="sd">          .. todo::</span>
+
+<span class="sd">            see whether all set functionality is carried over</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">set</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">PMFunc</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
@@ -173,6 +156,10 @@
 <span class="sd">        &gt;&gt;&gt; K.discard(PMFunc({&#39;a&#39;}))</span>
 <span class="sd">        &gt;&gt;&gt; K</span>
 <span class="sd">        CredalSet([PMFunc({&#39;b&#39;: 1})])</span>
+
+<span class="sd">          .. todo::</span>
+
+<span class="sd">            see whether all set functionality is carried over</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">set</span><span class="o">.</span><span class="n">discard</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">PMFunc</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
