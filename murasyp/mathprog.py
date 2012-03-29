@@ -35,6 +35,11 @@ def feasible(data, mapping=None):
 
         document, test more and clean up
 
+      .. admonition:: Algorithm
+        :class: Algorithm
+
+        test text
+
     """
     D = set(Polytope(A) for A in data)
     if (mapping == None) or all(mapping[x] != 0 for x in mapping):
