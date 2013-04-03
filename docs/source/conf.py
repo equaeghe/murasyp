@@ -228,5 +228,5 @@ man_pages = [
 # Example configuration for intersphinx: refer to the Python standard library.
 intersphinx_mapping = {
     'python': ('http://docs.python.org/', None),
-    'cdd': ('http://packages.python.org/pycddlib', None),
+    'cdd': ('https://pycddlib.readthedocs.org/en/1.0.4/', None),
 }
