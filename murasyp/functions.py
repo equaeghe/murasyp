@@ -1,4 +1,5 @@
 from collections import Mapping
+from fractions import Fraction
 from murasyp import _make_rational
 
 class Function(Mapping):
@@ -102,18 +103,20 @@ class Function(Mapping):
         """
         return frozenset(arg for arg, value in self.iteritems() if value != 0)
 
-    def __add__(self, other):
-        """Pointwise addition of rational-valued functions"""
-        return type(self)({arg: self[arg] + other[arg]
-                           for arg in self._domain_joiner(other)})
-
-    def _domain_joiner(self, other):
-        if type(self) == type(other):
-            return iter(self.domain() & other.domain())
+    def _pointwise(self, other, operator):
+        """Pointwise application of a binary operator"""
+        if type(self) != type(other):
+            raise TypeError("cannot apply '" + operator.__name__ + "'"
+                            " to objects with different types: '" +
+                            type(self).__name__ + "' and '" +
+                            type(other).__name__ + "'")
         else:
-            raise TypeError("cannot combine domains of objects with different "
-                            "types: '" + type(self).__name__ + "' and '"
-                                       + type(other).__name__ + "'")
+            return type(self)({arg: operator(self[arg], other[arg])
+                               for arg in self._domain_joiner(other)})
+
+    _domain_joiner = lambda self, other: iter(self.domain() & other.domain())
+
+    __add__ = lambda self, other: self._pointwise(other, Fraction.__add__)
 
     def __mul__(self, other):
         """Scalar multiplication of rational-valued functions"""

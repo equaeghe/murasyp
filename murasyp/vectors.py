@@ -1,5 +1,6 @@
 from collections import Set, Hashable, Mapping
 from murasyp.functions import Function
+from fractions import Fraction
 
 class Vector(Function, Hashable):
     """Vectors map arguments to zero or a specified rational value
@@ -26,7 +27,7 @@ class Vector(Function, Hashable):
       >>> f
       Vector({'a': '11/10', 'c': 0, 'b': '-1/2'})
       >>> f['d']
-      0
+      Fraction(0, 1)
 
     * The union of domains is used under pointwise operations.
 
@@ -46,17 +47,11 @@ class Vector(Function, Hashable):
 
     """
 
-    __getitem__ = lambda self, x: self._mapping[x] if x in self else 0
+    __getitem__ = lambda self, x: self._mapping[x] if x in self else Fraction(0)
     __hash__ = lambda self: hash(tuple(item for item
                                             in self._mapping.iteritems()))
 
-    def _domain_joiner(self, other):
-        if type(self) == type(other):
-            return iter(self.domain() | other.domain())
-        else:
-            raise TypeError("cannot combine domains of objects with different "
-                            "types: '" + type(self).__name__ + "' and '"
-                                       + type(other).__name__ + "'")
+    _domain_joiner = lambda self, other: iter(self.domain() | other.domain())
 
     def __or__(self, other):
         """Restriction or extension with zero"""
