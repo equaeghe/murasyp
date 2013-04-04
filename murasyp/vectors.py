@@ -33,8 +33,8 @@ class Vector(Function, Hashable):
 
       >>> f = Vector({'a': 1.1, 'b': '-1/2','c': 0})
       >>> g = Vector({'b': '.6', 'c': -2, 'd': 0.0})
-      >>> (.3 * f - g) / 2
-      Vector({'a': '33/200', 'c': 1, 'b': '-3/8', 'd': 0})
+      >>> 1 + (.3 * f - g) / 2
+      Vector({'a': '233/200', 'c': 2, 'b': '5/8', 'd': 1})
 
     * A vector's domain can be restricted/extended to a specified
       :class:`~collections.Set`.

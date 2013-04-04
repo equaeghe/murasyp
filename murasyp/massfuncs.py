@@ -98,18 +98,10 @@ class UMFunc(Vector):
         else:
             return Vector(self) * other
 
-    def __add__(self, other):
-        """Pointwise addition of unit mass functions and vectors"""
-        if isinstance(other, Vector):
-            return Vector(self) + Vector(other)
-        else:
-            raise TypeError("can only add a vector to a unit mass function, not"
-                            + " '" + type(other).__name__ + "'")
+    __add__ = lambda self, other: Vector(self) + other
+    __radd__ = __add__
 
-    def __div__(self, other):
-        """Scalar division of mass assignments"""
-        other = _make_rational(other)
-        return Vector(self) / other
+    __div__ = lambda self, other: Vector(self) / other
 
     __rmul__ = __mul__
 

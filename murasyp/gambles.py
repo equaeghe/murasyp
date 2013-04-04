@@ -20,16 +20,6 @@ class Gamble(Vector):
       >>> Gamble({'abc'})
       Gamble({'abc': 1})
 
-    * Pointwise multiplication and scalar addition & subtraction
-      have been added.
-
-      >>> f = Gamble({'a': 1.1, 'b': '-1/2', 'c': 0})
-      >>> g = Gamble({'b': '.6', 'c': -2, 'd': 0.0})
-      >>> f * g
-      Gamble({'a': 0, 'c': 0, 'b': '-3/10', 'd': 0})
-      >>> -3 - f
-      Gamble({'a': '-41/10', 'c': -3, 'b': '-5/2'})
-
     * A gamble's domain can be cylindrically extended to the cartesian product
       of its domain and a specified :class:`~collections.Set`.
 
@@ -44,26 +34,6 @@ class Gamble(Vector):
             Vector.__init__(self, data)
         else: # indicator over Hashable Container
             Vector.__init__(self, {component: 1 for component in data})
-
-    def __add__(self, other):
-        """Also allow addition of gambles and scalars"""
-        if isinstance(other, Gamble):
-            return Vector.__add__(self, other)
-        else:
-            other = _make_rational(other)
-            return type(self)({arg: value + other
-                               for arg, value in self.iteritems()})
-
-    __radd__ = __add__
-    __rsub__ = lambda self, other: -(self - other)
-
-    def __mul__(self, other):
-        """Pointwise multiplication of gambles"""
-        if isinstance(other, Gamble):
-            return type(self)({x: self[x] * other[x]
-                               for x in self._domain_joiner(other)})
-        else:
-            return Vector.__mul__(self, other)
 
     def __xor__(self, other):
         """Cylindrical extension"""

@@ -26,13 +26,15 @@ class Function(Mapping):
         fractions and should be seen as just a convenient input representation
         for decimal numbers.
 
-    * Scalar multiplication (and division) as well as pointwise addition and
-      subtraction is possible.
+    * Scalar multiplication and division, as well as pointwise multiplication,
+      addition, and subtraction (also with scalars) is possible.
 
       >>> f = Function({'a': 1.1, 'b': '-1/2','c': 0})
       >>> g = Function({'b': '.6', 'c': -2, 'd': 0.0})
-      >>> (.3 * f - g) / 2
-      Function({'c': 1, 'b': '-3/8'})
+      >>> -1 + (.3 * f - g) / 2
+      Function({'c': 0, 'b': '-11/8'})
+      >>> f * g
+      Function({'c': 0, 'b': '-3/10'})
 
       .. note::
 
@@ -103,33 +105,44 @@ class Function(Mapping):
         """
         return frozenset(arg for arg, value in self.iteritems() if value != 0)
 
-    def _pointwise(self, other, operator):
-        """Pointwise application of a binary operator"""
-        if type(self) != type(other):
+    def _with_scalar(self, other, operator):
+        """Application of a binary operator to a function/scalar-pair"""
+        try:
+            other = _make_rational(other)
+            return type(self)({arg: operator(value, other)
+                              for arg, value in self.iteritems()})
+        except:
+            return NotImplemented
+
+    def _with_function(self, other, operator):
+        """pointwise application of a binary operator to a pair of functions"""
+        if isinstance(other, type(self)):
+            return type(self)({arg: operator(self[arg], other[arg])
+                              for arg in self._domain_joiner(other)})
+        else:
             raise TypeError("cannot apply '" + operator.__name__ + "'"
-                            " to objects with different types: '" +
+                            " to objects of types: '" +
                             type(self).__name__ + "' and '" +
                             type(other).__name__ + "'")
-        else:
-            return type(self)({arg: operator(self[arg], other[arg])
-                               for arg in self._domain_joiner(other)})
 
     _domain_joiner = lambda self, other: iter(self.domain() & other.domain())
 
+    def _pointwise(self, other, operator):
+        """Pointwise application of a binary operator"""
+        try:
+            return self._with_function(other, operator)
+        except:
+            return self._with_scalar(other, operator)
+
     __add__ = lambda self, other: self._pointwise(other, Fraction.__add__)
+    __radd__ = __add__
 
-    def __mul__(self, other):
-        """Scalar multiplication of rational-valued functions"""
-        other = _make_rational(other)
-        return type(self)({arg: value * other
-                           for arg, value in self.iteritems()})
-
-    def __div__(self, other):
-        """Scalar division of rational-valued functions"""
-        other = _make_rational(other)
-        return type(self)({arg: value / other
-                           for arg, value in self.iteritems()})
-
+    __mul__ = lambda self, other: self._pointwise(other, Fraction.__mul__)
     __rmul__ = __mul__
+
+    __div__ = lambda self, other: self._with_scalar(other, Fraction.__div__)
+
     __neg__ = lambda self: self * (-1)
+
     __sub__ = lambda self, other: self + (-other)
+    __rsub__ = lambda self, other: -(self - other)
