@@ -51,6 +51,7 @@
             
   <h1>Source code for murasyp.functions</h1><div class="highlight"><pre>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Mapping</span>
+<span class="kn">from</span> <span class="nn">fractions</span> <span class="kn">import</span> <span class="n">Fraction</span>
 <span class="kn">from</span> <span class="nn">murasyp</span> <span class="kn">import</span> <span class="n">_make_rational</span>
 
 <div class="viewcode-block" id="Function"><a class="viewcode-back" href="../../functions.html#murasyp.functions.Function">[docs]</a><span class="k">class</span> <span class="nc">Function</span><span class="p">(</span><span class="n">Mapping</span><span class="p">):</span>
@@ -65,7 +66,7 @@
 <span class="sd">      :class:`~fractions.Fraction`, whose :class:`str`-representation is then</span>
 <span class="sd">      especially convenient.</span>
 
-<span class="sd">      &gt;&gt;&gt; f = Function({&#39;a&#39;: 1.1, &#39;b&#39;: &#39;-1/2&#39;,&#39;c&#39;: 0})</span>
+<span class="sd">      &gt;&gt;&gt; f = Function({&#39;a&#39;: 11e-1, &#39;b&#39;: &#39;-1/2&#39;,&#39;c&#39;: 0})</span>
 <span class="sd">      &gt;&gt;&gt; f</span>
 <span class="sd">      Function({&#39;a&#39;: &#39;11/10&#39;, &#39;c&#39;: 0, &#39;b&#39;: &#39;-1/2&#39;})</span>
 <span class="sd">      &gt;&gt;&gt; f[&#39;a&#39;]</span>
@@ -74,15 +75,18 @@
 <span class="sd">      .. note::</span>
 
 <span class="sd">        No floats are ever really used; they are immediately converted to</span>
-<span class="sd">        fractions and should be seen as just a convenient input representation.</span>
+<span class="sd">        fractions and should be seen as just a convenient input representation</span>
+<span class="sd">        for decimal numbers.</span>
 
-<span class="sd">    * Scalar multiplication (and division) as well as pointwise addition and</span>
-<span class="sd">      subtraction is possible.</span>
+<span class="sd">    * Scalar multiplication and division, as well as pointwise multiplication,</span>
+<span class="sd">      addition, and subtraction (also with scalars) is possible.</span>
 
 <span class="sd">      &gt;&gt;&gt; f = Function({&#39;a&#39;: 1.1, &#39;b&#39;: &#39;-1/2&#39;,&#39;c&#39;: 0})</span>
 <span class="sd">      &gt;&gt;&gt; g = Function({&#39;b&#39;: &#39;.6&#39;, &#39;c&#39;: -2, &#39;d&#39;: 0.0})</span>
-<span class="sd">      &gt;&gt;&gt; (.3 * f - g) / 2</span>
-<span class="sd">      Function({&#39;c&#39;: 1, &#39;b&#39;: &#39;-3/8&#39;})</span>
+<span class="sd">      &gt;&gt;&gt; -1 + (.3 * f - g) / 2</span>
+<span class="sd">      Function({&#39;c&#39;: 0, &#39;b&#39;: &#39;-11/8&#39;})</span>
+<span class="sd">      &gt;&gt;&gt; f * g</span>
+<span class="sd">      Function({&#39;c&#39;: 0, &#39;b&#39;: &#39;-3/10&#39;})</span>
 
 <span class="sd">      .. note::</span>
 
@@ -153,34 +157,47 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">frozenset</span><span class="p">(</span><span class="n">arg</span> <span class="k">for</span> <span class="n">arg</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">iteritems</span><span class="p">()</span> <span class="k">if</span> <span class="n">value</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
 </div>
-    <span class="k">def</span> <span class="nf">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Pointwise addition of rational-valued functions&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)({</span><span class="n">arg</span><span class="p">:</span> <span class="bp">self</span><span class="p">[</span><span class="n">arg</span><span class="p">]</span> <span class="o">+</span> <span class="n">other</span><span class="p">[</span><span class="n">arg</span><span class="p">]</span>
-                           <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_domain_joiner</span><span class="p">(</span><span class="n">other</span><span class="p">)})</span>
+    <span class="k">def</span> <span class="nf">_with_scalar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">,</span> <span class="n">operator</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Application of a binary operator to a function/scalar-pair&quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">other</span> <span class="o">=</span> <span class="n">_make_rational</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)({</span><span class="n">arg</span><span class="p">:</span> <span class="n">operator</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+                              <span class="k">for</span> <span class="n">arg</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">iteritems</span><span class="p">()})</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">NotImplemented</span>
 
-    <span class="k">def</span> <span class="nf">_domain_joiner</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">==</span> <span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">):</span>
-            <span class="k">return</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">()</span> <span class="o">&amp;</span> <span class="n">other</span><span class="o">.</span><span class="n">domain</span><span class="p">())</span>
+    <span class="k">def</span> <span class="nf">_with_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">,</span> <span class="n">operator</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;pointwise application of a binary operator to a pair of functions&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)):</span>
+            <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)({</span><span class="n">arg</span><span class="p">:</span> <span class="n">operator</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="n">arg</span><span class="p">],</span> <span class="n">other</span><span class="p">[</span><span class="n">arg</span><span class="p">])</span>
+                              <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_domain_joiner</span><span class="p">(</span><span class="n">other</span><span class="p">)})</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s">&quot;cannot combine domains of objects with different &quot;</span>
-                            <span class="s">&quot;types: &#39;&quot;</span> <span class="o">+</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__name__</span> <span class="o">+</span> <span class="s">&quot;&#39; and &#39;&quot;</span>
-                                       <span class="o">+</span> <span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">)</span><span class="o">.</span><span class="n">__name__</span> <span class="o">+</span> <span class="s">&quot;&#39;&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s">&quot;cannot apply &#39;&quot;</span> <span class="o">+</span> <span class="n">operator</span><span class="o">.</span><span class="n">__name__</span> <span class="o">+</span> <span class="s">&quot;&#39;&quot;</span>
+                            <span class="s">&quot; to objects of types: &#39;&quot;</span> <span class="o">+</span>
+                            <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__name__</span> <span class="o">+</span> <span class="s">&quot;&#39; and &#39;&quot;</span> <span class="o">+</span>
+                            <span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">)</span><span class="o">.</span><span class="n">__name__</span> <span class="o">+</span> <span class="s">&quot;&#39;&quot;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Scalar multiplication of rational-valued functions&quot;&quot;&quot;</span>
-        <span class="n">other</span> <span class="o">=</span> <span class="n">_make_rational</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
-        <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)({</span><span class="n">arg</span><span class="p">:</span> <span class="n">value</span> <span class="o">*</span> <span class="n">other</span>
-                           <span class="k">for</span> <span class="n">arg</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">iteritems</span><span class="p">()})</span>
+    <span class="n">_domain_joiner</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">()</span> <span class="o">&amp;</span> <span class="n">other</span><span class="o">.</span><span class="n">domain</span><span class="p">())</span>
 
-    <span class="k">def</span> <span class="nf">__div__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Scalar division of rational-valued functions&quot;&quot;&quot;</span>
-        <span class="n">other</span> <span class="o">=</span> <span class="n">_make_rational</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
-        <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)({</span><span class="n">arg</span><span class="p">:</span> <span class="n">value</span> <span class="o">/</span> <span class="n">other</span>
-                           <span class="k">for</span> <span class="n">arg</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">iteritems</span><span class="p">()})</span>
+    <span class="k">def</span> <span class="nf">_pointwise</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">,</span> <span class="n">operator</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Pointwise application of a binary operator&quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_with_function</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">operator</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_with_scalar</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">operator</span><span class="p">)</span>
 
+    <span class="n">__add__</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pointwise</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Fraction</span><span class="o">.</span><span class="n">__add__</span><span class="p">)</span>
+    <span class="n">__radd__</span> <span class="o">=</span> <span class="n">__add__</span>
+
+    <span class="n">__mul__</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pointwise</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Fraction</span><span class="o">.</span><span class="n">__mul__</span><span class="p">)</span>
     <span class="n">__rmul__</span> <span class="o">=</span> <span class="n">__mul__</span>
+
+    <span class="n">__div__</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_with_scalar</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Fraction</span><span class="o">.</span><span class="n">__div__</span><span class="p">)</span>
+
     <span class="n">__neg__</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">:</span> <span class="bp">self</span> <span class="o">*</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
-    <span class="n">__sub__</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="bp">self</span> <span class="o">+</span> <span class="p">(</span><span class="o">-</span><span class="n">other</span><span class="p">)</span></div>
+
+    <span class="n">__sub__</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="bp">self</span> <span class="o">+</span> <span class="p">(</span><span class="o">-</span><span class="n">other</span><span class="p">)</span>
+    <span class="n">__rsub__</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="o">-</span><span class="p">(</span><span class="bp">self</span> <span class="o">-</span> <span class="n">other</span><span class="p">)</span></div>
 </pre></div>
 
           </div>
@@ -219,7 +236,7 @@
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2011–2012, Erik Quaeghebeur.
+        &copy; Copyright 2011–2013, Erik Quaeghebeur.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>

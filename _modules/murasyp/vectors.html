@@ -52,6 +52,7 @@
   <h1>Source code for murasyp.vectors</h1><div class="highlight"><pre>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Set</span><span class="p">,</span> <span class="n">Hashable</span><span class="p">,</span> <span class="n">Mapping</span>
 <span class="kn">from</span> <span class="nn">murasyp.functions</span> <span class="kn">import</span> <span class="n">Function</span>
+<span class="kn">from</span> <span class="nn">fractions</span> <span class="kn">import</span> <span class="n">Fraction</span>
 
 <div class="viewcode-block" id="Vector"><a class="viewcode-back" href="../../vectors.html#murasyp.vectors.Vector">[docs]</a><span class="k">class</span> <span class="nc">Vector</span><span class="p">(</span><span class="n">Function</span><span class="p">,</span> <span class="n">Hashable</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Vectors map arguments to zero or a specified rational value</span>
@@ -78,14 +79,14 @@
 <span class="sd">      &gt;&gt;&gt; f</span>
 <span class="sd">      Vector({&#39;a&#39;: &#39;11/10&#39;, &#39;c&#39;: 0, &#39;b&#39;: &#39;-1/2&#39;})</span>
 <span class="sd">      &gt;&gt;&gt; f[&#39;d&#39;]</span>
-<span class="sd">      0</span>
+<span class="sd">      Fraction(0, 1)</span>
 
 <span class="sd">    * The union of domains is used under pointwise operations.</span>
 
 <span class="sd">      &gt;&gt;&gt; f = Vector({&#39;a&#39;: 1.1, &#39;b&#39;: &#39;-1/2&#39;,&#39;c&#39;: 0})</span>
 <span class="sd">      &gt;&gt;&gt; g = Vector({&#39;b&#39;: &#39;.6&#39;, &#39;c&#39;: -2, &#39;d&#39;: 0.0})</span>
-<span class="sd">      &gt;&gt;&gt; (.3 * f - g) / 2</span>
-<span class="sd">      Vector({&#39;a&#39;: &#39;33/200&#39;, &#39;c&#39;: 1, &#39;b&#39;: &#39;-3/8&#39;, &#39;d&#39;: 0})</span>
+<span class="sd">      &gt;&gt;&gt; 1 + (.3 * f - g) / 2</span>
+<span class="sd">      Vector({&#39;a&#39;: &#39;233/200&#39;, &#39;c&#39;: 2, &#39;b&#39;: &#39;5/8&#39;, &#39;d&#39;: 1})</span>
 
 <span class="sd">    * A vector&#39;s domain can be restricted/extended to a specified</span>
 <span class="sd">      :class:`~collections.Set`.</span>
@@ -98,17 +99,11 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">__getitem__</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mapping</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span> <span class="k">else</span> <span class="mi">0</span>
+    <span class="n">__getitem__</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mapping</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span> <span class="k">else</span> <span class="n">Fraction</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
     <span class="n">__hash__</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">:</span> <span class="nb">hash</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">item</span> <span class="k">for</span> <span class="n">item</span>
                                             <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mapping</span><span class="o">.</span><span class="n">iteritems</span><span class="p">()))</span>
 
-    <span class="k">def</span> <span class="nf">_domain_joiner</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">==</span> <span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">):</span>
-            <span class="k">return</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">()</span> <span class="o">|</span> <span class="n">other</span><span class="o">.</span><span class="n">domain</span><span class="p">())</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s">&quot;cannot combine domains of objects with different &quot;</span>
-                            <span class="s">&quot;types: &#39;&quot;</span> <span class="o">+</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__name__</span> <span class="o">+</span> <span class="s">&quot;&#39; and &#39;&quot;</span>
-                                       <span class="o">+</span> <span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">)</span><span class="o">.</span><span class="n">__name__</span> <span class="o">+</span> <span class="s">&quot;&#39;&quot;</span><span class="p">)</span>
+    <span class="n">_domain_joiner</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">()</span> <span class="o">|</span> <span class="n">other</span><span class="o">.</span><span class="n">domain</span><span class="p">())</span>
 
     <span class="k">def</span> <span class="nf">__or__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Restriction or extension with zero&quot;&quot;&quot;</span>
@@ -248,7 +243,7 @@
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2011–2012, Erik Quaeghebeur.
+        &copy; Copyright 2011–2013, Erik Quaeghebeur.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>
