@@ -13,7 +13,7 @@ class Function(Mapping):
       :class:`~fractions.Fraction`, whose :class:`str`-representation is then
       especially convenient.
 
-      >>> f = Function({'a': 1.1, 'b': '-1/2','c': 0})
+      >>> f = Function({'a': 11e-1, 'b': '-1/2','c': 0})
       >>> f
       Function({'a': '11/10', 'c': 0, 'b': '-1/2'})
       >>> f['a']
@@ -22,7 +22,8 @@ class Function(Mapping):
       .. note::
 
         No floats are ever really used; they are immediately converted to
-        fractions and should be seen as just a convenient input representation.
+        fractions and should be seen as just a convenient input representation
+        for decimal numbers.
 
     * Scalar multiplication (and division) as well as pointwise addition and
       subtraction is possible.
