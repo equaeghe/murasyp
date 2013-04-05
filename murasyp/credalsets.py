@@ -75,7 +75,7 @@ class CredalSet(set):
     def add(self, data):
         """Add a probability mass function to the credal set
 
-          :type data: arguments accepted by the
+          :type `data`: arguments accepted by the
             :class:`~murasyp.massfuncs.PMFunc` constructor
 
         >>> K = CredalSet()
@@ -95,7 +95,7 @@ class CredalSet(set):
     def discard(self, data):
         """Remove a probability mass function from the credal set
 
-          :type data: arguments accepted by the
+          :type `data`: arguments accepted by the
             :class:`~murasyp.massfuncs.PMFunc` constructor
 
         >>> K = CredalSet('ab')

@@ -5,7 +5,7 @@ from murasyp import _make_rational
 class Function(Mapping):
     """Rational-valued functions
 
-      :type mapping: :class:`~collections.Mapping` (such as a :class:`dict`)
+      :type `mapping`: :class:`~collections.Mapping` (such as a :class:`dict`)
         to a representation of :class:`~numbers.Real`
 
     Features:
