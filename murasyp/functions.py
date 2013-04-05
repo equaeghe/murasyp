@@ -57,14 +57,16 @@ class Function(Mapping):
     __getitem__ = lambda self, element: self._mapping[element]
 
     def __repr__(self):
-        """Return a readable string representation"""
-        return (type(self).__name__ + '({'
-                + ', '.join(repr(arg) + ': '
-                         + (repr(str(val)) if '/' in str(val) else str(val))
-                         for arg, val in self._mapping.iteritems())
-                + '})')
+        """Return a readable unambiguous string representation"""
+        return type(self).__name__ + '(' + str(self) + ')'
 
-    __str__ = lambda self: str(self._mapping)
+    def __str__(self):
+        """Return a readable string representation"""
+        return ('{' +
+                ', '.join(repr(arg) + ': ' +
+                          (repr(str(val)) if '/' in str(val) else str(val))
+                          for arg, val in self._mapping.iteritems()) +
+                '}')
 
     def domain(self):
         """Domain of the function
