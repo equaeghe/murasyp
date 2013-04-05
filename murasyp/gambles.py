@@ -117,7 +117,7 @@ class Gamble(Vector):
 
 
 class Ray(Gamble):
-    """Rays are the origin or directions in gamble space
+    """Rays directions in gamble space
 
     This class derives from :class:`~murasyp.gambles.Gamble`, so its methods
     apply here as well.
@@ -134,20 +134,8 @@ class Ray(Gamble):
     * Ray-arithmetic results in gambles (which can be converted to rays).
 
       >>> r = Ray({'a': 1,'b': -2})
-      >>> r / 2
-      Gamble({'a': '1/4', 'b': '-1/2'})
-      >>> Ray(r * r)
-      Ray({'a': '1/4', 'b': 1})
-
-      .. warning::
-
-        Currently, ray addition incorrectly returns rays:
-
-        >>> r = Ray({'b', 'c'})
-        >>> r + r
-        Ray({'c': 1, 'b': 1})
-        >>> 2 * r
-        Gamble({'c': 2, 'b': 2})
+      >>> .3 * r * r + r / 2
+      Gamble({'a': '13/40', 'b': '-1/5'})
 
     """
 
@@ -159,19 +147,14 @@ class Ray(Gamble):
         else:
             Gamble.__init__(self, gamble | gamble.support())
 
-    def __mul__(self, other):
-        """Multiplication of rays (and other types)"""
-        self = Gamble(self)
-        if isinstance(other, Ray):
-            other = Gamble(other)
-        return self * other
+    __add__ = lambda self, other: Gamble(self) + other
+    __radd__ = __add__
 
-    def __div__(self, other):
-        """Scalar division of rays"""
-        other = _make_rational(other)
-        return Gamble(self) / other
-
+    __mul__ = lambda self, other: Gamble(self) * other
     __rmul__ = __mul__
+
+    __div__ = lambda self, other: Gamble(self) / other
+
 
 class Cone(Polytope):
     """A frozenset of rays
