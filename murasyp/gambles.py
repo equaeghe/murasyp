@@ -72,13 +72,14 @@ class Gamble(Vector):
 
         .. note::
 
-          The zero gamble is returned in case the gamble is constant.
+          ``None`` is returned in case the gamble is constant:
+
+          >>> Gamble({'a': 2, 'b': 2}).scaled_shifted() == None
+          True
 
         """
         minval, maxval = self.bounds()
-        shift = minval
-        scale = maxval - minval
-        return (self - shift) if scale == 0 else (self - shift) / scale
+        return None if maxval == minval else (self - minval) / (maxval - minval)
 
     def norm(self):
         """The max-norm of the gamble
@@ -104,12 +105,13 @@ class Gamble(Vector):
 
         >>> Gamble({'a': 1, 'b': 3, 'c': 4}).normalized()
         Gamble({'a': '1/4', 'c': 1, 'b': '3/4'})
-        >>> Gamble({'a': 0}).normalized() == None
-        True
 
         .. note::
 
           ``None`` is returned in case the the gamble's norm is zero.
+
+          >>> Gamble({'a': 0}).normalized() == None
+          True
 
         """
         norm = self.norm()
