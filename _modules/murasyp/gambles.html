@@ -124,13 +124,14 @@
 
 <span class="sd">        .. note::</span>
 
-<span class="sd">          The zero gamble is returned in case the gamble is constant.</span>
+<span class="sd">          ``None`` is returned in case the gamble is constant:</span>
+
+<span class="sd">          &gt;&gt;&gt; Gamble({&#39;a&#39;: 2, &#39;b&#39;: 2}).scaled_shifted() == None</span>
+<span class="sd">          True</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">minval</span><span class="p">,</span> <span class="n">maxval</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bounds</span><span class="p">()</span>
-        <span class="n">shift</span> <span class="o">=</span> <span class="n">minval</span>
-        <span class="n">scale</span> <span class="o">=</span> <span class="n">maxval</span> <span class="o">-</span> <span class="n">minval</span>
-        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span> <span class="o">-</span> <span class="n">shift</span><span class="p">)</span> <span class="k">if</span> <span class="n">scale</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="p">(</span><span class="bp">self</span> <span class="o">-</span> <span class="n">shift</span><span class="p">)</span> <span class="o">/</span> <span class="n">scale</span>
+        <span class="k">return</span> <span class="bp">None</span> <span class="k">if</span> <span class="n">maxval</span> <span class="o">==</span> <span class="n">minval</span> <span class="k">else</span> <span class="p">(</span><span class="bp">self</span> <span class="o">-</span> <span class="n">minval</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">maxval</span> <span class="o">-</span> <span class="n">minval</span><span class="p">)</span>
 </div>
 <div class="viewcode-block" id="Gamble.norm"><a class="viewcode-back" href="../../gambles.html#murasyp.gambles.Gamble.norm">[docs]</a>    <span class="k">def</span> <span class="nf">norm</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;The max-norm of the gamble</span>
@@ -156,12 +157,13 @@
 
 <span class="sd">        &gt;&gt;&gt; Gamble({&#39;a&#39;: 1, &#39;b&#39;: 3, &#39;c&#39;: 4}).normalized()</span>
 <span class="sd">        Gamble({&#39;a&#39;: &#39;1/4&#39;, &#39;c&#39;: 1, &#39;b&#39;: &#39;3/4&#39;})</span>
-<span class="sd">        &gt;&gt;&gt; Gamble({&#39;a&#39;: 0}).normalized() == None</span>
-<span class="sd">        True</span>
 
 <span class="sd">        .. note::</span>
 
 <span class="sd">          ``None`` is returned in case the the gamble&#39;s norm is zero.</span>
+
+<span class="sd">          &gt;&gt;&gt; Gamble({&#39;a&#39;: 0}).normalized() == None</span>
+<span class="sd">          True</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">norm</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">norm</span><span class="p">()</span>
@@ -169,7 +171,7 @@
 
 </div></div>
 <div class="viewcode-block" id="Ray"><a class="viewcode-back" href="../../gambles.html#murasyp.gambles.Ray">[docs]</a><span class="k">class</span> <span class="nc">Ray</span><span class="p">(</span><span class="n">Gamble</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Rays are the origin or directions in gamble space</span>
+    <span class="sd">&quot;&quot;&quot;Rays directions in gamble space</span>
 
 <span class="sd">    This class derives from :class:`~murasyp.gambles.Gamble`, so its methods</span>
 <span class="sd">    apply here as well.</span>
@@ -186,20 +188,8 @@
 <span class="sd">    * Ray-arithmetic results in gambles (which can be converted to rays).</span>
 
 <span class="sd">      &gt;&gt;&gt; r = Ray({&#39;a&#39;: 1,&#39;b&#39;: -2})</span>
-<span class="sd">      &gt;&gt;&gt; r / 2</span>
-<span class="sd">      Gamble({&#39;a&#39;: &#39;1/4&#39;, &#39;b&#39;: &#39;-1/2&#39;})</span>
-<span class="sd">      &gt;&gt;&gt; Ray(r * r)</span>
-<span class="sd">      Ray({&#39;a&#39;: &#39;1/4&#39;, &#39;b&#39;: 1})</span>
-
-<span class="sd">      .. warning::</span>
-
-<span class="sd">        Currently, ray addition incorrectly returns rays:</span>
-
-<span class="sd">        &gt;&gt;&gt; r = Ray({&#39;b&#39;, &#39;c&#39;})</span>
-<span class="sd">        &gt;&gt;&gt; r + r</span>
-<span class="sd">        Ray({&#39;c&#39;: 1, &#39;b&#39;: 1})</span>
-<span class="sd">        &gt;&gt;&gt; 2 * r</span>
-<span class="sd">        Gamble({&#39;c&#39;: 2, &#39;b&#39;: 2})</span>
+<span class="sd">      &gt;&gt;&gt; .3 * r * r + r / 2</span>
+<span class="sd">      Gamble({&#39;a&#39;: &#39;13/40&#39;, &#39;b&#39;: &#39;-1/5&#39;})</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -211,19 +201,14 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">Gamble</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gamble</span> <span class="o">|</span> <span class="n">gamble</span><span class="o">.</span><span class="n">support</span><span class="p">())</span>
 
-    <span class="k">def</span> <span class="nf">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Multiplication of rays (and other types)&quot;&quot;&quot;</span>
-        <span class="bp">self</span> <span class="o">=</span> <span class="n">Gamble</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Ray</span><span class="p">):</span>
-            <span class="n">other</span> <span class="o">=</span> <span class="n">Gamble</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span> <span class="o">*</span> <span class="n">other</span>
+    <span class="n">__add__</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Gamble</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">+</span> <span class="n">other</span>
+    <span class="n">__radd__</span> <span class="o">=</span> <span class="n">__add__</span>
 
-    <span class="k">def</span> <span class="nf">__div__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Scalar division of rays&quot;&quot;&quot;</span>
-        <span class="n">other</span> <span class="o">=</span> <span class="n">_make_rational</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">Gamble</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">/</span> <span class="n">other</span>
-
+    <span class="n">__mul__</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Gamble</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">*</span> <span class="n">other</span>
     <span class="n">__rmul__</span> <span class="o">=</span> <span class="n">__mul__</span>
+
+    <span class="n">__div__</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Gamble</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">/</span> <span class="n">other</span>
+
 </div>
 <div class="viewcode-block" id="Cone"><a class="viewcode-back" href="../../gambles.html#murasyp.gambles.Cone">[docs]</a><span class="k">class</span> <span class="nc">Cone</span><span class="p">(</span><span class="n">Polytope</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;A frozenset of rays</span>

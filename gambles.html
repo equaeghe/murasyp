@@ -133,7 +133,11 @@ of its domain and a specified <a class="reference external" href="http://docs.py
 </div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">The zero gamble is returned in case the gamble is constant.</p>
+<p><tt class="docutils literal"><span class="pre">None</span></tt> is returned in case the gamble is constant:</p>
+<div class="last highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Gamble</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">})</span><span class="o">.</span><span class="n">scaled_shifted</span><span class="p">()</span> <span class="o">==</span> <span class="bp">None</span>
+<span class="go">True</span>
+</pre></div>
+</div>
 </div>
 </dd></dl>
 
@@ -180,13 +184,15 @@ gamble <img class="math" src="_images/math/bb2c93730dbb48558bb3c4738c956c4e8f816
 </div></blockquote>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Gamble</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">})</span><span class="o">.</span><span class="n">normalized</span><span class="p">()</span>
 <span class="go">Gamble({&#39;a&#39;: &#39;1/4&#39;, &#39;c&#39;: 1, &#39;b&#39;: &#39;3/4&#39;})</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">Gamble</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">})</span><span class="o">.</span><span class="n">normalized</span><span class="p">()</span> <span class="o">==</span> <span class="bp">None</span>
-<span class="go">True</span>
 </pre></div>
 </div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last"><tt class="docutils literal"><span class="pre">None</span></tt> is returned in case the the gamble&#8217;s norm is zero.</p>
+<p><tt class="docutils literal"><span class="pre">None</span></tt> is returned in case the the gamble&#8217;s norm is zero.</p>
+<div class="last highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Gamble</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">})</span><span class="o">.</span><span class="n">normalized</span><span class="p">()</span> <span class="o">==</span> <span class="bp">None</span>
+<span class="go">True</span>
+</pre></div>
+</div>
 </div>
 </dd></dl>
 
@@ -198,7 +204,7 @@ gamble <img class="math" src="_images/math/bb2c93730dbb48558bb3c4738c956c4e8f816
 <dl class="class">
 <dt id="murasyp.gambles.Ray">
 <em class="property">class </em><tt class="descclassname">murasyp.gambles.</tt><tt class="descname">Ray</tt><big>(</big><em>data={}</em><big>)</big><a class="reference internal" href="_modules/murasyp/gambles.html#Ray"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#murasyp.gambles.Ray" title="Permalink to this definition">¶</a></dt>
-<dd><p>Rays are the origin or directions in gamble space</p>
+<dd><p>Rays directions in gamble space</p>
 <p>This class derives from <a class="reference internal" href="#murasyp.gambles.Gamble" title="murasyp.gambles.Gamble"><tt class="xref py py-class docutils literal"><span class="pre">Gamble</span></tt></a>, so its methods
 apply here as well.</p>
 <p>What has changed:</p>
@@ -213,22 +219,9 @@ apply here as well.</p>
 </li>
 <li><p class="first">Ray-arithmetic results in gambles (which can be converted to rays).</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span> <span class="o">=</span> <span class="n">Ray</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span><span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">2</span><span class="p">})</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span> <span class="o">/</span> <span class="mi">2</span>
-<span class="go">Gamble({&#39;a&#39;: &#39;1/4&#39;, &#39;b&#39;: &#39;-1/2&#39;})</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">Ray</span><span class="p">(</span><span class="n">r</span> <span class="o">*</span> <span class="n">r</span><span class="p">)</span>
-<span class="go">Ray({&#39;a&#39;: &#39;1/4&#39;, &#39;b&#39;: 1})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="o">.</span><span class="mi">3</span> <span class="o">*</span> <span class="n">r</span> <span class="o">*</span> <span class="n">r</span> <span class="o">+</span> <span class="n">r</span> <span class="o">/</span> <span class="mi">2</span>
+<span class="go">Gamble({&#39;a&#39;: &#39;13/40&#39;, &#39;b&#39;: &#39;-1/5&#39;})</span>
 </pre></div>
-</div>
-<div class="admonition warning">
-<p class="first admonition-title">Warning</p>
-<p>Currently, ray addition incorrectly returns rays:</p>
-<div class="last highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span> <span class="o">=</span> <span class="n">Ray</span><span class="p">({</span><span class="s">&#39;b&#39;</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">})</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span> <span class="o">+</span> <span class="n">r</span>
-<span class="go">Ray({&#39;c&#39;: 1, &#39;b&#39;: 1})</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="mi">2</span> <span class="o">*</span> <span class="n">r</span>
-<span class="go">Gamble({&#39;c&#39;: 2, &#39;b&#39;: 2})</span>
-</pre></div>
-</div>
 </div>
 </li>
 </ul>
