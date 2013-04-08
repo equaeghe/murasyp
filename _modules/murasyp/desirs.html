@@ -51,7 +51,6 @@
             
   <h1>Source code for murasyp.desirs</h1><div class="highlight"><pre>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Mapping</span>
-<span class="kn">from</span> <span class="nn">murasyp</span> <span class="kn">import</span> <span class="n">_make_rational</span>
 <span class="kn">from</span> <span class="nn">murasyp.gambles</span> <span class="kn">import</span> <span class="n">Gamble</span><span class="p">,</span> <span class="n">Ray</span><span class="p">,</span> <span class="n">Cone</span>
 <span class="kn">import</span> <span class="nn">murasyp.credalsets</span>
 <span class="kn">import</span> <span class="nn">murasyp.mathprog</span>
@@ -203,7 +202,7 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">gamble</span> <span class="o">=</span> <span class="n">Gamble</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">({</span><span class="n">gamble</span> <span class="o">-</span> <span class="n">_make_rational</span><span class="p">(</span><span class="n">val</span><span class="p">),</span> <span class="n">Ray</span><span class="p">(</span><span class="n">gamble</span><span class="o">.</span><span class="n">domain</span><span class="p">())})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">({</span><span class="n">gamble</span> <span class="o">-</span> <span class="n">gamble</span><span class="o">.</span><span class="n">_make_rational</span><span class="p">(</span><span class="n">val</span><span class="p">),</span> <span class="n">Ray</span><span class="p">(</span><span class="n">gamble</span><span class="o">.</span><span class="n">domain</span><span class="p">())})</span>
 </div>
 <div class="viewcode-block" id="DesirSet.set_upper_pr"><a class="viewcode-back" href="../../desirs.html#murasyp.desirs.DesirSet.set_upper_pr">[docs]</a>    <span class="k">def</span> <span class="nf">set_upper_pr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Set the upper probability/prevision (expectation) of an event/gamble</span>
@@ -227,7 +226,8 @@
 <span class="sd">          The domain of the input gamble determines the conditioning event.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">set_lower_pr</span><span class="p">(</span><span class="o">-</span><span class="n">Gamble</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="o">-</span><span class="n">_make_rational</span><span class="p">(</span><span class="n">val</span><span class="p">))</span>
+        <span class="n">gamble</span> <span class="o">=</span> <span class="n">Gamble</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_lower_pr</span><span class="p">(</span><span class="o">-</span><span class="n">gamble</span><span class="p">,</span> <span class="o">-</span><span class="n">gamble</span><span class="o">.</span><span class="n">_make_rational</span><span class="p">(</span><span class="n">val</span><span class="p">))</span>
 </div>
 <div class="viewcode-block" id="DesirSet.set_pr"><a class="viewcode-back" href="../../desirs.html#murasyp.desirs.DesirSet.set_pr">[docs]</a>    <span class="k">def</span> <span class="nf">set_pr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Set the probability/prevision (expectation) of an event/gamble</span>

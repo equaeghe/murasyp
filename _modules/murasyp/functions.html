@@ -52,7 +52,6 @@
   <h1>Source code for murasyp.functions</h1><div class="highlight"><pre>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Mapping</span>
 <span class="kn">from</span> <span class="nn">fractions</span> <span class="kn">import</span> <span class="n">Fraction</span>
-<span class="kn">from</span> <span class="nn">murasyp</span> <span class="kn">import</span> <span class="n">_make_rational</span>
 
 <div class="viewcode-block" id="Function"><a class="viewcode-back" href="../../functions.html#murasyp.functions.Function">[docs]</a><span class="k">class</span> <span class="nc">Function</span><span class="p">(</span><span class="n">Mapping</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Rational-valued functions</span>
@@ -98,10 +97,19 @@
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mapping</span><span class="o">=</span><span class="p">{}):</span>
         <span class="sd">&quot;&quot;&quot;Create a rational-valued function&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mapping</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_mapping</span> <span class="o">=</span> <span class="p">{</span><span class="n">arg</span><span class="p">:</span> <span class="n">_make_rational</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_mapping</span> <span class="o">=</span> <span class="p">{</span><span class="n">arg</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_rational</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
                              <span class="k">for</span> <span class="n">arg</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">mapping</span><span class="o">.</span><span class="n">iteritems</span><span class="p">()}</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s">&quot;specify a mapping&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_make_rational</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Make a Fraction of acceptable input&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">==</span> <span class="nb">float</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="c"># treat floats as decimal numbers</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">Fraction</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot; is not a Rational number&quot;</span><span class="p">)</span>
 
     <span class="n">__len__</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_mapping</span><span class="p">)</span>
     <span class="n">__iter__</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">:</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_mapping</span><span class="p">)</span>
@@ -162,7 +170,7 @@
     <span class="k">def</span> <span class="nf">_with_scalar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">,</span> <span class="n">operator</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Application of a binary operator to a function/scalar-pair&quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">other</span> <span class="o">=</span> <span class="n">_make_rational</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+            <span class="n">other</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_rational</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
             <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)({</span><span class="n">arg</span><span class="p">:</span> <span class="n">operator</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
                               <span class="k">for</span> <span class="n">arg</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">iteritems</span><span class="p">()})</span>
         <span class="k">except</span><span class="p">:</span>

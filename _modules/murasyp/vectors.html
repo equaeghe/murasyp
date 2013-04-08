@@ -52,7 +52,6 @@
   <h1>Source code for murasyp.vectors</h1><div class="highlight"><pre>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Set</span><span class="p">,</span> <span class="n">Hashable</span><span class="p">,</span> <span class="n">Mapping</span>
 <span class="kn">from</span> <span class="nn">murasyp.functions</span> <span class="kn">import</span> <span class="n">Function</span>
-<span class="kn">from</span> <span class="nn">fractions</span> <span class="kn">import</span> <span class="n">Fraction</span>
 
 <div class="viewcode-block" id="Vector"><a class="viewcode-back" href="../../vectors.html#murasyp.vectors.Vector">[docs]</a><span class="k">class</span> <span class="nc">Vector</span><span class="p">(</span><span class="n">Function</span><span class="p">,</span> <span class="n">Hashable</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Vectors map arguments to zero or a specified rational value</span>
@@ -99,7 +98,8 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">__getitem__</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mapping</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span> <span class="k">else</span> <span class="n">Fraction</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">__getitem__</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_mapping</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span>
+                                                    <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_rational</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
     <span class="n">__hash__</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">:</span> <span class="nb">hash</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">item</span> <span class="k">for</span> <span class="n">item</span>
                                             <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mapping</span><span class="o">.</span><span class="n">iteritems</span><span class="p">()))</span>
 
