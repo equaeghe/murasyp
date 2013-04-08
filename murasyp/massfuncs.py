@@ -1,6 +1,4 @@
 from collections import Set, Mapping
-from fractions import Fraction
-from murasyp import _make_rational
 from murasyp.vectors import Vector
 from murasyp.gambles import Gamble
 
@@ -83,7 +81,7 @@ class UMFunc(Vector):
                                 + str(data) + " with a total mass of zero")
             Vector.__init__(self, umfunc | umfunc.support())
         else: # uniform over Hashable Container
-            Vector.__init__(self, {component: Fraction(1, len(data))
+            Vector.__init__(self, {component: 1 / self._make_rational(len(data))
                                    for component in data})
 
     def __or__(self, other):

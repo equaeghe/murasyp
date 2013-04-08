@@ -1,6 +1,5 @@
 from collections import Set, Hashable, Mapping
 from murasyp.functions import Function
-from fractions import Fraction
 
 class Vector(Function, Hashable):
     """Vectors map arguments to zero or a specified rational value
@@ -47,7 +46,8 @@ class Vector(Function, Hashable):
 
     """
 
-    __getitem__ = lambda self, x: self._mapping[x] if x in self else Fraction(0)
+    __getitem__ = lambda self, x: (self._mapping[x] if x in self
+                                                    else self._make_rational(0))
     __hash__ = lambda self: hash(tuple(item for item
                                             in self._mapping.iteritems()))
 

@@ -1,5 +1,4 @@
 from collections import Set, Mapping
-from murasyp import _make_rational
 from murasyp.vectors import Vector, Polytope
 
 class Gamble(Vector):

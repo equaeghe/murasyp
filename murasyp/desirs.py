@@ -1,5 +1,4 @@
 from collections import Mapping
-from murasyp import _make_rational
 from murasyp.gambles import Gamble, Ray, Cone
 import murasyp.credalsets
 import murasyp.mathprog
@@ -151,7 +150,7 @@ class DesirSet(set):
 
         """
         gamble = Gamble(data)
-        self.add({gamble - _make_rational(val), Ray(gamble.domain())})
+        self.add({gamble - gamble._make_rational(val), Ray(gamble.domain())})
 
     def set_upper_pr(self, data, val):
         """Set the upper probability/prevision (expectation) of an event/gamble
@@ -175,7 +174,8 @@ class DesirSet(set):
           The domain of the input gamble determines the conditioning event.
 
         """
-        self.set_lower_pr(-Gamble(data), -_make_rational(val))
+        gamble = Gamble(data)
+        self.set_lower_pr(-gamble, -gamble._make_rational(val))
 
     def set_pr(self, data, val):
         """Set the probability/prevision (expectation) of an event/gamble

@@ -1,6 +1,5 @@
 from collections import Mapping
 from fractions import Fraction
-from murasyp import _make_rational
 
 class Function(Mapping):
     """Rational-valued functions
@@ -46,10 +45,19 @@ class Function(Mapping):
     def __init__(self, mapping={}):
         """Create a rational-valued function"""
         if isinstance(mapping, Mapping):
-            self._mapping = {arg: _make_rational(value)
+            self._mapping = {arg: self._make_rational(value)
                              for arg, value in mapping.iteritems()}
         else:
             raise TypeError("specify a mapping")
+
+    def _make_rational(self, value):
+        """Make a Fraction of acceptable input"""
+        if type(value) == float:
+            value = str(value) # treat floats as decimal numbers
+        try:
+            return Fraction(value)
+        except ValueError:
+            print(repr(value) + " is not a Rational number")
 
     __len__ = lambda self: len(self._mapping)
     __iter__ = lambda self: iter(self._mapping)
@@ -110,7 +118,7 @@ class Function(Mapping):
     def _with_scalar(self, other, operator):
         """Application of a binary operator to a function/scalar-pair"""
         try:
-            other = _make_rational(other)
+            other = self._make_rational(other)
             return type(self)({arg: operator(value, other)
                               for arg, value in self.iteritems()})
         except:
