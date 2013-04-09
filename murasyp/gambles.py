@@ -1,3 +1,4 @@
+from __future__ import division
 from collections import Set, Mapping
 from murasyp.vectors import Vector, Polytope
 
@@ -154,7 +155,7 @@ class Ray(Gamble):
     __mul__ = lambda self, other: Gamble(self) * other
     __rmul__ = __mul__
 
-    __div__ = lambda self, other: Gamble(self) / other
+    __truediv__ = lambda self, other: Gamble(self) / other
 
 
 class Cone(Polytope):
@@ -165,11 +166,11 @@ class Cone(Polytope):
         arguments accepted by the :class:`~murasyp.gambles.Ray` constructor.
 
       >>> Cone([{'a': 2, 'b': 3}, {'b': 1, 'c': 4}])
-      Cone([Ray({'a': '2/3', 'b': 1}), Ray({'c': 1, 'b': '1/4'})])
+      Cone({Ray({'a': '2/3', 'b': 1}), Ray({'c': 1, 'b': '1/4'})})
       >>> Cone('abc')
-      Cone([Ray({'a': 1}), Ray({'b': 1}), Ray({'c': 1})])
+      Cone({Ray({'a': 1}), Ray({'b': 1}), Ray({'c': 1})})
       >>> Cone({'ab', 'bc'})
-      Cone([Ray({'c': 1, 'b': 1}), Ray({'a': 1, 'b': 1})])
+      Cone({Ray({'c': 1, 'b': 1}), Ray({'a': 1, 'b': 1})})
 
     This class derives from :class:`~murasyp.vectors.Polytope`, so its methods
     apply here as well.

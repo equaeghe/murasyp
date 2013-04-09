@@ -1,3 +1,4 @@
+from __future__ import division
 from collections import Set, Mapping
 from murasyp.vectors import Vector
 from murasyp.gambles import Gamble
@@ -99,7 +100,7 @@ class UMFunc(Vector):
     __add__ = lambda self, other: Vector(self) + other
     __radd__ = __add__
 
-    __div__ = lambda self, other: Vector(self) / other
+    __truediv__ = lambda self, other: Vector(self) / other
 
     __rmul__ = __mul__
 

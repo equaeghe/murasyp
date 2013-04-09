@@ -11,11 +11,11 @@ class DesirSet(set):
         arguments accepted by the :class:`~murasyp.gambles.Cone` constructor.
 
       >>> DesirSet('abc')
-      DesirSet([Cone([Ray({'b': 1})]), Cone([Ray({'c': 1})]), Cone([Ray({'a': 1})])])
+      DesirSet({Cone({Ray({'b': 1})}), Cone({Ray({'c': 1})}), Cone({Ray({'a': 1})})})
       >>> DesirSet(['abc'])
-      DesirSet([Cone([Ray({'a': 1}), Ray({'b': 1}), Ray({'c': 1})])])
+      DesirSet({Cone({Ray({'a': 1}), Ray({'b': 1}), Ray({'c': 1})})})
       >>> DesirSet([['abc']])
-      DesirSet([Cone([Ray({'a': 1, 'c': 1, 'b': 1})])])
+      DesirSet({Cone({Ray({'a': 1, 'c': 1, 'b': 1})})})
 
     This class derives from :class:`~set`, so its methods apply here as
     well.
@@ -78,10 +78,10 @@ class DesirSet(set):
 
         >>> D = DesirSet()
         >>> D
-        DesirSet([])
+        DesirSet()
         >>> D.add([Gamble({'a': -.06, 'b': .14, 'c': 1.8, 'd': 0})])
         >>> D
-        DesirSet([Cone([Ray({'a': '-1/30', 'c': 1, 'b': '7/90'})])])
+        DesirSet({Cone({Ray({'a': '-1/30', 'c': 1, 'b': '7/90'})})})
 
           .. todo::
 
@@ -98,10 +98,10 @@ class DesirSet(set):
 
         >>> D = DesirSet({'a','b'})
         >>> D
-        DesirSet([Cone([Ray({'b': 1})]), Cone([Ray({'a': 1})])])
+        DesirSet({Cone({Ray({'b': 1})}), Cone({Ray({'a': 1})})})
         >>> D.discard([Ray({'a'})])
         >>> D
-        DesirSet([Cone([Ray({'b': 1})])])
+        DesirSet({Cone({Ray({'b': 1})})})
 
           .. todo::
 
@@ -122,7 +122,7 @@ class DesirSet(set):
         >>> s = Ray({'a': .07, 'e': -.03})
         >>> D.add([r, s])
         >>> D.pspace()
-        frozenset(['a', 'c', 'b', 'e', 'd'])
+        frozenset({'a', 'c', 'b', 'e', 'd'})
 
         """
         return frozenset.union(*(cone.domain() for cone in self))
@@ -142,7 +142,7 @@ class DesirSet(set):
         >>> D = DesirSet()
         >>> D.set_lower_pr(Gamble({'a', 'b'}) | {'a', 'b', 'c'}, .4)
         >>> D
-        DesirSet([Cone([Ray({'a': 1, 'c': 1, 'b': 1}), Ray({'a': 1, 'c': '-2/3', 'b': 1})])])
+        DesirSet({Cone({Ray({'a': 1, 'c': '-2/3', 'b': 1}), Ray({'a': 1, 'c': 1, 'b': 1})})})
 
         .. note::
 
@@ -167,7 +167,7 @@ class DesirSet(set):
         >>> D = DesirSet()
         >>> D.set_upper_pr(Gamble({'a', 'b'}) | {'a', 'b', 'c'}, .4)
         >>> D
-        DesirSet([Cone([Ray({'a': 1, 'c': 1, 'b': 1}), Ray({'a': -1, 'c': '2/3', 'b': -1})])])
+        DesirSet({Cone({Ray({'a': -1, 'c': '2/3', 'b': -1}), Ray({'a': 1, 'c': 1, 'b': 1})})})
 
         .. note::
 
@@ -192,7 +192,7 @@ class DesirSet(set):
         >>> D = DesirSet()
         >>> D.set_pr(Gamble({'a', 'b'}) | {'a', 'b', 'c'}, .4)
         >>> D
-        DesirSet([Cone([Ray({'a': 1, 'c': 1, 'b': 1}), Ray({'a': 1, 'c': '-2/3', 'b': 1})]), Cone([Ray({'a': 1, 'c': 1, 'b': 1}), Ray({'a': -1, 'c': '2/3', 'b': -1})])])
+        DesirSet({Cone({Ray({'a': -1, 'c': '2/3', 'b': -1}), Ray({'a': 1, 'c': 1, 'b': 1})}), Cone({Ray({'a': 1, 'c': '-2/3', 'b': 1}), Ray({'a': 1, 'c': 1, 'b': 1})})})
 
         .. note::
 
@@ -251,7 +251,7 @@ class DesirSet(set):
         >>> D = DesirSet()
         >>> D.set_pr(Gamble('b') | {'a', 'b'}, 0)
         >>> D
-        DesirSet([Cone([Ray({'a': 1, 'b': 1}), Ray({'b': 1})]), Cone([Ray({'a': 1, 'b': 1}), Ray({'b': -1})])])
+        DesirSet({Cone({Ray({'a': 1, 'b': 1}), Ray({'b': 1})}), Cone({Ray({'a': 1, 'b': 1}), Ray({'b': -1})})})
         >>> D.apl()
         True
 
@@ -283,7 +283,7 @@ class DesirSet(set):
         >>> D = DesirSet(['abc'])
         >>> D.set_lower_pr({'a': 1, 'b': 0, 'c': 1}, .5)
         >>> D.get_credal()
-        CredalSet([PMFunc({'a': '1/2', 'b': '1/2'}), PMFunc({'c': '1/2', 'b': '1/2'}), PMFunc({'a': 1}), PMFunc({'c': 1})])
+        CredalSet({PMFunc({'a': '1/2', 'b': '1/2'}), PMFunc({'c': '1/2', 'b': '1/2'}), PMFunc({'a': 1}), PMFunc({'c': 1})})
 
         """
         C = Cone.union(*self)

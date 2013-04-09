@@ -1,3 +1,4 @@
+from __future__ import division
 from collections import Set, Hashable, Mapping
 from murasyp.functions import Function
 
@@ -18,7 +19,7 @@ class Vector(Function, Hashable):
         ...
       TypeError: unhashable type: 'Function'
       >>> {Vector({})}
-      set([Vector({})])
+      {Vector({})}
 
     * Unspecified values are assumed to be zero.
 
@@ -49,7 +50,7 @@ class Vector(Function, Hashable):
     __getitem__ = lambda self, x: (self._mapping[x] if x in self
                                                     else self._make_rational(0))
     __hash__ = lambda self: hash(tuple(item for item
-                                            in self._mapping.iteritems()))
+                                            in self._mapping.items()))
 
     _domain_joiner = lambda self, other: iter(self.domain() | other.domain())
 
@@ -70,7 +71,7 @@ class Vector(Function, Hashable):
         Fraction(1, 2)
 
         """
-        return sum(self._mapping.itervalues())
+        return sum(self._mapping.values())
 
     def sum_normalized(self):
         """'Sum-of-values'-normalized version of the vector
@@ -105,7 +106,7 @@ class Vector(Function, Hashable):
         True
 
         """
-        return all(val >= 0 for val in self._mapping.itervalues())
+        return all(val >= 0 for val in self._mapping.values())
 
 
 class Polytope(frozenset):
@@ -116,7 +117,7 @@ class Polytope(frozenset):
         arguments accepted by the :class:`~murasyp.gambles.Vector` constructor.
 
       >>> Polytope([{'a': 2, 'b': 3}, {'b': 1, 'c': 4}])
-      Polytope([Vector({'a': 2, 'b': 3}), Vector({'c': 4, 'b': 1})])
+      Polytope({Vector({'a': 2, 'b': 3}), Vector({'c': 4, 'b': 1})})
 
     This class derives from :class:`~frozenset`, so its methods apply here as
     well.
@@ -149,7 +150,7 @@ class Polytope(frozenset):
         >>> r = Vector({'a': .03, 'b': -.07})
         >>> s = Vector({'a': .07, 'c': -.03})
         >>> Polytope({r, s}).domain()
-        frozenset(['a', 'c', 'b'])
+        frozenset({'a', 'c', 'b'})
 
         """
         return frozenset.union(*(vector.domain() for vector in self))

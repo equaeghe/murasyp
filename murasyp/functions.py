@@ -1,3 +1,4 @@
+from __future__ import division
 from collections import Mapping
 from fractions import Fraction
 
@@ -46,7 +47,7 @@ class Function(Mapping):
         """Create a rational-valued function"""
         if isinstance(mapping, Mapping):
             self._mapping = {arg: self._make_rational(value)
-                             for arg, value in mapping.iteritems()}
+                             for arg, value in mapping.items()}
         else:
             raise TypeError("specify a mapping")
 
@@ -73,7 +74,7 @@ class Function(Mapping):
         return ('{' +
                 ', '.join(repr(arg) + ': ' +
                           (repr(str(val)) if '/' in str(val) else str(val))
-                          for arg, val in self._mapping.iteritems()) +
+                          for arg, val in self._mapping.items()) +
                 '}')
 
     def domain(self):
@@ -84,10 +85,10 @@ class Function(Mapping):
           :rtype: :class:`frozenset`
 
         >>> Function({'a': 1, 'b': -1, 'c': 0}).domain()
-        frozenset(['a', 'c', 'b'])
+        frozenset({'a', 'c', 'b'})
 
         """
-        return frozenset(self.iterkeys())
+        return frozenset(self.keys())
 
     def range(self):
         """Range of the function
@@ -97,10 +98,10 @@ class Function(Mapping):
           :rtype: :class:`frozenset`
 
         >>> Function({'a': 1, 'b': -1, 'c': 0}).range()
-        frozenset([Fraction(0, 1), Fraction(1, 1), Fraction(-1, 1)])
+        frozenset({Fraction(0, 1), Fraction(1, 1), Fraction(-1, 1)})
 
         """
-        return frozenset(self.itervalues())
+        return frozenset(self.values())
 
     def support(self):
         """Support of the function
@@ -110,17 +111,17 @@ class Function(Mapping):
           :rtype: :class:`frozenset`
 
         >>> Function({'a': 1, 'b': -1, 'c': 0}).support()
-        frozenset(['a', 'b'])
+        frozenset({'a', 'b'})
 
         """
-        return frozenset(arg for arg, value in self.iteritems() if value != 0)
+        return frozenset(arg for arg, value in self.items() if value != 0)
 
     def _with_scalar(self, other, operator):
         """Application of a binary operator to a function/scalar-pair"""
         try:
             other = self._make_rational(other)
             return type(self)({arg: operator(value, other)
-                              for arg, value in self.iteritems()})
+                              for arg, value in self.items()})
         except:
             return NotImplemented
 
@@ -150,7 +151,7 @@ class Function(Mapping):
     __mul__ = lambda self, other: self._pointwise(other, Fraction.__mul__)
     __rmul__ = __mul__
 
-    __div__ = lambda self, other: self._with_scalar(other, Fraction.__div__)
+    __truediv__ = lambda self, other: self._with_scalar(other, Fraction.__truediv__)
 
     __neg__ = lambda self: self * (-1)
 

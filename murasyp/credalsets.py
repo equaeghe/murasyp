@@ -14,7 +14,7 @@ class CredalSet(set):
         constructor.
 
       >>> CredalSet('abc')
-      CredalSet([PMFunc({'a': 1}), PMFunc({'b': 1}), PMFunc({'c': 1})])
+      CredalSet({PMFunc({'a': 1}), PMFunc({'b': 1}), PMFunc({'c': 1})})
 
     This class derives from :class:`~set`, so its methods apply here as
     well.
@@ -80,10 +80,10 @@ class CredalSet(set):
 
         >>> K = CredalSet()
         >>> K
-        CredalSet([])
+        CredalSet()
         >>> K.add({'a': .06, 'b': .14, 'c': 1.8, 'd': 0})
         >>> K
-        CredalSet([PMFunc({'a': '3/100', 'c': '9/10', 'b': '7/100'})])
+        CredalSet({PMFunc({'a': '3/100', 'c': '9/10', 'b': '7/100'})})
 
           .. todo::
 
@@ -100,10 +100,10 @@ class CredalSet(set):
 
         >>> K = CredalSet('ab')
         >>> K
-        CredalSet([PMFunc({'a': 1}), PMFunc({'b': 1})])
+        CredalSet({PMFunc({'a': 1}), PMFunc({'b': 1})})
         >>> K.discard(PMFunc({'a'}))
         >>> K
-        CredalSet([PMFunc({'b': 1})])
+        CredalSet({PMFunc({'b': 1})})
 
           .. todo::
 
@@ -154,7 +154,7 @@ class CredalSet(set):
         >>> q = PMFunc({'a': .07, 'c': .03})
         >>> K = CredalSet([p, q])
         >>> K.pspace()
-        frozenset(['a', 'c', 'b'])
+        frozenset({'a', 'c', 'b'})
 
         """
         return frozenset.union(*(p.domain() for p in self))
@@ -168,10 +168,10 @@ class CredalSet(set):
         >>> K = CredalSet('abc')
         >>> K.add({'a': 1, 'b': 1, 'c': 1})
         >>> K
-        CredalSet([..., PMFunc({'a': '1/3', 'c': '1/3', 'b': '1/3'})])
+        CredalSet({PMFunc({'a': '1/3', 'c': '1/3', 'b': '1/3'}), PMFunc({'a': 1}), PMFunc({'b': 1}), PMFunc({'c': 1})})
         >>> K.discard_redundant()
         >>> K
-        CredalSet([PMFunc({'a': 1}), PMFunc({'b': 1}), PMFunc({'c': 1})])
+        CredalSet({PMFunc({'a': 1}), PMFunc({'b': 1}), PMFunc({'c': 1})})
 
         """
         pspace = list(self.pspace())
@@ -192,7 +192,7 @@ class CredalSet(set):
 
         >>> CredalSet([PMFunc({'a', 'b'}), PMFunc({'c', 'b'}),
         ...            PMFunc({'a'}), PMFunc({'c'})]).get_desir()
-        DesirSet([Cone([Ray({'a': 1}), Ray({'b': 1}), Ray({'c': 1}), Ray({'a': 1, 'c': 1, 'b': -1})])])
+        DesirSet({Cone({Ray({'a': 1}), Ray({'b': 1}), Ray({'c': 1}), Ray({'a': 1, 'c': 1, 'b': -1})})})
 
         """
         return murasyp.desirs.DesirSet([murasyp.mathprog.vf_enumeration(self)])
