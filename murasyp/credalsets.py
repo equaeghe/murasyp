@@ -61,7 +61,7 @@ class CredalSet(set):
       This does not impede the classical union of sets.
 
       >>> CredalSet('a') | CredalSet('b')
-      CredalSet([PMFunc({'a': 1}), PMFunc({'b': 1})])
+      CredalSet({PMFunc({'a': 1}), PMFunc({'b': 1})})
 
     """
     def __init__(self, data=[]):
@@ -115,7 +115,7 @@ class CredalSet(set):
     def __or__(self, other):
         """Credal set conditional on the given event"""
         if isinstance(other, CredalSet):
-            return set.__or__(self, other)
+            return CredalSet(self.union(other))
         else:
             K = {p | other for p in self}
             if any(p == None for p in K):
