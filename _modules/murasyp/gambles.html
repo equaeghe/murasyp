@@ -50,6 +50,7 @@
           <div class="body">
             
   <h1>Source code for murasyp.gambles</h1><div class="highlight"><pre>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Set</span><span class="p">,</span> <span class="n">Mapping</span>
 <span class="kn">from</span> <span class="nn">murasyp.vectors</span> <span class="kn">import</span> <span class="n">Vector</span><span class="p">,</span> <span class="n">Polytope</span>
 
@@ -206,7 +207,7 @@
     <span class="n">__mul__</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Gamble</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">*</span> <span class="n">other</span>
     <span class="n">__rmul__</span> <span class="o">=</span> <span class="n">__mul__</span>
 
-    <span class="n">__div__</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Gamble</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">/</span> <span class="n">other</span>
+    <span class="n">__truediv__</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Gamble</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">/</span> <span class="n">other</span>
 
 </div>
 <div class="viewcode-block" id="Cone"><a class="viewcode-back" href="../../gambles.html#murasyp.gambles.Cone">[docs]</a><span class="k">class</span> <span class="nc">Cone</span><span class="p">(</span><span class="n">Polytope</span><span class="p">):</span>
@@ -217,11 +218,11 @@
 <span class="sd">        arguments accepted by the :class:`~murasyp.gambles.Ray` constructor.</span>
 
 <span class="sd">      &gt;&gt;&gt; Cone([{&#39;a&#39;: 2, &#39;b&#39;: 3}, {&#39;b&#39;: 1, &#39;c&#39;: 4}])</span>
-<span class="sd">      Cone([Ray({&#39;a&#39;: &#39;2/3&#39;, &#39;b&#39;: 1}), Ray({&#39;c&#39;: 1, &#39;b&#39;: &#39;1/4&#39;})])</span>
+<span class="sd">      Cone({Ray({&#39;a&#39;: &#39;2/3&#39;, &#39;b&#39;: 1}), Ray({&#39;c&#39;: 1, &#39;b&#39;: &#39;1/4&#39;})})</span>
 <span class="sd">      &gt;&gt;&gt; Cone(&#39;abc&#39;)</span>
-<span class="sd">      Cone([Ray({&#39;a&#39;: 1}), Ray({&#39;b&#39;: 1}), Ray({&#39;c&#39;: 1})])</span>
+<span class="sd">      Cone({Ray({&#39;a&#39;: 1}), Ray({&#39;b&#39;: 1}), Ray({&#39;c&#39;: 1})})</span>
 <span class="sd">      &gt;&gt;&gt; Cone({&#39;ab&#39;, &#39;bc&#39;})</span>
-<span class="sd">      Cone([Ray({&#39;c&#39;: 1, &#39;b&#39;: 1}), Ray({&#39;a&#39;: 1, &#39;b&#39;: 1})])</span>
+<span class="sd">      Cone({Ray({&#39;c&#39;: 1, &#39;b&#39;: 1}), Ray({&#39;a&#39;: 1, &#39;b&#39;: 1})})</span>
 
 <span class="sd">    This class derives from :class:`~murasyp.vectors.Polytope`, so its methods</span>
 <span class="sd">    apply here as well.</span>

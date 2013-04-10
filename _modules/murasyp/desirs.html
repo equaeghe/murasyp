@@ -63,11 +63,11 @@
 <span class="sd">        arguments accepted by the :class:`~murasyp.gambles.Cone` constructor.</span>
 
 <span class="sd">      &gt;&gt;&gt; DesirSet(&#39;abc&#39;)</span>
-<span class="sd">      DesirSet([Cone([Ray({&#39;b&#39;: 1})]), Cone([Ray({&#39;c&#39;: 1})]), Cone([Ray({&#39;a&#39;: 1})])])</span>
+<span class="sd">      DesirSet({Cone({Ray({&#39;b&#39;: 1})}), Cone({Ray({&#39;c&#39;: 1})}), Cone({Ray({&#39;a&#39;: 1})})})</span>
 <span class="sd">      &gt;&gt;&gt; DesirSet([&#39;abc&#39;])</span>
-<span class="sd">      DesirSet([Cone([Ray({&#39;a&#39;: 1}), Ray({&#39;b&#39;: 1}), Ray({&#39;c&#39;: 1})])])</span>
+<span class="sd">      DesirSet({Cone({Ray({&#39;a&#39;: 1}), Ray({&#39;b&#39;: 1}), Ray({&#39;c&#39;: 1})})})</span>
 <span class="sd">      &gt;&gt;&gt; DesirSet([[&#39;abc&#39;]])</span>
-<span class="sd">      DesirSet([Cone([Ray({&#39;a&#39;: 1, &#39;c&#39;: 1, &#39;b&#39;: 1})])])</span>
+<span class="sd">      DesirSet({Cone({Ray({&#39;a&#39;: 1, &#39;c&#39;: 1, &#39;b&#39;: 1})})})</span>
 
 <span class="sd">    This class derives from :class:`~set`, so its methods apply here as</span>
 <span class="sd">    well.</span>
@@ -130,10 +130,10 @@
 
 <span class="sd">        &gt;&gt;&gt; D = DesirSet()</span>
 <span class="sd">        &gt;&gt;&gt; D</span>
-<span class="sd">        DesirSet([])</span>
+<span class="sd">        DesirSet()</span>
 <span class="sd">        &gt;&gt;&gt; D.add([Gamble({&#39;a&#39;: -.06, &#39;b&#39;: .14, &#39;c&#39;: 1.8, &#39;d&#39;: 0})])</span>
 <span class="sd">        &gt;&gt;&gt; D</span>
-<span class="sd">        DesirSet([Cone([Ray({&#39;a&#39;: &#39;-1/30&#39;, &#39;c&#39;: 1, &#39;b&#39;: &#39;7/90&#39;})])])</span>
+<span class="sd">        DesirSet({Cone({Ray({&#39;a&#39;: &#39;-1/30&#39;, &#39;c&#39;: 1, &#39;b&#39;: &#39;7/90&#39;})})})</span>
 
 <span class="sd">          .. todo::</span>
 
@@ -150,10 +150,10 @@
 
 <span class="sd">        &gt;&gt;&gt; D = DesirSet({&#39;a&#39;,&#39;b&#39;})</span>
 <span class="sd">        &gt;&gt;&gt; D</span>
-<span class="sd">        DesirSet([Cone([Ray({&#39;b&#39;: 1})]), Cone([Ray({&#39;a&#39;: 1})])])</span>
+<span class="sd">        DesirSet({Cone({Ray({&#39;b&#39;: 1})}), Cone({Ray({&#39;a&#39;: 1})})})</span>
 <span class="sd">        &gt;&gt;&gt; D.discard([Ray({&#39;a&#39;})])</span>
 <span class="sd">        &gt;&gt;&gt; D</span>
-<span class="sd">        DesirSet([Cone([Ray({&#39;b&#39;: 1})])])</span>
+<span class="sd">        DesirSet({Cone({Ray({&#39;b&#39;: 1})})})</span>
 
 <span class="sd">          .. todo::</span>
 
@@ -174,7 +174,7 @@
 <span class="sd">        &gt;&gt;&gt; s = Ray({&#39;a&#39;: .07, &#39;e&#39;: -.03})</span>
 <span class="sd">        &gt;&gt;&gt; D.add([r, s])</span>
 <span class="sd">        &gt;&gt;&gt; D.pspace()</span>
-<span class="sd">        frozenset([&#39;a&#39;, &#39;c&#39;, &#39;b&#39;, &#39;e&#39;, &#39;d&#39;])</span>
+<span class="sd">        frozenset({&#39;a&#39;, &#39;c&#39;, &#39;b&#39;, &#39;e&#39;, &#39;d&#39;})</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">frozenset</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="n">cone</span><span class="o">.</span><span class="n">domain</span><span class="p">()</span> <span class="k">for</span> <span class="n">cone</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">))</span>
@@ -194,7 +194,7 @@
 <span class="sd">        &gt;&gt;&gt; D = DesirSet()</span>
 <span class="sd">        &gt;&gt;&gt; D.set_lower_pr(Gamble({&#39;a&#39;, &#39;b&#39;}) | {&#39;a&#39;, &#39;b&#39;, &#39;c&#39;}, .4)</span>
 <span class="sd">        &gt;&gt;&gt; D</span>
-<span class="sd">        DesirSet([Cone([Ray({&#39;a&#39;: 1, &#39;c&#39;: 1, &#39;b&#39;: 1}), Ray({&#39;a&#39;: 1, &#39;c&#39;: &#39;-2/3&#39;, &#39;b&#39;: 1})])])</span>
+<span class="sd">        DesirSet({Cone({Ray({&#39;a&#39;: 1, &#39;c&#39;: &#39;-2/3&#39;, &#39;b&#39;: 1}), Ray({&#39;a&#39;: 1, &#39;c&#39;: 1, &#39;b&#39;: 1})})})</span>
 
 <span class="sd">        .. note::</span>
 
@@ -219,7 +219,7 @@
 <span class="sd">        &gt;&gt;&gt; D = DesirSet()</span>
 <span class="sd">        &gt;&gt;&gt; D.set_upper_pr(Gamble({&#39;a&#39;, &#39;b&#39;}) | {&#39;a&#39;, &#39;b&#39;, &#39;c&#39;}, .4)</span>
 <span class="sd">        &gt;&gt;&gt; D</span>
-<span class="sd">        DesirSet([Cone([Ray({&#39;a&#39;: 1, &#39;c&#39;: 1, &#39;b&#39;: 1}), Ray({&#39;a&#39;: -1, &#39;c&#39;: &#39;2/3&#39;, &#39;b&#39;: -1})])])</span>
+<span class="sd">        DesirSet({Cone({Ray({&#39;a&#39;: -1, &#39;c&#39;: &#39;2/3&#39;, &#39;b&#39;: -1}), Ray({&#39;a&#39;: 1, &#39;c&#39;: 1, &#39;b&#39;: 1})})})</span>
 
 <span class="sd">        .. note::</span>
 
@@ -244,7 +244,7 @@
 <span class="sd">        &gt;&gt;&gt; D = DesirSet()</span>
 <span class="sd">        &gt;&gt;&gt; D.set_pr(Gamble({&#39;a&#39;, &#39;b&#39;}) | {&#39;a&#39;, &#39;b&#39;, &#39;c&#39;}, .4)</span>
 <span class="sd">        &gt;&gt;&gt; D</span>
-<span class="sd">        DesirSet([Cone([Ray({&#39;a&#39;: 1, &#39;c&#39;: 1, &#39;b&#39;: 1}), Ray({&#39;a&#39;: 1, &#39;c&#39;: &#39;-2/3&#39;, &#39;b&#39;: 1})]), Cone([Ray({&#39;a&#39;: 1, &#39;c&#39;: 1, &#39;b&#39;: 1}), Ray({&#39;a&#39;: -1, &#39;c&#39;: &#39;2/3&#39;, &#39;b&#39;: -1})])])</span>
+<span class="sd">        DesirSet({Cone({Ray({&#39;a&#39;: -1, &#39;c&#39;: &#39;2/3&#39;, &#39;b&#39;: -1}), Ray({&#39;a&#39;: 1, &#39;c&#39;: 1, &#39;b&#39;: 1})}), Cone({Ray({&#39;a&#39;: 1, &#39;c&#39;: &#39;-2/3&#39;, &#39;b&#39;: 1}), Ray({&#39;a&#39;: 1, &#39;c&#39;: 1, &#39;b&#39;: 1})})})</span>
 
 <span class="sd">        .. note::</span>
 
@@ -303,7 +303,7 @@
 <span class="sd">        &gt;&gt;&gt; D = DesirSet()</span>
 <span class="sd">        &gt;&gt;&gt; D.set_pr(Gamble(&#39;b&#39;) | {&#39;a&#39;, &#39;b&#39;}, 0)</span>
 <span class="sd">        &gt;&gt;&gt; D</span>
-<span class="sd">        DesirSet([Cone([Ray({&#39;a&#39;: 1, &#39;b&#39;: 1}), Ray({&#39;b&#39;: 1})]), Cone([Ray({&#39;a&#39;: 1, &#39;b&#39;: 1}), Ray({&#39;b&#39;: -1})])])</span>
+<span class="sd">        DesirSet({Cone({Ray({&#39;a&#39;: 1, &#39;b&#39;: 1}), Ray({&#39;b&#39;: 1})}), Cone({Ray({&#39;a&#39;: 1, &#39;b&#39;: 1}), Ray({&#39;b&#39;: -1})})})</span>
 <span class="sd">        &gt;&gt;&gt; D.apl()</span>
 <span class="sd">        True</span>
 
@@ -335,7 +335,7 @@
 <span class="sd">        &gt;&gt;&gt; D = DesirSet([&#39;abc&#39;])</span>
 <span class="sd">        &gt;&gt;&gt; D.set_lower_pr({&#39;a&#39;: 1, &#39;b&#39;: 0, &#39;c&#39;: 1}, .5)</span>
 <span class="sd">        &gt;&gt;&gt; D.get_credal()</span>
-<span class="sd">        CredalSet([PMFunc({&#39;a&#39;: &#39;1/2&#39;, &#39;b&#39;: &#39;1/2&#39;}), PMFunc({&#39;c&#39;: &#39;1/2&#39;, &#39;b&#39;: &#39;1/2&#39;}), PMFunc({&#39;a&#39;: 1}), PMFunc({&#39;c&#39;: 1})])</span>
+<span class="sd">        CredalSet({PMFunc({&#39;a&#39;: &#39;1/2&#39;, &#39;b&#39;: &#39;1/2&#39;}), PMFunc({&#39;c&#39;: &#39;1/2&#39;, &#39;b&#39;: &#39;1/2&#39;}), PMFunc({&#39;a&#39;: 1}), PMFunc({&#39;c&#39;: 1})})</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">C</span> <span class="o">=</span> <span class="n">Cone</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="p">)</span>

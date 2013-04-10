@@ -50,6 +50,7 @@
           <div class="body">
             
   <h1>Source code for murasyp.functions</h1><div class="highlight"><pre>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Mapping</span>
 <span class="kn">from</span> <span class="nn">fractions</span> <span class="kn">import</span> <span class="n">Fraction</span>
 
@@ -98,7 +99,7 @@
         <span class="sd">&quot;&quot;&quot;Create a rational-valued function&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mapping</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_mapping</span> <span class="o">=</span> <span class="p">{</span><span class="n">arg</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_rational</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-                             <span class="k">for</span> <span class="n">arg</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">mapping</span><span class="o">.</span><span class="n">iteritems</span><span class="p">()}</span>
+                             <span class="k">for</span> <span class="n">arg</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">mapping</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s">&quot;specify a mapping&quot;</span><span class="p">)</span>
 
@@ -125,7 +126,7 @@
         <span class="k">return</span> <span class="p">(</span><span class="s">&#39;{&#39;</span> <span class="o">+</span>
                 <span class="s">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span> <span class="o">+</span> <span class="s">&#39;: &#39;</span> <span class="o">+</span>
                           <span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">val</span><span class="p">))</span> <span class="k">if</span> <span class="s">&#39;/&#39;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="k">else</span> <span class="nb">str</span><span class="p">(</span><span class="n">val</span><span class="p">))</span>
-                          <span class="k">for</span> <span class="n">arg</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mapping</span><span class="o">.</span><span class="n">iteritems</span><span class="p">())</span> <span class="o">+</span>
+                          <span class="k">for</span> <span class="n">arg</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mapping</span><span class="o">.</span><span class="n">items</span><span class="p">())</span> <span class="o">+</span>
                 <span class="s">&#39;}&#39;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Function.domain"><a class="viewcode-back" href="../../functions.html#murasyp.functions.Function.domain">[docs]</a>    <span class="k">def</span> <span class="nf">domain</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -136,10 +137,10 @@
 <span class="sd">          :rtype: :class:`frozenset`</span>
 
 <span class="sd">        &gt;&gt;&gt; Function({&#39;a&#39;: 1, &#39;b&#39;: -1, &#39;c&#39;: 0}).domain()</span>
-<span class="sd">        frozenset([&#39;a&#39;, &#39;c&#39;, &#39;b&#39;])</span>
+<span class="sd">        frozenset({&#39;a&#39;, &#39;c&#39;, &#39;b&#39;})</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="nb">frozenset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">iterkeys</span><span class="p">())</span>
+        <span class="k">return</span> <span class="nb">frozenset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
 </div>
 <div class="viewcode-block" id="Function.range"><a class="viewcode-back" href="../../functions.html#murasyp.functions.Function.range">[docs]</a>    <span class="k">def</span> <span class="nf">range</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Range of the function</span>
@@ -149,10 +150,10 @@
 <span class="sd">          :rtype: :class:`frozenset`</span>
 
 <span class="sd">        &gt;&gt;&gt; Function({&#39;a&#39;: 1, &#39;b&#39;: -1, &#39;c&#39;: 0}).range()</span>
-<span class="sd">        frozenset([Fraction(0, 1), Fraction(1, 1), Fraction(-1, 1)])</span>
+<span class="sd">        frozenset({Fraction(0, 1), Fraction(1, 1), Fraction(-1, 1)})</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="nb">frozenset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">itervalues</span><span class="p">())</span>
+        <span class="k">return</span> <span class="nb">frozenset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
 </div>
 <div class="viewcode-block" id="Function.support"><a class="viewcode-back" href="../../functions.html#murasyp.functions.Function.support">[docs]</a>    <span class="k">def</span> <span class="nf">support</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Support of the function</span>
@@ -162,17 +163,17 @@
 <span class="sd">          :rtype: :class:`frozenset`</span>
 
 <span class="sd">        &gt;&gt;&gt; Function({&#39;a&#39;: 1, &#39;b&#39;: -1, &#39;c&#39;: 0}).support()</span>
-<span class="sd">        frozenset([&#39;a&#39;, &#39;b&#39;])</span>
+<span class="sd">        frozenset({&#39;a&#39;, &#39;b&#39;})</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="nb">frozenset</span><span class="p">(</span><span class="n">arg</span> <span class="k">for</span> <span class="n">arg</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">iteritems</span><span class="p">()</span> <span class="k">if</span> <span class="n">value</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">frozenset</span><span class="p">(</span><span class="n">arg</span> <span class="k">for</span> <span class="n">arg</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">value</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
 </div>
     <span class="k">def</span> <span class="nf">_with_scalar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">,</span> <span class="n">operator</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Application of a binary operator to a function/scalar-pair&quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">other</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_rational</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
             <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)({</span><span class="n">arg</span><span class="p">:</span> <span class="n">operator</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
-                              <span class="k">for</span> <span class="n">arg</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">iteritems</span><span class="p">()})</span>
+                              <span class="k">for</span> <span class="n">arg</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">()})</span>
         <span class="k">except</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">NotImplemented</span>
 
@@ -202,7 +203,7 @@
     <span class="n">__mul__</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pointwise</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Fraction</span><span class="o">.</span><span class="n">__mul__</span><span class="p">)</span>
     <span class="n">__rmul__</span> <span class="o">=</span> <span class="n">__mul__</span>
 
-    <span class="n">__div__</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_with_scalar</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Fraction</span><span class="o">.</span><span class="n">__div__</span><span class="p">)</span>
+    <span class="n">__truediv__</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_with_scalar</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Fraction</span><span class="o">.</span><span class="n">__truediv__</span><span class="p">)</span>
 
     <span class="n">__neg__</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">:</span> <span class="bp">self</span> <span class="o">*</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
 

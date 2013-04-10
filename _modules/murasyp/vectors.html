@@ -50,6 +50,7 @@
           <div class="body">
             
   <h1>Source code for murasyp.vectors</h1><div class="highlight"><pre>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Set</span><span class="p">,</span> <span class="n">Hashable</span><span class="p">,</span> <span class="n">Mapping</span>
 <span class="kn">from</span> <span class="nn">murasyp.functions</span> <span class="kn">import</span> <span class="n">Function</span>
 
@@ -70,7 +71,7 @@
 <span class="sd">        ...</span>
 <span class="sd">      TypeError: unhashable type: &#39;Function&#39;</span>
 <span class="sd">      &gt;&gt;&gt; {Vector({})}</span>
-<span class="sd">      set([Vector({})])</span>
+<span class="sd">      {Vector({})}</span>
 
 <span class="sd">    * Unspecified values are assumed to be zero.</span>
 
@@ -101,7 +102,7 @@
     <span class="n">__getitem__</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_mapping</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span>
                                                     <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_rational</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
     <span class="n">__hash__</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">:</span> <span class="nb">hash</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">item</span> <span class="k">for</span> <span class="n">item</span>
-                                            <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mapping</span><span class="o">.</span><span class="n">iteritems</span><span class="p">()))</span>
+                                            <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mapping</span><span class="o">.</span><span class="n">items</span><span class="p">()))</span>
 
     <span class="n">_domain_joiner</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">()</span> <span class="o">|</span> <span class="n">other</span><span class="o">.</span><span class="n">domain</span><span class="p">())</span>
 
@@ -122,7 +123,7 @@
 <span class="sd">        Fraction(1, 2)</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_mapping</span><span class="o">.</span><span class="n">itervalues</span><span class="p">())</span>
+        <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_mapping</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
 </div>
 <div class="viewcode-block" id="Vector.sum_normalized"><a class="viewcode-back" href="../../vectors.html#murasyp.vectors.Vector.sum_normalized">[docs]</a>    <span class="k">def</span> <span class="nf">sum_normalized</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;&#39;Sum-of-values&#39;-normalized version of the vector</span>
@@ -157,7 +158,7 @@
 <span class="sd">        True</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="nb">all</span><span class="p">(</span><span class="n">val</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mapping</span><span class="o">.</span><span class="n">itervalues</span><span class="p">())</span>
+        <span class="k">return</span> <span class="nb">all</span><span class="p">(</span><span class="n">val</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mapping</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
 
 </div></div>
 <div class="viewcode-block" id="Polytope"><a class="viewcode-back" href="../../vectors.html#murasyp.vectors.Polytope">[docs]</a><span class="k">class</span> <span class="nc">Polytope</span><span class="p">(</span><span class="nb">frozenset</span><span class="p">):</span>
@@ -168,7 +169,7 @@
 <span class="sd">        arguments accepted by the :class:`~murasyp.gambles.Vector` constructor.</span>
 
 <span class="sd">      &gt;&gt;&gt; Polytope([{&#39;a&#39;: 2, &#39;b&#39;: 3}, {&#39;b&#39;: 1, &#39;c&#39;: 4}])</span>
-<span class="sd">      Polytope([Vector({&#39;a&#39;: 2, &#39;b&#39;: 3}), Vector({&#39;c&#39;: 4, &#39;b&#39;: 1})])</span>
+<span class="sd">      Polytope({Vector({&#39;a&#39;: 2, &#39;b&#39;: 3}), Vector({&#39;c&#39;: 4, &#39;b&#39;: 1})})</span>
 
 <span class="sd">    This class derives from :class:`~frozenset`, so its methods apply here as</span>
 <span class="sd">    well.</span>
@@ -201,7 +202,7 @@
 <span class="sd">        &gt;&gt;&gt; r = Vector({&#39;a&#39;: .03, &#39;b&#39;: -.07})</span>
 <span class="sd">        &gt;&gt;&gt; s = Vector({&#39;a&#39;: .07, &#39;c&#39;: -.03})</span>
 <span class="sd">        &gt;&gt;&gt; Polytope({r, s}).domain()</span>
-<span class="sd">        frozenset([&#39;a&#39;, &#39;c&#39;, &#39;b&#39;])</span>
+<span class="sd">        frozenset({&#39;a&#39;, &#39;c&#39;, &#39;b&#39;})</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">frozenset</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="n">vector</span><span class="o">.</span><span class="n">domain</span><span class="p">()</span> <span class="k">for</span> <span class="n">vector</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">))</span></div></div>

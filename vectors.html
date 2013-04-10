@@ -75,7 +75,7 @@ their built-in variants <a class="reference external" href="http://docs.python.o
   <span class="c">...</span>
 <span class="gr">TypeError: unhashable type</span>: <span class="n">&#39;Function&#39;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="p">{</span><span class="n">Vector</span><span class="p">({})}</span>
-<span class="go">set([Vector({})])</span>
+<span class="go">{Vector({})}</span>
 </pre></div>
 </div>
 </li>
@@ -204,7 +204,7 @@ arguments accepted by the <tt class="xref py py-class docutils literal"><span cl
 </tbody>
 </table>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Polytope</span><span class="p">([{</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">},</span> <span class="p">{</span><span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">}])</span>
-<span class="go">Polytope([Vector({&#39;a&#39;: 2, &#39;b&#39;: 3}), Vector({&#39;c&#39;: 4, &#39;b&#39;: 1})])</span>
+<span class="go">Polytope({Vector({&#39;a&#39;: 2, &#39;b&#39;: 3}), Vector({&#39;c&#39;: 4, &#39;b&#39;: 1})})</span>
 </pre></div>
 </div>
 </div></blockquote>
@@ -236,7 +236,7 @@ well.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="o">.</span><span class="mo">03</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="o">-.</span><span class="mo">07</span><span class="p">})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="o">.</span><span class="mo">07</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">:</span> <span class="o">-.</span><span class="mo">03</span><span class="p">})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">Polytope</span><span class="p">({</span><span class="n">r</span><span class="p">,</span> <span class="n">s</span><span class="p">})</span><span class="o">.</span><span class="n">domain</span><span class="p">()</span>
-<span class="go">frozenset([&#39;a&#39;, &#39;c&#39;, &#39;b&#39;])</span>
+<span class="go">frozenset({&#39;a&#39;, &#39;c&#39;, &#39;b&#39;})</span>
 </pre></div>
 </div>
 </dd></dl>

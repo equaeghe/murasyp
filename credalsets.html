@@ -74,7 +74,7 @@ constructor.</td>
 </tbody>
 </table>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">CredalSet</span><span class="p">(</span><span class="s">&#39;abc&#39;</span><span class="p">)</span>
-<span class="go">CredalSet([PMFunc({&#39;a&#39;: 1}), PMFunc({&#39;b&#39;: 1}), PMFunc({&#39;c&#39;: 1})])</span>
+<span class="go">CredalSet({PMFunc({&#39;a&#39;: 1}), PMFunc({&#39;b&#39;: 1}), PMFunc({&#39;c&#39;: 1})})</span>
 </pre></div>
 </div>
 </div></blockquote>
@@ -124,7 +124,7 @@ is).</p>
 </div>
 <p>This does not impede the classical union of sets.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">CredalSet</span><span class="p">(</span><span class="s">&#39;a&#39;</span><span class="p">)</span> <span class="o">|</span> <span class="n">CredalSet</span><span class="p">(</span><span class="s">&#39;b&#39;</span><span class="p">)</span>
-<span class="go">CredalSet([PMFunc({&#39;a&#39;: 1}), PMFunc({&#39;b&#39;: 1})])</span>
+<span class="go">CredalSet({PMFunc({&#39;a&#39;: 1}), PMFunc({&#39;b&#39;: 1})})</span>
 </pre></div>
 </div>
 </li>
@@ -146,10 +146,10 @@ is).</p>
 </div></blockquote>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">K</span> <span class="o">=</span> <span class="n">CredalSet</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">K</span>
-<span class="go">CredalSet([])</span>
+<span class="go">CredalSet()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">K</span><span class="o">.</span><span class="n">add</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="o">.</span><span class="mo">06</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="o">.</span><span class="mi">14</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">:</span> <span class="mf">1.8</span><span class="p">,</span> <span class="s">&#39;d&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">K</span>
-<span class="go">CredalSet([PMFunc({&#39;a&#39;: &#39;3/100&#39;, &#39;c&#39;: &#39;9/10&#39;, &#39;b&#39;: &#39;7/100&#39;})])</span>
+<span class="go">CredalSet({PMFunc({&#39;a&#39;: &#39;3/100&#39;, &#39;c&#39;: &#39;9/10&#39;, &#39;b&#39;: &#39;7/100&#39;})})</span>
 </pre></div>
 </div>
 <blockquote>
@@ -177,10 +177,10 @@ is).</p>
 </div></blockquote>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">K</span> <span class="o">=</span> <span class="n">CredalSet</span><span class="p">(</span><span class="s">&#39;ab&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">K</span>
-<span class="go">CredalSet([PMFunc({&#39;a&#39;: 1}), PMFunc({&#39;b&#39;: 1})])</span>
+<span class="go">CredalSet({PMFunc({&#39;a&#39;: 1}), PMFunc({&#39;b&#39;: 1})})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">K</span><span class="o">.</span><span class="n">discard</span><span class="p">(</span><span class="n">PMFunc</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">}))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">K</span>
-<span class="go">CredalSet([PMFunc({&#39;b&#39;: 1})])</span>
+<span class="go">CredalSet({PMFunc({&#39;b&#39;: 1})})</span>
 </pre></div>
 </div>
 <blockquote>
@@ -212,7 +212,7 @@ the domains of the probability mass functions it contains</td>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">q</span> <span class="o">=</span> <span class="n">PMFunc</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="o">.</span><span class="mo">07</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">:</span> <span class="o">.</span><span class="mo">03</span><span class="p">})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">K</span> <span class="o">=</span> <span class="n">CredalSet</span><span class="p">([</span><span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">K</span><span class="o">.</span><span class="n">pspace</span><span class="p">()</span>
-<span class="go">frozenset([&#39;a&#39;, &#39;c&#39;, &#39;b&#39;])</span>
+<span class="go">frozenset({&#39;a&#39;, &#39;c&#39;, &#39;b&#39;})</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -226,10 +226,10 @@ convex hull.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">K</span> <span class="o">=</span> <span class="n">CredalSet</span><span class="p">(</span><span class="s">&#39;abc&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">K</span><span class="o">.</span><span class="n">add</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">K</span>
-<span class="go">CredalSet([..., PMFunc({&#39;a&#39;: &#39;1/3&#39;, &#39;c&#39;: &#39;1/3&#39;, &#39;b&#39;: &#39;1/3&#39;})])</span>
+<span class="go">CredalSet({PMFunc({&#39;a&#39;: &#39;1/3&#39;, &#39;c&#39;: &#39;1/3&#39;, &#39;b&#39;: &#39;1/3&#39;}), PMFunc({&#39;a&#39;: 1}), PMFunc({&#39;b&#39;: 1}), PMFunc({&#39;c&#39;: 1})})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">K</span><span class="o">.</span><span class="n">discard_redundant</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">K</span>
-<span class="go">CredalSet([PMFunc({&#39;a&#39;: 1}), PMFunc({&#39;b&#39;: 1}), PMFunc({&#39;c&#39;: 1})])</span>
+<span class="go">CredalSet({PMFunc({&#39;a&#39;: 1}), PMFunc({&#39;b&#39;: 1}), PMFunc({&#39;c&#39;: 1})})</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -253,7 +253,7 @@ uncertainty model</td>
 </div></blockquote>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">CredalSet</span><span class="p">([</span><span class="n">PMFunc</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">}),</span> <span class="n">PMFunc</span><span class="p">({</span><span class="s">&#39;c&#39;</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">}),</span>
 <span class="gp">... </span>           <span class="n">PMFunc</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">}),</span> <span class="n">PMFunc</span><span class="p">({</span><span class="s">&#39;c&#39;</span><span class="p">})])</span><span class="o">.</span><span class="n">get_desir</span><span class="p">()</span>
-<span class="go">DesirSet([Cone([Ray({&#39;a&#39;: 1}), Ray({&#39;b&#39;: 1}), Ray({&#39;c&#39;: 1}), Ray({&#39;a&#39;: 1, &#39;c&#39;: 1, &#39;b&#39;: -1})])])</span>
+<span class="go">DesirSet({Cone({Ray({&#39;a&#39;: 1}), Ray({&#39;b&#39;: 1}), Ray({&#39;c&#39;: 1}), Ray({&#39;a&#39;: 1, &#39;c&#39;: 1, &#39;b&#39;: -1})})})</span>
 </pre></div>
 </div>
 </dd></dl>

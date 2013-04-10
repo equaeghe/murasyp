@@ -73,11 +73,11 @@ arguments accepted by the <a class="reference internal" href="gambles.html#muras
 </tbody>
 </table>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">DesirSet</span><span class="p">(</span><span class="s">&#39;abc&#39;</span><span class="p">)</span>
-<span class="go">DesirSet([Cone([Ray({&#39;b&#39;: 1})]), Cone([Ray({&#39;c&#39;: 1})]), Cone([Ray({&#39;a&#39;: 1})])])</span>
+<span class="go">DesirSet({Cone({Ray({&#39;b&#39;: 1})}), Cone({Ray({&#39;c&#39;: 1})}), Cone({Ray({&#39;a&#39;: 1})})})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">DesirSet</span><span class="p">([</span><span class="s">&#39;abc&#39;</span><span class="p">])</span>
-<span class="go">DesirSet([Cone([Ray({&#39;a&#39;: 1}), Ray({&#39;b&#39;: 1}), Ray({&#39;c&#39;: 1})])])</span>
+<span class="go">DesirSet({Cone({Ray({&#39;a&#39;: 1}), Ray({&#39;b&#39;: 1}), Ray({&#39;c&#39;: 1})})})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">DesirSet</span><span class="p">([[</span><span class="s">&#39;abc&#39;</span><span class="p">]])</span>
-<span class="go">DesirSet([Cone([Ray({&#39;a&#39;: 1, &#39;c&#39;: 1, &#39;b&#39;: 1})])])</span>
+<span class="go">DesirSet({Cone({Ray({&#39;a&#39;: 1, &#39;c&#39;: 1, &#39;b&#39;: 1})})})</span>
 </pre></div>
 </div>
 </div></blockquote>
@@ -145,10 +145,10 @@ constructor</td>
 </div></blockquote>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">D</span> <span class="o">=</span> <span class="n">DesirSet</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">D</span>
-<span class="go">DesirSet([])</span>
+<span class="go">DesirSet()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">D</span><span class="o">.</span><span class="n">add</span><span class="p">([</span><span class="n">Gamble</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="o">-.</span><span class="mo">06</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="o">.</span><span class="mi">14</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">:</span> <span class="mf">1.8</span><span class="p">,</span> <span class="s">&#39;d&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">})])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">D</span>
-<span class="go">DesirSet([Cone([Ray({&#39;a&#39;: &#39;-1/30&#39;, &#39;c&#39;: 1, &#39;b&#39;: &#39;7/90&#39;})])])</span>
+<span class="go">DesirSet({Cone({Ray({&#39;a&#39;: &#39;-1/30&#39;, &#39;c&#39;: 1, &#39;b&#39;: &#39;7/90&#39;})})})</span>
 </pre></div>
 </div>
 <blockquote>
@@ -176,10 +176,10 @@ constructor</td>
 </div></blockquote>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">D</span> <span class="o">=</span> <span class="n">DesirSet</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">,</span><span class="s">&#39;b&#39;</span><span class="p">})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">D</span>
-<span class="go">DesirSet([Cone([Ray({&#39;b&#39;: 1})]), Cone([Ray({&#39;a&#39;: 1})])])</span>
+<span class="go">DesirSet({Cone({Ray({&#39;b&#39;: 1})}), Cone({Ray({&#39;a&#39;: 1})})})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">D</span><span class="o">.</span><span class="n">discard</span><span class="p">([</span><span class="n">Ray</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">})])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">D</span>
-<span class="go">DesirSet([Cone([Ray({&#39;b&#39;: 1})])])</span>
+<span class="go">DesirSet({Cone({Ray({&#39;b&#39;: 1})})})</span>
 </pre></div>
 </div>
 <blockquote>
@@ -212,7 +212,7 @@ the union of the domains of the cones it contains</td>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="n">Ray</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="o">.</span><span class="mo">07</span><span class="p">,</span> <span class="s">&#39;e&#39;</span><span class="p">:</span> <span class="o">-.</span><span class="mo">03</span><span class="p">})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">D</span><span class="o">.</span><span class="n">add</span><span class="p">([</span><span class="n">r</span><span class="p">,</span> <span class="n">s</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">D</span><span class="o">.</span><span class="n">pspace</span><span class="p">()</span>
-<span class="go">frozenset([&#39;a&#39;, &#39;c&#39;, &#39;b&#39;, &#39;e&#39;, &#39;d&#39;])</span>
+<span class="go">frozenset({&#39;a&#39;, &#39;c&#39;, &#39;b&#39;, &#39;e&#39;, &#39;d&#39;})</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -243,7 +243,7 @@ calculated and added to the set of desirable gambles.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">D</span> <span class="o">=</span> <span class="n">DesirSet</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">D</span><span class="o">.</span><span class="n">set_lower_pr</span><span class="p">(</span><span class="n">Gamble</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">})</span> <span class="o">|</span> <span class="p">{</span><span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">},</span> <span class="o">.</span><span class="mi">4</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">D</span>
-<span class="go">DesirSet([Cone([Ray({&#39;a&#39;: 1, &#39;c&#39;: 1, &#39;b&#39;: 1}), Ray({&#39;a&#39;: 1, &#39;c&#39;: &#39;-2/3&#39;, &#39;b&#39;: 1})])])</span>
+<span class="go">DesirSet({Cone({Ray({&#39;a&#39;: 1, &#39;c&#39;: &#39;-2/3&#39;, &#39;b&#39;: 1}), Ray({&#39;a&#39;: 1, &#39;c&#39;: 1, &#39;b&#39;: 1})})})</span>
 </pre></div>
 </div>
 <div class="admonition note">
@@ -278,7 +278,7 @@ calculated and added to the set of desirable gambles.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">D</span> <span class="o">=</span> <span class="n">DesirSet</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">D</span><span class="o">.</span><span class="n">set_upper_pr</span><span class="p">(</span><span class="n">Gamble</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">})</span> <span class="o">|</span> <span class="p">{</span><span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">},</span> <span class="o">.</span><span class="mi">4</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">D</span>
-<span class="go">DesirSet([Cone([Ray({&#39;a&#39;: 1, &#39;c&#39;: 1, &#39;b&#39;: 1}), Ray({&#39;a&#39;: -1, &#39;c&#39;: &#39;2/3&#39;, &#39;b&#39;: -1})])])</span>
+<span class="go">DesirSet({Cone({Ray({&#39;a&#39;: -1, &#39;c&#39;: &#39;2/3&#39;, &#39;b&#39;: -1}), Ray({&#39;a&#39;: 1, &#39;c&#39;: 1, &#39;b&#39;: 1})})})</span>
 </pre></div>
 </div>
 <div class="admonition note">
@@ -313,7 +313,7 @@ value.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">D</span> <span class="o">=</span> <span class="n">DesirSet</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">D</span><span class="o">.</span><span class="n">set_pr</span><span class="p">(</span><span class="n">Gamble</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">})</span> <span class="o">|</span> <span class="p">{</span><span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">},</span> <span class="o">.</span><span class="mi">4</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">D</span>
-<span class="go">DesirSet([Cone([Ray({&#39;a&#39;: 1, &#39;c&#39;: 1, &#39;b&#39;: 1}), Ray({&#39;a&#39;: 1, &#39;c&#39;: &#39;-2/3&#39;, &#39;b&#39;: 1})]), Cone([Ray({&#39;a&#39;: 1, &#39;c&#39;: 1, &#39;b&#39;: 1}), Ray({&#39;a&#39;: -1, &#39;c&#39;: &#39;2/3&#39;, &#39;b&#39;: -1})])])</span>
+<span class="go">DesirSet({Cone({Ray({&#39;a&#39;: -1, &#39;c&#39;: &#39;2/3&#39;, &#39;b&#39;: -1}), Ray({&#39;a&#39;: 1, &#39;c&#39;: 1, &#39;b&#39;: 1})}), Cone({Ray({&#39;a&#39;: 1, &#39;c&#39;: &#39;-2/3&#39;, &#39;b&#39;: 1}), Ray({&#39;a&#39;: 1, &#39;c&#39;: 1, &#39;b&#39;: 1})})})</span>
 </pre></div>
 </div>
 <div class="admonition note">
@@ -386,7 +386,7 @@ containing non-singleton cones:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">D</span> <span class="o">=</span> <span class="n">DesirSet</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">D</span><span class="o">.</span><span class="n">set_pr</span><span class="p">(</span><span class="n">Gamble</span><span class="p">(</span><span class="s">&#39;b&#39;</span><span class="p">)</span> <span class="o">|</span> <span class="p">{</span><span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">},</span> <span class="mi">0</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">D</span>
-<span class="go">DesirSet([Cone([Ray({&#39;a&#39;: 1, &#39;b&#39;: 1}), Ray({&#39;b&#39;: 1})]), Cone([Ray({&#39;a&#39;: 1, &#39;b&#39;: 1}), Ray({&#39;b&#39;: -1})])])</span>
+<span class="go">DesirSet({Cone({Ray({&#39;a&#39;: 1, &#39;b&#39;: 1}), Ray({&#39;b&#39;: 1})}), Cone({Ray({&#39;a&#39;: 1, &#39;b&#39;: 1}), Ray({&#39;b&#39;: -1})})})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">D</span><span class="o">.</span><span class="n">apl</span><span class="p">()</span>
 <span class="go">True</span>
 </pre></div>
@@ -413,7 +413,7 @@ model</td>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">D</span> <span class="o">=</span> <span class="n">DesirSet</span><span class="p">([</span><span class="s">&#39;abc&#39;</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">D</span><span class="o">.</span><span class="n">set_lower_pr</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span> <span class="o">.</span><span class="mi">5</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">D</span><span class="o">.</span><span class="n">get_credal</span><span class="p">()</span>
-<span class="go">CredalSet([PMFunc({&#39;a&#39;: &#39;1/2&#39;, &#39;b&#39;: &#39;1/2&#39;}), PMFunc({&#39;c&#39;: &#39;1/2&#39;, &#39;b&#39;: &#39;1/2&#39;}), PMFunc({&#39;a&#39;: 1}), PMFunc({&#39;c&#39;: 1})])</span>
+<span class="go">CredalSet({PMFunc({&#39;a&#39;: &#39;1/2&#39;, &#39;b&#39;: &#39;1/2&#39;}), PMFunc({&#39;c&#39;: &#39;1/2&#39;, &#39;b&#39;: &#39;1/2&#39;}), PMFunc({&#39;a&#39;: 1}), PMFunc({&#39;c&#39;: 1})})</span>
 </pre></div>
 </div>
 </dd></dl>

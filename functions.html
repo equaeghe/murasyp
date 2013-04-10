@@ -126,7 +126,7 @@ function is defined</td>
 </table>
 </div></blockquote>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Function</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">})</span><span class="o">.</span><span class="n">domain</span><span class="p">()</span>
-<span class="go">frozenset([&#39;a&#39;, &#39;c&#39;, &#39;b&#39;])</span>
+<span class="go">frozenset({&#39;a&#39;, &#39;c&#39;, &#39;b&#39;})</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -149,7 +149,7 @@ returned by the function</td>
 </table>
 </div></blockquote>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Function</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">})</span><span class="o">.</span><span class="n">range</span><span class="p">()</span>
-<span class="go">frozenset([Fraction(0, 1), Fraction(1, 1), Fraction(-1, 1)])</span>
+<span class="go">frozenset({Fraction(0, 1), Fraction(1, 1), Fraction(-1, 1)})</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -172,7 +172,7 @@ for which the function is nonzero</td>
 </table>
 </div></blockquote>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Function</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">})</span><span class="o">.</span><span class="n">support</span><span class="p">()</span>
-<span class="go">frozenset([&#39;a&#39;, &#39;b&#39;])</span>
+<span class="go">frozenset({&#39;a&#39;, &#39;b&#39;})</span>
 </pre></div>
 </div>
 </dd></dl>
