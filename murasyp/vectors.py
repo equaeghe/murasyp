@@ -114,7 +114,7 @@ class Polytope(frozenset):
 
       :type `data`: a non-:class:`~collections.Mapping`
         :class:`~collections.Iterable` :class:`~collections.Container` of
-        arguments accepted by the :class:`~murasyp.gambles.Vector` constructor.
+        arguments accepted by the :class:`~murasyp.vectors.Vector` constructor.
 
       >>> Polytope([{'a': 2, 'b': 3}, {'b': 1, 'c': 4}])
       Polytope({Vector({'a': 2, 'b': 3}), Vector({'c': 4, 'b': 1})})
