@@ -1,5 +1,5 @@
 from __future__ import division
-from collections import Set, Hashable, Mapping
+from collections import Set, Hashable, Mapping, MutableMapping
 from murasyp.functions import Function
 
 class Vector(Function, Hashable):
@@ -154,3 +154,55 @@ class Polytope(frozenset):
 
         """
         return frozenset.union(*(vector.domain() for vector in self))
+
+
+class Trafo(MutableMapping):
+    """A linear transformation between vector spaces
+
+      :type `mapping`: a :class:`~collections.Mapping` (such as a :class:`dict`)
+        of arguments accepted by the :class:`~murasyp.vectors.Vector`
+        constructor.
+
+    Features:
+
+    * The transformation can be applied to :class:`~murasyp.vectors.Vector`
+      (and :class:`~collections.Set` thereof) using the ``<<`` operator:
+
+      >>> T = Trafo()
+      >>> T['a'] = {('a', 'c'): 1, ('a', 'd'): 1}
+      >>> T['b'] = {('b', 'c'): 1, ('b', 'd'): 1}
+      >>> T << Vector({'a': 1, 'b': 2})
+      Vector({('b', 'c'): 2, ('a', 'd'): 1, ('a', 'c'): 1, ('b', 'd'): 2})
+      >>> P = Polytope({Vector({'a': -2})})
+      >>> T << P
+      Polytope({Vector({('a', 'd'): -2, ('a', 'c'): -2})})
+
+    """
+    def __init__(self, mapping={}):
+        """Create a transformation"""
+        if isinstance(mapping, Mapping):
+            self._mapping = {arg: Vector(value)
+                             for arg, value in mapping.items()}
+        else:
+            raise TypeError("specify a mapping")
+
+    __len__ = lambda self: len(self._mapping)
+    __iter__ = lambda self: iter(self._mapping)
+    __contains__ = lambda self, element: element in self._mapping
+    __getitem__ = lambda self, element: self._mapping[element]
+
+    def __setitem__(self, element, value):
+        self._mapping.__setitem__(element, Vector(value))
+
+    def __delitem__(self, element):
+        mapping = self._mapping
+        del mapping[element]
+
+    def __lshift__(self, other):
+        """Applying the transformation"""
+        if isinstance(other, Vector):
+            return sum(value * self[arg] for arg, value in other.items())
+        if isinstance(other, Set):
+            return type(other)(self << x for x in other)
+        else:
+            raise TypeError("the argument must be a Vector or a (nested) Set thereof")
