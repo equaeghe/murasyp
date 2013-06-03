@@ -16,3 +16,8 @@ Polytopes
 ---------
 
 .. autoclass:: Polytope
+
+Transformations
+---------------
+
+.. autoclass:: Trafo

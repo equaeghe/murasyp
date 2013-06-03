@@ -51,7 +51,7 @@
             
   <h1>Source code for murasyp.vectors</h1><div class="highlight"><pre>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span>
-<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Set</span><span class="p">,</span> <span class="n">Hashable</span><span class="p">,</span> <span class="n">Mapping</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Set</span><span class="p">,</span> <span class="n">Hashable</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">MutableMapping</span>
 <span class="kn">from</span> <span class="nn">murasyp.functions</span> <span class="kn">import</span> <span class="n">Function</span>
 
 <div class="viewcode-block" id="Vector"><a class="viewcode-back" href="../../vectors.html#murasyp.vectors.Vector">[docs]</a><span class="k">class</span> <span class="nc">Vector</span><span class="p">(</span><span class="n">Function</span><span class="p">,</span> <span class="n">Hashable</span><span class="p">):</span>
@@ -166,7 +166,7 @@
 
 <span class="sd">      :type `data`: a non-:class:`~collections.Mapping`</span>
 <span class="sd">        :class:`~collections.Iterable` :class:`~collections.Container` of</span>
-<span class="sd">        arguments accepted by the :class:`~murasyp.gambles.Vector` constructor.</span>
+<span class="sd">        arguments accepted by the :class:`~murasyp.vectors.Vector` constructor.</span>
 
 <span class="sd">      &gt;&gt;&gt; Polytope([{&#39;a&#39;: 2, &#39;b&#39;: 3}, {&#39;b&#39;: 1, &#39;c&#39;: 4}])</span>
 <span class="sd">      Polytope({Vector({&#39;a&#39;: 2, &#39;b&#39;: 3}), Vector({&#39;c&#39;: 4, &#39;b&#39;: 1})})</span>
@@ -205,7 +205,59 @@
 <span class="sd">        frozenset({&#39;a&#39;, &#39;c&#39;, &#39;b&#39;})</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="nb">frozenset</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="n">vector</span><span class="o">.</span><span class="n">domain</span><span class="p">()</span> <span class="k">for</span> <span class="n">vector</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">))</span></div></div>
+        <span class="k">return</span> <span class="nb">frozenset</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="n">vector</span><span class="o">.</span><span class="n">domain</span><span class="p">()</span> <span class="k">for</span> <span class="n">vector</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">))</span>
+
+</div></div>
+<div class="viewcode-block" id="Trafo"><a class="viewcode-back" href="../../vectors.html#murasyp.vectors.Trafo">[docs]</a><span class="k">class</span> <span class="nc">Trafo</span><span class="p">(</span><span class="n">MutableMapping</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A linear transformation between vector spaces</span>
+
+<span class="sd">      :type `mapping`: a :class:`~collections.Mapping` (such as a :class:`dict`)</span>
+<span class="sd">        of arguments accepted by the :class:`~murasyp.vectors.Vector`</span>
+<span class="sd">        constructor.</span>
+
+<span class="sd">    Features:</span>
+
+<span class="sd">    * The transformation can be applied to :class:`~murasyp.vectors.Vector`</span>
+<span class="sd">      (and :class:`~collections.Set` thereof) using the ``&lt;&lt;`` operator:</span>
+
+<span class="sd">      &gt;&gt;&gt; T = Trafo()</span>
+<span class="sd">      &gt;&gt;&gt; T[&#39;a&#39;] = {(&#39;a&#39;, &#39;c&#39;): 1, (&#39;a&#39;, &#39;d&#39;): 1}</span>
+<span class="sd">      &gt;&gt;&gt; T[&#39;b&#39;] = {(&#39;b&#39;, &#39;c&#39;): 1, (&#39;b&#39;, &#39;d&#39;): 1}</span>
+<span class="sd">      &gt;&gt;&gt; T &lt;&lt; Vector({&#39;a&#39;: 1, &#39;b&#39;: 2})</span>
+<span class="sd">      Vector({(&#39;b&#39;, &#39;c&#39;): 2, (&#39;a&#39;, &#39;d&#39;): 1, (&#39;a&#39;, &#39;c&#39;): 1, (&#39;b&#39;, &#39;d&#39;): 2})</span>
+<span class="sd">      &gt;&gt;&gt; P = Polytope({Vector({&#39;a&#39;: -2})})</span>
+<span class="sd">      &gt;&gt;&gt; T &lt;&lt; P</span>
+<span class="sd">      Polytope({Vector({(&#39;a&#39;, &#39;d&#39;): -2, (&#39;a&#39;, &#39;c&#39;): -2})})</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mapping</span><span class="o">=</span><span class="p">{}):</span>
+        <span class="sd">&quot;&quot;&quot;Create a transformation&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mapping</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_mapping</span> <span class="o">=</span> <span class="p">{</span><span class="n">arg</span><span class="p">:</span> <span class="n">Vector</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+                             <span class="k">for</span> <span class="n">arg</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">mapping</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s">&quot;specify a mapping&quot;</span><span class="p">)</span>
+
+    <span class="n">__len__</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_mapping</span><span class="p">)</span>
+    <span class="n">__iter__</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">:</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_mapping</span><span class="p">)</span>
+    <span class="n">__contains__</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">element</span><span class="p">:</span> <span class="n">element</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mapping</span>
+    <span class="n">__getitem__</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">element</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mapping</span><span class="p">[</span><span class="n">element</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">element</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_mapping</span><span class="o">.</span><span class="n">__setitem__</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="n">Vector</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">__delitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">element</span><span class="p">):</span>
+        <span class="n">mapping</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mapping</span>
+        <span class="k">del</span> <span class="n">mapping</span><span class="p">[</span><span class="n">element</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">__lshift__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Applying the transformation&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Vector</span><span class="p">):</span>
+            <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="n">value</span> <span class="o">*</span> <span class="bp">self</span><span class="p">[</span><span class="n">arg</span><span class="p">]</span> <span class="k">for</span> <span class="n">arg</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">other</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Set</span><span class="p">):</span>
+            <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">)(</span><span class="bp">self</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">other</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s">&quot;the argument must be a Vector or a (nested) Set thereof&quot;</span><span class="p">)</span></div>
 </pre></div>
 
           </div>

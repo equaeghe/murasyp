@@ -73,7 +73,7 @@ their built-in variants <a class="reference external" href="http://docs.python.o
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="p">{</span><span class="n">Function</span><span class="p">({})}</span>
 <span class="gt">Traceback (most recent call last):</span>
   <span class="c">...</span>
-<span class="gr">TypeError: unhashable type</span>: <span class="n">&#39;Function&#39;</span>
+<span class="gr">TypeError</span>: <span class="n">unhashable type: &#39;Function&#39;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="p">{</span><span class="n">Vector</span><span class="p">({})}</span>
 <span class="go">{Vector({})}</span>
 </pre></div>
@@ -199,7 +199,7 @@ zero.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">type <cite>data</cite>:</th><td class="field-body">a non-<a class="reference external" href="http://docs.python.org/library/collections.html#collections.Mapping" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">Mapping</span></tt></a>
 <a class="reference external" href="http://docs.python.org/library/collections.html#collections.Iterable" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">Iterable</span></tt></a> <a class="reference external" href="http://docs.python.org/library/collections.html#collections.Container" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">Container</span></tt></a> of
-arguments accepted by the <tt class="xref py py-class docutils literal"><span class="pre">Vector</span></tt> constructor.</td>
+arguments accepted by the <a class="reference internal" href="#murasyp.vectors.Vector" title="murasyp.vectors.Vector"><tt class="xref py py-class docutils literal"><span class="pre">Vector</span></tt></a> constructor.</td>
 </tr>
 </tbody>
 </table>
@@ -244,6 +244,43 @@ well.</p>
 </dd></dl>
 
 </div>
+<div class="section" id="transformations">
+<h2>Transformations<a class="headerlink" href="#transformations" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="murasyp.vectors.Trafo">
+<em class="property">class </em><tt class="descclassname">murasyp.vectors.</tt><tt class="descname">Trafo</tt><big>(</big><em>mapping={}</em><big>)</big><a class="reference internal" href="_modules/murasyp/vectors.html#Trafo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#murasyp.vectors.Trafo" title="Permalink to this definition">¶</a></dt>
+<dd><p>A linear transformation between vector spaces</p>
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">type <cite>mapping</cite>:</th><td class="field-body">a <a class="reference external" href="http://docs.python.org/library/collections.html#collections.Mapping" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">Mapping</span></tt></a> (such as a <a class="reference external" href="http://docs.python.org/library/stdtypes.html#dict" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">dict</span></tt></a>)
+of arguments accepted by the <a class="reference internal" href="#murasyp.vectors.Vector" title="murasyp.vectors.Vector"><tt class="xref py py-class docutils literal"><span class="pre">Vector</span></tt></a>
+constructor.</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>Features:</p>
+<ul>
+<li><p class="first">The transformation can be applied to <a class="reference internal" href="#murasyp.vectors.Vector" title="murasyp.vectors.Vector"><tt class="xref py py-class docutils literal"><span class="pre">Vector</span></tt></a>
+(and <a class="reference external" href="http://docs.python.org/library/collections.html#collections.Set" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">Set</span></tt></a> thereof) using the <tt class="docutils literal"><span class="pre">&lt;&lt;</span></tt> operator:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">T</span> <span class="o">=</span> <span class="n">Trafo</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">T</span><span class="p">[</span><span class="s">&#39;a&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{(</span><span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">):</span> <span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;d&#39;</span><span class="p">):</span> <span class="mi">1</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">T</span><span class="p">[</span><span class="s">&#39;b&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{(</span><span class="s">&#39;b&#39;</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">):</span> <span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;b&#39;</span><span class="p">,</span> <span class="s">&#39;d&#39;</span><span class="p">):</span> <span class="mi">1</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">T</span> <span class="o">&lt;&lt;</span> <span class="n">Vector</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">})</span>
+<span class="go">Vector({(&#39;b&#39;, &#39;c&#39;): 2, (&#39;a&#39;, &#39;d&#39;): 1, (&#39;a&#39;, &#39;c&#39;): 1, (&#39;b&#39;, &#39;d&#39;): 2})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">P</span> <span class="o">=</span> <span class="n">Polytope</span><span class="p">({</span><span class="n">Vector</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">2</span><span class="p">})})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">T</span> <span class="o">&lt;&lt;</span> <span class="n">P</span>
+<span class="go">Polytope({Vector({(&#39;a&#39;, &#39;d&#39;): -2, (&#39;a&#39;, &#39;c&#39;): -2})})</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</dd></dl>
+
+</div>
 </div>
 
 
@@ -257,6 +294,7 @@ well.</p>
 <li><a class="reference internal" href="#">Vectors &amp; Polytopes</a><ul>
 <li><a class="reference internal" href="#vectors">Vectors</a></li>
 <li><a class="reference internal" href="#polytopes">Polytopes</a></li>
+<li><a class="reference internal" href="#transformations">Transformations</a></li>
 </ul>
 </li>
 </ul>
