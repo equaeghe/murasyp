@@ -1,47 +1,8 @@
-from __future__ import division
-from collections import Mapping
+from collections import Mapping, MutableMapping, Hashable
 from fractions import Fraction
 
-class Function(Mapping):
-    """Rational-valued functions
-
-      :type `mapping`: :class:`~collections.Mapping` (such as a :class:`dict`)
-        to a representation of :class:`~numbers.Real`
-
-    Features:
-
-    * Values may be specified as :class:`int`, :class:`float`, or
-      :class:`~fractions.Fraction`, whose :class:`str`-representation is then
-      especially convenient.
-
-      >>> f = Function({'a': 11e-1, 'b': '-1/2','c': 0})
-      >>> f
-      Function({'a': '11/10', 'c': 0, 'b': '-1/2'})
-      >>> f['a']
-      Fraction(11, 10)
-
-      .. note::
-
-        No floats are ever really used; they are immediately converted to
-        fractions and should be seen as just a convenient input representation
-        for decimal numbers.
-
-    * Scalar multiplication and division, as well as pointwise multiplication,
-      addition, and subtraction (also with scalars) is possible.
-
-      >>> f = Function({'a': 1.1, 'b': '-1/2','c': 0})
-      >>> g = Function({'b': '.6', 'c': -2, 'd': 0.0})
-      >>> -1 + (.3 * f - g) / 2
-      Function({'c': 0, 'b': '-11/8'})
-      >>> f * g
-      Function({'c': 0, 'b': '-3/10'})
-
-      .. note::
-
-        The domain of results of sums and differences is the intersection of
-        the respective domains.
-
-    """
+class _Function(Mapping):
+    """Rational-valued functions (base class)"""
 
     def __init__(self, mapping={}):
         """Create a rational-valued function"""
@@ -50,6 +11,9 @@ class Function(Mapping):
                              for arg, value in mapping.items()}
         else:
             raise TypeError("specify a mapping")
+        self._base_type = _Function
+        self._mutable_type = Function
+        self._frozen_type = frozenFunction
 
     def _make_rational(self, value):
         """Make a Fraction of acceptable input"""
@@ -62,8 +26,8 @@ class Function(Mapping):
 
     __len__ = lambda self: len(self._mapping)
     __iter__ = lambda self: iter(self._mapping)
-    __contains__ = lambda self, element: element in self._mapping
-    __getitem__ = lambda self, element: self._mapping[element]
+    __contains__ = lambda self, arg: arg in self._mapping
+    __getitem__ = lambda self, arg: self._mapping[arg]
 
     def __repr__(self):
         """Return a readable unambiguous string representation"""
@@ -120,21 +84,18 @@ class Function(Mapping):
         """Application of a binary operator to a function/scalar-pair"""
         try:
             other = self._make_rational(other)
-            return type(self)({arg: operator(value, other)
-                              for arg, value in self.items()})
+            return self._mutable_type({arg: operator(value, other)
+                                       for arg, value in self.items()})
         except:
             return NotImplemented
 
     def _with_function(self, other, operator):
         """pointwise application of a binary operator to a pair of functions"""
-        if isinstance(other, type(self)):
-            return type(self)({arg: operator(self[arg], other[arg])
-                              for arg in self._domain_joiner(other)})
+        if isinstance(other, self._base_type):
+            return self._mutable_type({arg: operator(self[arg], other[arg])
+                                       for arg in self._domain_joiner(other)})
         else:
-            raise TypeError("cannot apply '" + operator.__name__ + "'"
-                            " to objects of types: '" +
-                            type(self).__name__ + "' and '" +
-                            type(other).__name__ + "'")
+            raise NotImplementedError
 
     _domain_joiner = lambda self, other: iter(self.domain() & other.domain())
 
@@ -157,3 +118,57 @@ class Function(Mapping):
 
     __sub__ = lambda self, other: self + (-other)
     __rsub__ = lambda self, other: -(self - other)
+
+
+class Function(_Function, MutableMapping):
+    """Rational-valued functions
+
+      :type `mapping`: :class:`~collections.Mapping` (such as a :class:`dict`)
+        to a representation of :class:`~numbers.Real`
+
+    Features:
+
+    * Values may be specified as :class:`int`, :class:`float`, or
+      :class:`~fractions.Fraction`, whose :class:`str`-representation is then
+      especially convenient.
+
+      >>> f = Function({'a': 11e-1, 'b': '-1/2','c': 0})
+      >>> f
+      Function({'a': '11/10', 'c': 0, 'b': '-1/2'})
+      >>> f['a']
+      Fraction(11, 10)
+
+      .. note::
+
+        No floats are ever really used; they are immediately converted to
+        fractions and should be seen as just a convenient input representation
+        for decimal numbers.
+
+    * Scalar multiplication and division, as well as pointwise multiplication,
+      addition, and subtraction (also with scalars) is possible.
+
+      >>> f = Function({'a': 1.1, 'b': '-1/2','c': 0})
+      >>> g = Function({'b': '.6', 'c': -2, 'd': 0.0})
+      >>> -1 + (.3 * f - g) / 2
+      Function({'c': 0, 'b': '-11/8'})
+      >>> f * g
+      Function({'c': 0, 'b': '-3/10'})
+
+      .. note::
+
+        The domain of results of sums and differences is the intersection of
+        the respective domains.
+
+    """
+
+    def __setitem__(self, arg, value):
+        value = self._make_rational(value)
+        self._mapping.__setitem__(arg, value)
+
+    def __delitem__(self, arg):
+        self._mapping.__delitem__(arg)
+
+class frozenFunction(_Function, Hashable):
+    """Frozen rational-valued functions"""
+
+    __hash__ = lambda self: hash(frozenset(self.items()))

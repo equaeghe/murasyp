@@ -8,4 +8,12 @@
 Rational-Valued Functions
 =========================
 
+Functions
+---------
+
 .. autoclass:: Function
+
+Frozen Functions
+----------------
+
+.. autoclass:: frozenFunction
