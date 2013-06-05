@@ -1,4 +1,3 @@
-from __future__ import division
 from collections import Set, Hashable, Mapping, MutableMapping
 from murasyp.functions import Function
 
@@ -9,17 +8,6 @@ class Vector(Function, Hashable):
     methods apply here as well.
 
     What has changed:
-
-    * This class's members are also hashable, which means they can be used as
-      keys (in :class:`~collections.Set` and :class:`~collections.Mapping`, and
-      their built-in variants :class:`set` and :class:`dict`).
-
-      >>> {Function({})}
-      Traceback (most recent call last):
-        ...
-      TypeError: unhashable type: 'Function'
-      >>> {Vector({})}
-      {Vector({})}
 
     * Unspecified values are assumed to be zero.
 

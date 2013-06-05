@@ -13,6 +13,12 @@ Functions
 
 .. autoclass:: Function
 
+   Members:
+
+    .. automethod:: domain
+    .. automethod:: support
+    .. automethod:: range
+
 Frozen Functions
 ----------------
 

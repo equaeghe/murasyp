@@ -132,8 +132,7 @@ class Function(_Function, MutableMapping):
       :class:`~fractions.Fraction`, whose :class:`str`-representation is then
       especially convenient.
 
-      >>> f = Function({'a': 11e-1, 'b': '-1/2','c': 0})
-      >>> f
+      >>> f = Function({'a': 11e-1, 'b': '-1/2', 'c': 0}); f
       Function({'a': '11/10', 'c': 0, 'b': '-1/2'})
       >>> f['a']
       Fraction(11, 10)
@@ -143,6 +142,17 @@ class Function(_Function, MutableMapping):
         No floats are ever really used; they are immediately converted to
         fractions and should be seen as just a convenient input representation
         for decimal numbers.
+
+    * Its members are :class:`~collections.MutableMapping`; this means that they can be modified after their 
+      creation:
+      
+      >>> f = Function({'a': -1})
+      >>> f['a'] = 5; f['b'] = 2; f
+      Function({'a': 5, 'b': 2})
+      >>> del f['a']; f
+      Function({'b': 2})
+      >>> f.clear(); f
+      Function({})
 
     * Scalar multiplication and division, as well as pointwise multiplication,
       addition, and subtraction (also with scalars) is possible.
@@ -169,6 +179,50 @@ class Function(_Function, MutableMapping):
         self._mapping.__delitem__(arg)
 
 class frozenFunction(_Function, Hashable):
-    """Frozen rational-valued functions"""
+    """Frozen rational-valued functions
+
+    This class is the immutable cousin of :class:`~murasyp.functions.Function`.
+    It inherits most of its functionality.
+
+    What has changed:
+
+    * Its members cannot be modified after their initial creation.
+
+      >>> f = frozenFunction({})
+      >>> f['a'] = 3
+      Traceback (most recent call last):
+        ...
+      TypeError: 'frozenFunction' object does not support item assignment
+
+    * This class's members are, however, also hashable, which means that they
+      can be used as keys (in :class:`~collections.Set` and :class:`~collections.Mapping`).
+
+      >>> {Function({})}
+      Traceback (most recent call last):
+        ...
+      TypeError: unhashable type: 'Function'
+      >>> {frozenFunction({})}
+      {frozenFunction({})}
+
+    .. note::
+
+       Function arithmetic always results in mutable functions:
+
+       >>> f = frozenFunction({'a': 1})
+       >>> 2 * f
+       Function({'a': 2})
+       >>> f * f
+       Function({'a': 1})
+
+    .. note::
+
+       Equality, however, is based on content:
+
+       >>> frozenFunction({'a': 1}) == Function({'a': 1})
+       True
+       >>> type(frozenFunction({'a': 1})) == type(Function({'a': 1}))
+       False
+
+    """
 
     __hash__ = lambda self: hash(frozenset(self.items()))
