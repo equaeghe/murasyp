@@ -1,44 +1,18 @@
-from collections import Set, Hashable, Mapping, MutableMapping
-from murasyp.functions import Function
+from collections import Set, Mapping, MutableMapping
+from murasyp.functions import _Function, Function, frozenFunction
 
-class Vector(Function, Hashable):
-    """Vectors map arguments to zero or a specified rational value
+class _Vector(_Function):
+    """Vector (base class)"""
 
-    This class derives from :class:`~murasyp.functions.Function`, so its
-    methods apply here as well.
+    def __init__(self, mapping={}):
+        """Create a vector"""
+        super(_Vector, self).__init__(mapping)
+        self._base_type = _Vector
+        self._mutable_type = Vector
+        self._frozen_type = frozenVector
 
-    What has changed:
-
-    * Unspecified values are assumed to be zero.
-
-      >>> f = Vector({'a': 1.1, 'b': '-1/2','c': 0})
-      >>> f
-      Vector({'a': '11/10', 'c': 0, 'b': '-1/2'})
-      >>> f['d']
-      Fraction(0, 1)
-
-    * The union of domains is used under pointwise operations.
-
-      >>> f = Vector({'a': 1.1, 'b': '-1/2','c': 0})
-      >>> g = Vector({'b': '.6', 'c': -2, 'd': 0.0})
-      >>> 1 + (.3 * f - g) / 2
-      Vector({'a': '233/200', 'c': 2, 'b': '5/8', 'd': 1})
-
-    * A vector's domain can be restricted/extended to a specified
-      :class:`~collections.Set`.
-
-      >>> f = Vector({'a': 1.1, 'b': '-1/2','c': 0})
-      >>> f | {'a','b'}
-      Vector({'a': '11/10', 'b': '-1/2'})
-      >>> f | {'a','d'}
-      Vector({'a': '11/10', 'd': 0})
-
-    """
-
-    __getitem__ = lambda self, x: (self._mapping[x] if x in self
+    __getitem__ = lambda self, x: (self._mapping[x] if x in self._mapping
                                                     else self._make_rational(0))
-    __hash__ = lambda self: hash(tuple(item for item
-                                            in self._mapping.items()))
 
     _domain_joiner = lambda self, other: iter(self.domain() | other.domain())
 
@@ -59,7 +33,7 @@ class Vector(Function, Hashable):
         Fraction(1, 2)
 
         """
-        return sum(self._mapping.values())
+        return sum(self.values())
 
     def sum_normalized(self):
         """'Sum-of-values'-normalized version of the vector
@@ -94,8 +68,53 @@ class Vector(Function, Hashable):
         True
 
         """
-        return all(val >= 0 for val in self._mapping.values())
+        return all(val >= 0 for val in self.values())
 
+
+class Vector(_Vector, Function):
+    """Rational-valued functions assumed to be zero outside of their domain
+
+    This class derives from :class:`~murasyp.functions.Function`, so its
+    methods apply here as well.
+
+    What has changed:
+
+    * Unspecified values are assumed to be zero.
+
+      >>> f = Vector({'a': 1.1, 'b': '-1/2','c': 0})
+      >>> f
+      Vector({'a': '11/10', 'c': 0, 'b': '-1/2'})
+      >>> f['d']
+      Fraction(0, 1)
+
+    * The union of domains is used under pointwise operations.
+
+      >>> f = Vector({'a': 1.1, 'b': '-1/2','c': 0})
+      >>> g = Vector({'b': '.6', 'c': -2, 'd': 0.0})
+      >>> 1 + (.3 * f - g) / 2
+      Vector({'a': '233/200', 'c': 2, 'b': '5/8', 'd': 1})
+
+    * A vector's domain can be restricted/extended to a specified
+      :class:`~collections.Set`.
+
+      >>> f = Vector({'a': 1.1, 'b': '-1/2','c': 0})
+      >>> f | {'a','b'}
+      Vector({'a': '11/10', 'b': '-1/2'})
+      >>> f | {'a','d'}
+      Vector({'a': '11/10', 'd': 0})
+
+    """
+
+
+class frozenVector(_Vector, frozenFunction):
+    """Frozen vectors
+
+    This class is the immutable cousin of :class:`~murasyp.vectors.Vector`.
+    It inherits most of its functionality and relates to it in the same way that
+    :class:`~murasyp.functions.frozenFunction` relates to 
+    :class:`~murasyp.functions.Function`.
+
+    """
 
 class Polytope(frozenset):
     """A frozenset of vectors
