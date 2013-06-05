@@ -1,13 +1,12 @@
-from __future__ import division
 from collections import Set, Mapping
-from murasyp.vectors import Vector
+from murasyp.vectors import frozenVector
 from murasyp.gambles import Gamble
 
-class UMFunc(Vector):
+class UMFunc(frozenVector):
     """(Unit) mass functions map states or events to abstract mass values
 
-    This class derives from :class:`~murasyp.vectors.Vector`, so its methods
-    apply here as well.
+    This class derives from :class:`~murasyp.vectors.frozenVector`, so its
+    methods apply here as well.
 
     What has changed:
 
@@ -49,7 +48,8 @@ class UMFunc(Vector):
       >>> m * f
       Fraction(113, 5)
 
-      Take note, however, that the domain of the gamble acts as a conditioning event (so one can calculate conditional expectations without explicitly
+      Take note, however, that the domain of the gamble acts as a conditioning
+      event (so one can calculate conditional expectations without explicitly
       calculating conditional mass functions).
 
       >>> m = UMFunc({'a': '1/3', 'b': '1/6', 'c': '1/2'})
@@ -76,18 +76,20 @@ class UMFunc(Vector):
     def __init__(self, data={}):
         """Create a unit mass function"""
         if isinstance(data, Mapping):  # Hashable Mapping to Rational
-            umfunc = Vector(data).sum_normalized()
+            super().__init__(data)
+            umfunc = self.sum_normalized()
             if umfunc == None:
                 raise ValueError("no UMFunc can be constructed from a Mapping "
                                 + str(data) + " with a total mass of zero")
-            Vector.__init__(self, umfunc | umfunc.support())
+            super().__init__(umfunc | umfunc.support())
         else: # uniform over Hashable Container
-            Vector.__init__(self, {component: 1 / self._make_rational(len(data))
-                                   for component in data})
+            super().__init__({component: 1 / self._make_rational(len(data))
+                              for component in data})
+        self._frozen_type = UMFunc
 
     def __or__(self, other):
         """Mass function conditional on the given event"""
-        return type(self)(Vector(self) | other)
+        return type(self)(self._mutable_type(self) | other)
 
     def __mul__(self, other):
         """'Expectation' of a gamble"""
@@ -95,12 +97,12 @@ class UMFunc(Vector):
             pspace = self.domain() & other.domain()
             return sum((self | pspace)[x] * other[x] for x in pspace)
         else:
-            return Vector(self) * other
+            return self._mutable_type(self) * other
 
-    __add__ = lambda self, other: Vector(self) + other
+    __add__ = lambda self, other: self._mutable_type(self) + other
     __radd__ = __add__
 
-    __truediv__ = lambda self, other: Vector(self) / other
+    __truediv__ = lambda self, other: self._mutable_type(self) / other
 
     __rmul__ = __mul__
 
