@@ -6,7 +6,7 @@ class _Vector(_Function):
 
     def __init__(self, mapping={}):
         """Create a vector"""
-        super(_Vector, self).__init__(mapping)
+        super().__init__(mapping)
         self._base_type = _Vector
         self._mutable_type = Vector
         self._frozen_type = frozenVector
