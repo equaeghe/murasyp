@@ -124,7 +124,7 @@ class Polytope(frozenset):
         arguments accepted by the :class:`~murasyp.vectors.Vector` constructor.
 
       >>> Polytope([{'a': 2, 'b': 3}, {'b': 1, 'c': 4}])
-      Polytope({Vector({'a': 2, 'b': 3}), Vector({'c': 4, 'b': 1})})
+      Polytope({frozenVector({'c': 4, 'b': 1}), frozenVector({'a': 2, 'b': 3})})
 
     This class derives from :class:`~frozenset`, so its methods apply here as
     well.
@@ -142,7 +142,8 @@ class Polytope(frozenset):
             raise TypeError(str(cls) + " does not accept a mapping,"
                             + " but you passed it " + str(data))
         else:
-            return frozenset.__new__(cls, (Vector(element) for element in data))
+            return frozenset.__new__(cls, (frozenVector(element)
+                                           for element in data))
 
     def __init__(self, data=[]): # only here for Sphinx to pick up the argument
         """Initialize the polytope"""
@@ -156,7 +157,7 @@ class Polytope(frozenset):
 
         >>> r = Vector({'a': .03, 'b': -.07})
         >>> s = Vector({'a': .07, 'c': -.03})
-        >>> Polytope({r, s}).domain()
+        >>> Polytope([r, s]).domain()
         frozenset({'a', 'c', 'b'})
 
         """
@@ -180,15 +181,15 @@ class Trafo(MutableMapping):
       >>> T['b'] = {('b', 'c'): 1, ('b', 'd'): 1}
       >>> T << Vector({'a': 1, 'b': 2})
       Vector({('b', 'c'): 2, ('a', 'd'): 1, ('a', 'c'): 1, ('b', 'd'): 2})
-      >>> P = Polytope({Vector({'a': -2})})
+      >>> P = Polytope([Vector({'a': -2})])
       >>> T << P
-      Polytope({Vector({('a', 'd'): -2, ('a', 'c'): -2})})
+      Polytope({frozenVector({('a', 'd'): -2, ('a', 'c'): -2})})
 
     """
     def __init__(self, mapping={}):
         """Create a transformation"""
         if isinstance(mapping, Mapping):
-            self._mapping = {arg: Vector(value)
+            self._mapping = {arg: frozenVector(value)
                              for arg, value in mapping.items()}
         else:
             raise TypeError("specify a mapping")
@@ -199,7 +200,7 @@ class Trafo(MutableMapping):
     __getitem__ = lambda self, element: self._mapping[element]
 
     def __setitem__(self, element, value):
-        self._mapping.__setitem__(element, Vector(value))
+        self._mapping.__setitem__(element, frozenVector(value))
 
     def __delitem__(self, element):
         mapping = self._mapping
@@ -207,7 +208,7 @@ class Trafo(MutableMapping):
 
     def __lshift__(self, other):
         """Applying the transformation"""
-        if isinstance(other, Vector):
+        if isinstance(other, _Vector):
             return sum(value * self[arg] for arg, value in other.items())
         if isinstance(other, Set):
             return type(other)(self << x for x in other)
