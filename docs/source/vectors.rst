@@ -18,8 +18,8 @@ Vectors
     .. automethod:: sum_normalized
     .. automethod:: is_nonnegative
 
-Frozen Functions
-----------------
+Frozen Vectors
+--------------
 
 .. autoclass:: frozenVector
 
