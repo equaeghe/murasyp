@@ -14,7 +14,7 @@ class CredalSet(set):
         constructor.
 
       >>> CredalSet('abc')
-      CredalSet({PMFunc({'a': 1}), PMFunc({'b': 1}), PMFunc({'c': 1})})
+      CredalSet({PMFunc({'c': 1}), PMFunc({'b': 1}), PMFunc({'a': 1})})
 
     This class derives from :class:`~set`, so its methods apply here as
     well.
@@ -61,7 +61,7 @@ class CredalSet(set):
       This does not impede the classical union of sets.
 
       >>> CredalSet('a') | CredalSet('b')
-      CredalSet({PMFunc({'a': 1}), PMFunc({'b': 1})})
+      CredalSet({PMFunc({'b': 1}), PMFunc({'a': 1})})
 
     """
     def __init__(self, data=[]):
@@ -100,7 +100,7 @@ class CredalSet(set):
 
         >>> K = CredalSet('ab')
         >>> K
-        CredalSet({PMFunc({'a': 1}), PMFunc({'b': 1})})
+        CredalSet({PMFunc({'b': 1}), PMFunc({'a': 1})})
         >>> K.discard(PMFunc({'a'}))
         >>> K
         CredalSet({PMFunc({'b': 1})})
@@ -168,10 +168,10 @@ class CredalSet(set):
         >>> K = CredalSet('abc')
         >>> K.add({'a': 1, 'b': 1, 'c': 1})
         >>> K
-        CredalSet({PMFunc({'a': '1/3', 'c': '1/3', 'b': '1/3'}), PMFunc({'a': 1}), PMFunc({'b': 1}), PMFunc({'c': 1})})
+        CredalSet({PMFunc({'c': 1}), PMFunc({'a': '1/3', 'c': '1/3', 'b': '1/3'}), PMFunc({'b': 1}), PMFunc({'a': 1})})
         >>> K.discard_redundant()
         >>> K
-        CredalSet({PMFunc({'a': 1}), PMFunc({'b': 1}), PMFunc({'c': 1})})
+        CredalSet({PMFunc({'c': 1}), PMFunc({'b': 1}), PMFunc({'a': 1})})
 
         """
         pspace = list(self.pspace())
@@ -192,7 +192,7 @@ class CredalSet(set):
 
         >>> CredalSet([PMFunc({'a', 'b'}), PMFunc({'c', 'b'}),
         ...            PMFunc({'a'}), PMFunc({'c'})]).get_desir()
-        DesirSet({Cone({Ray({'a': 1}), Ray({'b': 1}), Ray({'c': 1}), Ray({'a': 1, 'c': 1, 'b': -1})})})
+        DesirSet({Cone({Ray({'a': 1, 'c': 1, 'b': -1}), Ray({'c': 1}), Ray({'b': 1}), Ray({'a': 1})})})
 
         """
         return murasyp.desirs.DesirSet([murasyp.mathprog.vf_enumeration(self)])

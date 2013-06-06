@@ -11,9 +11,9 @@ class DesirSet(set):
         arguments accepted by the :class:`~murasyp.gambles.Cone` constructor.
 
       >>> DesirSet('abc')
-      DesirSet({Cone({Ray({'b': 1})}), Cone({Ray({'c': 1})}), Cone({Ray({'a': 1})})})
+      DesirSet({Cone({Ray({'a': 1})}), Cone({Ray({'b': 1})}), Cone({Ray({'c': 1})})})
       >>> DesirSet(['abc'])
-      DesirSet({Cone({Ray({'a': 1}), Ray({'b': 1}), Ray({'c': 1})})})
+      DesirSet({Cone({Ray({'c': 1}), Ray({'b': 1}), Ray({'a': 1})})})
       >>> DesirSet([['abc']])
       DesirSet({Cone({Ray({'a': 1, 'c': 1, 'b': 1})})})
 
@@ -98,7 +98,7 @@ class DesirSet(set):
 
         >>> D = DesirSet({'a','b'})
         >>> D
-        DesirSet({Cone({Ray({'b': 1})}), Cone({Ray({'a': 1})})})
+        DesirSet({Cone({Ray({'a': 1})}), Cone({Ray({'b': 1})})})
         >>> D.discard([Ray({'a'})])
         >>> D
         DesirSet({Cone({Ray({'b': 1})})})
