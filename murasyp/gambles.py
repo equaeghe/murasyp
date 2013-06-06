@@ -160,6 +160,7 @@ class Ray(frozenGamble):
         gamble = self.normalized()
         data = {} if gamble == None else gamble | gamble.support()
         super().__init__(data)
+        self._frozen_type = Ray
 
 
 class Cone(Polytope):

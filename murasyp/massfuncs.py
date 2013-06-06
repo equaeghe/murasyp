@@ -124,9 +124,10 @@ class PMFunc(UMFunc):
 
     """
 
-    def __init__(self, data):
+    def __init__(self, data={}):
         """Create a probability mass function"""
-        UMFunc.__init__(self, data)
+        super().__init__(data)
         if not self.is_nonnegative():
             raise ValueError("no PMFunc can be constructed from a Mapping "
                              + str(data) + " with negative values")
+        self._frozen_type = PMFunc
