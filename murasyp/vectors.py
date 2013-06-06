@@ -18,10 +18,7 @@ class _Vector(_Function):
 
     def __or__(self, other):
         """Restriction or extension with zero"""
-        if isinstance(other, Set):
-            return type(self)({x: self[x] for x in other})
-        else:
-            raise TypeError("the argument must be a Set")
+        return self._mutable_type({x: self[x] for x in other})
 
     def mass(self):
         """Sum of the values of the vector
@@ -94,13 +91,13 @@ class Vector(_Vector, Function):
       >>> 1 + (.3 * f - g) / 2
       Vector({'a': '233/200', 'c': 2, 'b': '5/8', 'd': 1})
 
-    * A vector's domain can be restricted/extended to a specified
-      :class:`~collections.Set`.
+    * A vector's domain can be restricted/extended to the elements of a
+      specified :class:`~collections.Container`.
 
       >>> f = Vector({'a': 1.1, 'b': '-1/2','c': 0})
-      >>> f | {'a','b'}
+      >>> f | 'ab'
       Vector({'a': '11/10', 'b': '-1/2'})
-      >>> f | {'a','d'}
+      >>> f | 'ad'
       Vector({'a': '11/10', 'd': 0})
 
     """
