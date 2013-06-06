@@ -110,8 +110,8 @@ class UMFunc(frozenVector):
 class PMFunc(UMFunc):
     """Probability mass functions map states to probability mass
 
-    This class derives from :class:`~murasyp.massfuncs.UMFunc`,
-    so its methods apply here as well.
+    This class derives from :class:`~murasyp.massfuncs.UMFunc`, so its methods
+    apply here as well.
 
     What has changed:
 

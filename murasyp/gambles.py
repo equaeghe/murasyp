@@ -168,19 +168,19 @@ class Cone(Polytope):
       :type `data`: an :class:`~collections.Iterable` of arguments accepted by
         the :class:`~murasyp.gambles.Ray` constructor.
 
-      >>> Cone([{'a': 2, 'b': 3}, {'b': 1, 'c': 4}])
-      Cone({Ray({'c': 1, 'b': '1/4'}), Ray({'a': '2/3', 'b': 1})})
-      >>> Cone('abc')
-      Cone({Ray({'c': 1}), Ray({'b': 1}), Ray({'a': 1})})
-      >>> Cone({'ab', 'bc'})
-      Cone({Ray({'a': 1, 'b': 1}), Ray({'c': 1, 'b': 1})})
+    >>> Cone([{'a': 2, 'b': 3}, {'b': 1, 'c': 4}])
+    Cone({Ray({'c': 1, 'b': '1/4'}), Ray({'a': '2/3', 'b': 1})})
+    >>> Cone('abc')
+    Cone({Ray({'c': 1}), Ray({'b': 1}), Ray({'a': 1})})
+    >>> Cone({'ab', 'bc'})
+    Cone({Ray({'a': 1, 'b': 1}), Ray({'c': 1, 'b': 1})})
 
     This class derives from :class:`~murasyp.vectors.Polytope`, so its methods
     apply here as well.
 
-      .. todo::
+    .. todo::
 
-        test all set methods and fix, or elegantly deal with, broken ones
+      test all set methods and fix, or elegantly deal with, broken ones
 
     """
     def __new__(cls, data=[]):

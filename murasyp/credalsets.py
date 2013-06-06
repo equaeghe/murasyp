@@ -72,11 +72,9 @@ class CredalSet(set):
           :type `data`: arguments accepted by the
             :class:`~murasyp.massfuncs.PMFunc` constructor
 
-        >>> K = CredalSet()
-        >>> K
+        >>> K = CredalSet(); K
         CredalSet()
-        >>> K.add({'a': .06, 'b': .14, 'c': 1.8, 'd': 0})
-        >>> K
+        >>> K.add({'a': .06, 'b': .14, 'c': 1.8, 'd': 0}); K
         CredalSet({PMFunc({'a': '3/100', 'c': '9/10', 'b': '7/100'})})
 
           .. todo::
@@ -92,11 +90,9 @@ class CredalSet(set):
           :type `data`: arguments accepted by the
             :class:`~murasyp.massfuncs.PMFunc` constructor
 
-        >>> K = CredalSet('ab')
-        >>> K
+        >>> K = CredalSet('ab'); K
         CredalSet({PMFunc({'b': 1}), PMFunc({'a': 1})})
-        >>> K.discard(PMFunc({'a'}))
-        >>> K
+        >>> K.discard(PMFunc({'a'})); K
         CredalSet({PMFunc({'b': 1})})
 
           .. todo::
