@@ -1,4 +1,4 @@
-from collections import Set, Mapping
+from collections import Mapping
 from murasyp.vectors import _Vector, Vector, frozenVector, Polytope
 
 class _Gamble(_Vector):
