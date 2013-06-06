@@ -92,7 +92,7 @@ class Vector(_Vector, Function):
       Vector({'a': '233/200', 'c': 2, 'b': '5/8', 'd': 1})
 
     * A vector's domain can be restricted/extended to the elements of a
-      specified :class:`~collections.Container`.
+      specified :class:`~collections.Iterable`.
 
       >>> f = Vector({'a': 1.1, 'b': '-1/2','c': 0})
       >>> f | 'ab'
@@ -116,9 +116,8 @@ class frozenVector(_Vector, frozenFunction):
 class Polytope(frozenset):
     """A frozenset of vectors
 
-      :type `data`: a non-:class:`~collections.Mapping`
-        :class:`~collections.Iterable` :class:`~collections.Container` of
-        arguments accepted by the :class:`~murasyp.vectors.Vector` constructor.
+      :type `data`: an :class:`~collections.Iterable` over arguments accepted by
+        the :class:`~murasyp.vectors.Vector` constructor.
 
       >>> Polytope([{'a': 2, 'b': 3}, {'b': 1, 'c': 4}])
       Polytope({frozenVector({'c': 4, 'b': 1}), frozenVector({'a': 2, 'b': 3})})
@@ -135,12 +134,8 @@ class Polytope(frozenset):
     """
     def __new__(cls, data=[]):
         """Create a polytope"""
-        if isinstance(data, Mapping):
-            raise TypeError(str(cls) + " does not accept a mapping,"
-                            + " but you passed it " + str(data))
-        else:
-            return frozenset.__new__(cls, (frozenVector(element)
-                                           for element in data))
+        return frozenset.__new__(cls, (frozenVector(element)
+                                       for element in data))
 
     def __init__(self, data=[]): # only here for Sphinx to pick up the argument
         """Initialize the polytope"""

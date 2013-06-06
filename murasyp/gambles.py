@@ -103,7 +103,7 @@ class Gamble(_Gamble, Vector):
     What has changed:
 
     * There is a new constructor. If `data` is not a
-      :class:`~collections.Mapping`, but is a :class:`~collections.Container`,
+      :class:`~collections.Mapping`, but is a :class:`~collections.Iterable`,
       then its so-called indicator function is generated.
 
       >>> Gamble('abc')
@@ -112,7 +112,7 @@ class Gamble(_Gamble, Vector):
       Gamble({'abc': 1})
 
     * A gamble's domain can be cylindrically extended to the cartesian product
-      of its domain and a specified :class:`~collections.Container`.
+      of its domain and a specified :class:`~collections.Iterable`.
 
       >>> Gamble({'a': 0, 'b': -1}) ^ 'cd'
       Gamble({('b', 'c'): -1, ('a', 'd'): 0, ('a', 'c'): 0, ('b', 'd'): -1})
@@ -165,9 +165,8 @@ class Ray(frozenGamble):
 class Cone(Polytope):
     """A frozenset of rays
 
-      :type `data`: a non-:class:`~collections.Mapping`
-        :class:`~collections.Iterable` :class:`~collections.Container` of
-        arguments accepted by the :class:`~murasyp.gambles.Ray` constructor.
+      :type `data`: an :class:`~collections.Iterable` of arguments accepted by
+        the :class:`~murasyp.gambles.Ray` constructor.
 
       >>> Cone([{'a': 2, 'b': 3}, {'b': 1, 'c': 4}])
       Cone({Ray({'c': 1, 'b': '1/4'}), Ray({'a': '2/3', 'b': 1})})
@@ -186,11 +185,7 @@ class Cone(Polytope):
     """
     def __new__(cls, data=[]):
         """Create a frozenset of rays"""
-        if isinstance(data, Mapping):
-            raise TypeError(str(cls) + " does not accept a mapping,"
-                            + " but you passed it " + str(data))
-        else:
-            return frozenset.__new__(cls, (Ray(element) for element in data))
+        return frozenset.__new__(cls, (Ray(element) for element in data))
 
     def __init__(self, data=[]): # only here for Sphinx to pick up the argument
         """Initialize the cone"""

@@ -75,14 +75,14 @@ class UMFunc(frozenVector):
 
     def __init__(self, data={}):
         """Create a unit mass function"""
-        if isinstance(data, Mapping):  # Hashable Mapping to Rational
+        if isinstance(data, Mapping):
             super().__init__(data)
             umfunc = self.sum_normalized()
             if umfunc == None:
                 raise ValueError("no UMFunc can be constructed from a Mapping "
                                 + str(data) + " with a total mass of zero")
             super().__init__(umfunc | umfunc.support())
-        else: # uniform over Hashable Container
+        else: # uniform
             super().__init__({component: 1 / self._make_rational(len(data))
                               for component in data})
         self._frozen_type = UMFunc

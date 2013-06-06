@@ -8,10 +8,8 @@ import murasyp.mathprog
 class CredalSet(set):
     """A set of probability mass functions
 
-      :type `data`: a non-:class:`~collections.Mapping`
-        :class:`~collections.Iterable` :class:`~collections.Container` of
-        arguments accepted by the  :class:`~murasyp.massfuncs.PMFunc`
-        constructor.
+      :type `data`: an :class:`~collections.Iterable` over arguments accepted by
+        the :class:`~murasyp.massfuncs.PMFunc` constructor.
 
       >>> CredalSet('abc')
       CredalSet({PMFunc({'c': 1}), PMFunc({'b': 1}), PMFunc({'a': 1})})
@@ -66,11 +64,7 @@ class CredalSet(set):
     """
     def __init__(self, data=[]):
         """Initialize a credal set"""
-        if isinstance(data, Mapping):
-            raise TypeError(type(self) + " does not accept a mapping,"
-                            + " but you passed it " + str(data))
-        else:
-            set.__init__(self, (PMFunc(element) for element in data))
+        super().__init__(PMFunc(element) for element in data)
 
     def add(self, data):
         """Add a probability mass function to the credal set

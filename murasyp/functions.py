@@ -6,11 +6,8 @@ class _Function(Mapping):
 
     def __init__(self, mapping={}):
         """Create a rational-valued function"""
-        if isinstance(mapping, Mapping):
-            self._mapping = {arg: self._make_rational(value)
-                             for arg, value in mapping.items()}
-        else:
-            raise TypeError("specify a Mapping")
+        self._mapping = {arg: self._make_rational(value)
+                         for arg, value in mapping.items()}
         self._base_type = _Function
         self._mutable_type = Function
         self._frozen_type = frozenFunction
