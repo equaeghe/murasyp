@@ -1,14 +1,13 @@
 from collections import Mapping
-from murasyp.gambles import Gamble, Ray, Cone
+from murasyp.gambles import Gamble, frozenGamble, Ray, Cone
 import murasyp.credalsets
 import murasyp.mathprog
 
 class DesirSet(set):
     """A set of cones
 
-      :type `data`: a non-:class:`~collections.Mapping`
-        :class:`~collections.Iterable` :class:`~collections.Container` of
-        arguments accepted by the :class:`~murasyp.gambles.Cone` constructor.
+      :type `data`: an :class:`~collections.Iterable` of arguments accepted by
+        the :class:`~murasyp.gambles.Cone` constructor.
 
       >>> DesirSet('abc')
       DesirSet({Cone({Ray({'a': 1})}), Cone({Ray({'b': 1})}), Cone({Ray({'c': 1})})})
@@ -29,10 +28,10 @@ class DesirSet(set):
     * Lower and upper (conditional) expectations can be calculated, using the
       ``*`` and ``**`` operators, respectively.
 
-      >>> D = DesirSet([[Gamble({'a': -1, 'c': '7/90'}),
-      ...                Gamble({'a': 1, 'c': '-1/30'}),
-      ...                Gamble({'a': -1, 'c': '1/9', 'b': -1}),
-      ...                Gamble({'a': 1, 'c': '-1/9', 'b': 1})]])
+      >>> D = DesirSet([[{'a': -1, 'c': '7/90'},
+      ...                {'a': 1, 'c': '-1/30'},
+      ...                {'a': -1, 'c': '1/9', 'b': -1},
+      ...                {'a': 1, 'c': '-1/9', 'b': 1}]])
       >>> f = Gamble({'a': -1, 'b': 1, 'c': 0})
       >>> D * f
       Fraction(-1, 25)
@@ -64,11 +63,7 @@ class DesirSet(set):
     """
     def __init__(self, data=[]):
         """Initialize a set of desirable gambles"""
-        if isinstance(data, Mapping):
-            raise TypeError(type(self) + " does not accept a mapping,"
-                            + " but you passed it " + str(data))
-        else:
-            set.__init__(self, (Cone(element) for element in data))
+        super().__init__(Cone(element) for element in data)
 
     def add(self, data):
         """Add a cone to the set of desirable gambles
@@ -76,16 +71,14 @@ class DesirSet(set):
           :type `data`: arguments accepted by the :class:`~murasyp.gambles.Cone`
             constructor
 
-        >>> D = DesirSet()
-        >>> D
+        >>> D = DesirSet(); D
         DesirSet()
-        >>> D.add([Gamble({'a': -.06, 'b': .14, 'c': 1.8, 'd': 0})])
-        >>> D
+        >>> D.add([{'a': -.06, 'b': .14, 'c': 1.8, 'd': 0}]); D
         DesirSet({Cone({Ray({'a': '-1/30', 'c': 1, 'b': '7/90'})})})
 
-          .. todo::
+        .. todo::
 
-            see whether all set functionality is carried over
+          see whether all set functionality is carried over
 
         """
         set.add(self, Cone(data))
@@ -96,16 +89,14 @@ class DesirSet(set):
           :type `data`: arguments accepted by the :class:`~murasyp.gambles.Cone`
             constructor
 
-        >>> D = DesirSet({'a','b'})
-        >>> D
+        >>> D = DesirSet({'a', 'b'}); D
         DesirSet({Cone({Ray({'a': 1})}), Cone({Ray({'b': 1})})})
-        >>> D.discard([Ray({'a'})])
-        >>> D
+        >>> D.discard([Ray({'a'})]); D
         DesirSet({Cone({Ray({'b': 1})})})
 
-          .. todo::
+        .. todo::
 
-            see whether all set functionality is carried over
+          see whether all set functionality is carried over
 
         """
         set.discard(self, frozenset(Ray(element) for element in data))
@@ -149,7 +140,7 @@ class DesirSet(set):
           The domain of the input gamble determines the conditioning event.
 
         """
-        gamble = Gamble(data)
+        gamble = frozenGamble(data)
         self.add({gamble - gamble._make_rational(val), Ray(gamble.domain())})
 
     def set_upper_pr(self, data, val):
@@ -174,7 +165,7 @@ class DesirSet(set):
           The domain of the input gamble determines the conditioning event.
 
         """
-        gamble = Gamble(data)
+        gamble = frozenGamble(data)
         self.set_lower_pr(-gamble, -gamble._make_rational(val))
 
     def set_pr(self, data, val):
@@ -261,8 +252,8 @@ class DesirSet(set):
 
     def __mul__(self, other):
         """Lower expectation of a gamble"""
-        gamble = Gamble(other)
-        indicator = Gamble(gamble.domain())
+        gamble = frozenGamble(other)
+        indicator = frozenGamble(gamble.domain())
         return murasyp.mathprog.maximize(
                   self | DesirSet(self.pspace() | gamble.domain()
                                                 | indicator.domain())
