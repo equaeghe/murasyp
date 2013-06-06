@@ -38,7 +38,7 @@ class _Function(Mapping):
         return ('{' +
                 ', '.join(repr(arg) + ': ' +
                           (repr(str(val)) if '/' in str(val) else str(val))
-                          for arg, val in self._mapping.items()) +
+                          for arg, val in self.items()) +
                 '}')
 
     def domain(self):
