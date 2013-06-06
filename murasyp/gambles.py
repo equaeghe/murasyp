@@ -1,46 +1,22 @@
-from __future__ import division
 from collections import Set, Mapping
-from murasyp.vectors import Vector, Polytope
+from murasyp.vectors import _Vector, Vector, frozenVector, Polytope
 
-class Gamble(Vector):
-    """Gambles map states to utility payoffs
-
-    This class derives from :class:`~murasyp.vectors.Vector`, so its methods
-    apply here as well.
-
-    What has changed:
-
-    * There is a new constructor. If `data` is not a
-      :class:`~collections.Mapping`, but is a :class:`~collections.Iterable`
-      :class:`~collections.Hashable` :class:`~collections.Container`, then its
-      so-called indicator function is generated.
-
-      >>> Gamble('abc')
-      Gamble({'a': 1, 'c': 1, 'b': 1})
-      >>> Gamble({'abc'})
-      Gamble({'abc': 1})
-
-    * A gamble's domain can be cylindrically extended to the cartesian product
-      of its domain and a specified :class:`~collections.Set`.
-
-      >>> Gamble({'a': 0, 'b': -1}) ^ {'c', 'd'}
-      Gamble({('b', 'c'): -1, ('a', 'd'): 0, ('a', 'c'): 0, ('b', 'd'): -1})
-
-    """
+class _Gamble(_Vector):
+    """Gamble (base class)"""
 
     def __init__(self, data={}):
         """Create a gamble"""
-        if isinstance(data, Mapping):  # Hashable Mapping to Rational
-            Vector.__init__(self, data)
-        else: # indicator over Hashable Container
-            Vector.__init__(self, {component: 1 for component in data})
+        if not isinstance(data, Mapping):  # assume representation of an event
+          data = {component: 1 for component in data}
+        super().__init__(data)
+        self._base_type = _Gamble
+        self._mutable_type = Gamble
+        self._frozen_type = frozenGamble
 
     def __xor__(self, other):
         """Cylindrical extension"""
-        if isinstance(other, Set):
-            return type(self)({(x, y): self[x] for x in self for y in other})
-        else:
-            raise TypeError("the argument must be a Set")
+        return self._mutable_type({(x, y): self[x] for x in self
+                                                   for y in other})
 
     def bounds(self):
         """The minimum and maximum values of the gamble
@@ -118,11 +94,48 @@ class Gamble(Vector):
         return None if norm == 0 else self / norm
 
 
-class Ray(Gamble):
-    """Rays directions in gamble space
+class Gamble(_Gamble, Vector):
+    """Gambles map states to utility payoffs
 
-    This class derives from :class:`~murasyp.gambles.Gamble`, so its methods
+    This class derives from :class:`~murasyp.vectors.Vector`, so its methods
     apply here as well.
+
+    What has changed:
+
+    * There is a new constructor. If `data` is not a
+      :class:`~collections.Mapping`, but is a :class:`~collections.Container`,
+      then its so-called indicator function is generated.
+
+      >>> Gamble('abc')
+      Gamble({'a': 1, 'c': 1, 'b': 1})
+      >>> Gamble(['abc'])
+      Gamble({'abc': 1})
+
+    * A gamble's domain can be cylindrically extended to the cartesian product
+      of its domain and a specified :class:`~collections.Container`.
+
+      >>> Gamble({'a': 0, 'b': -1}) ^ 'cd'
+      Gamble({('b', 'c'): -1, ('a', 'd'): 0, ('a', 'c'): 0, ('b', 'd'): -1})
+
+    """
+
+
+class frozenGamble(_Gamble, frozenVector):
+    """Frozen gambles
+
+    This class is the immutable cousin of :class:`~murasyp.gambles.Gamble`.
+    It inherits most of its functionality and relates to it in the same way that
+    :class:`~murasyp.vectors.frozenVector` relates to 
+    :class:`~murasyp.vectors.Vector`.
+
+    """
+
+
+class Ray(frozenGamble):
+    """Rays are directions in gamble space
+
+    This class derives from :class:`~murasyp.gambles.frozenGamble`, so its
+    methods apply here as well.
 
     What has changed:
 
@@ -143,19 +156,10 @@ class Ray(Gamble):
 
     def __init__(self, data={}):
         """Create a ray"""
-        gamble = Gamble(data).normalized()
-        if gamble == None:
-            Gamble.__init__(self, {})
-        else:
-            Gamble.__init__(self, gamble | gamble.support())
-
-    __add__ = lambda self, other: Gamble(self) + other
-    __radd__ = __add__
-
-    __mul__ = lambda self, other: Gamble(self) * other
-    __rmul__ = __mul__
-
-    __truediv__ = lambda self, other: Gamble(self) / other
+        super().__init__(data)
+        gamble = self.normalized()
+        data = {} if gamble == None else gamble | gamble.support()
+        super().__init__(data)
 
 
 class Cone(Polytope):

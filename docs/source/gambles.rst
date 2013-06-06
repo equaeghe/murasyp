@@ -12,6 +12,18 @@ Gambles
 
 .. autoclass:: Gamble
 
+   Members:
+
+    .. automethod:: bounds
+    .. automethod:: scaled_shifted
+    .. automethod:: norm
+    .. automethod:: normalized
+
+Frozen Gambles
+--------------
+
+.. autoclass:: frozenGamble
+
 Rays
 ----
 
