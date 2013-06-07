@@ -12,17 +12,6 @@ Vectors
 
 .. autoclass:: Vector
 
-   Members:
-
-    .. automethod:: mass
-    .. automethod:: sum_normalized
-    .. automethod:: is_nonnegative
-
-Frozen Vectors
---------------
-
-.. autoclass:: frozenVector
-
 Polytopes
 ---------
 

@@ -1,7 +1,7 @@
 from collections import Mapping
 from cdd import Matrix, RepType
 from murasyp.massfuncs import PMFunc
-from murasyp.gambles import _Gamble
+from murasyp.gambles import Gamble
 import murasyp.credalsets
 import murasyp.mathprog
 
@@ -115,7 +115,7 @@ class CredalSet(set):
 
     def __mul__(self, other):
         """Lower expectation of a gamble"""
-        if isinstance(other, _Gamble):
+        if isinstance(other, Gamble):
             if len(self) == 0:
                 raise Error("Empty credal sets have no expectations")
             else:
@@ -125,7 +125,7 @@ class CredalSet(set):
 
     def __pow__(self, other):
         """Upper expectation of a gamble"""
-        if isinstance(other, _Gamble):
+        if isinstance(other, Gamble):
             if len(self) == 0:
                 raise Error("Empty credal sets have no expectations")
             else:

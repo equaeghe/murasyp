@@ -1,12 +1,13 @@
 from collections import Set, Mapping
-from murasyp.vectors import frozenVector
-from murasyp.gambles import _Gamble
+from murasyp.vectors import Vector
+from murasyp.gambles import Gamble
 
-class UMFunc(frozenVector):
-    """(Unit) mass functions map states or events to abstract mass values
+class UMFunc(Vector):
+    """Unit mass functions map states or events to abstract mass values
 
-    This class derives from :class:`~murasyp.vectors.frozenVector`, so its
-    methods apply here as well.
+    This class derives from :class:`~murasyp.vectors.Vector`, so its methods
+    apply here as well. Unit mass functions are permanently frozen to guarantee
+    that normalization is preserved.
 
     What has changed:
 
@@ -61,13 +62,21 @@ class UMFunc(frozenVector):
       >>> (m | f.support()) * f
       Fraction(1, 3)
 
-    * Arithmetic with unit mass functions results in a vector, which may be
-      converted to a unit mass function in case it satisfies the conditions.
+    * Thawing a unit mass function is disallowed:
+
+      >>> UMFunc({'a': 1}).thaw()
+      Traceback (most recent call last):
+        ...
+      TypeError: normalized functions cannot be thawed
+
+      For the same reason, unit mass function-arithmetic results in vectors,
+      which may be converted to a unit mass function in case it satisfies the
+      conditions.
 
       >>> m = UMFunc({'a': 1.7, 'b': -.7})
       >>> n = UMFunc({'a': .5, 'b': .5})
       >>> m + n
-      frozenVector({'a': '11/5', 'b': '-1/5'})
+      Vector({'a': '11/5', 'b': '-1/5'})
       >>> UMFunc(.5 * m + n / 2)
       UMFunc({'a': '11/10', 'b': '-1/10'})
 
@@ -81,27 +90,27 @@ class UMFunc(frozenVector):
             if umfunc == None:
                 raise ValueError("no UMFunc can be constructed from a Mapping "
                                 + str(data) + " with a total mass of zero")
-            super().__init__(umfunc | umfunc.support())
+            super().__init__(umfunc | umfunc.support(), True)
         else: # uniform
             super().__init__({component: 1 / self._make_rational(len(data))
-                              for component in data})
+                              for component in data}, True)
 
     def __or__(self, other):
         """Mass function conditional on the given event"""
-        return type(self)(self._arith_type(self) | other)
+        return type(self)(self._normless_type(self) | other)
 
     def __mul__(self, other):
         """'Expectation' of a gamble"""
-        if isinstance(other, _Gamble):
+        if isinstance(other, Gamble):
             pspace = self.domain() & other.domain()
             return sum((self | pspace)[x] * other[x] for x in pspace)
         else:
-            return self._arith_type(self) * other
+            return self._normless_type(self) * other
 
-    __add__ = lambda self, other: self._base_type(self) + other
+    __add__ = lambda self, other: self._normless_type(self) + other
     __radd__ = __add__
 
-    __truediv__ = lambda self, other: self._base_type(self) / other
+    __truediv__ = lambda self, other: self._normless_type(self) / other
 
     __rmul__ = __mul__
 

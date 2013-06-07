@@ -1,21 +1,42 @@
 from collections import Mapping
-from murasyp.vectors import _Vector, Vector, frozenVector, Polytope
+from murasyp.vectors import Vector, Polytope
 
-class _Gamble(_Vector):
-    """Gamble (base class)"""
+class Gamble(Vector):
+    """Gambles map states to utility payoffs
 
-    def __init__(self, data={}):
+    This class derives from :class:`~murasyp.vectors.Vector`, so its methods
+    apply here as well.
+
+    What has changed:
+
+    * There is a new constructor. If `data` is not a
+      :class:`~collections.Mapping`, but is a :class:`~collections.Iterable`,
+      then its so-called indicator function is generated.
+
+      >>> Gamble('abc')
+      Gamble({'a': 1, 'c': 1, 'b': 1})
+      >>> Gamble(['abc'])
+      Gamble({'abc': 1})
+
+    * A gamble's domain can be cylindrically extended to the cartesian product
+      of its domain and a specified :class:`~collections.Iterable`.
+
+      >>> Gamble({'a': 0, 'b': -1}) ^ 'cd'
+      Gamble({('b', 'c'): -1, ('a', 'd'): 0, ('a', 'c'): 0, ('b', 'd'): -1})
+
+    """
+
+    def __init__(self, data={}, frozen=True):
         """Create a gamble"""
         if not isinstance(data, Mapping):  # assume representation of an event
           data = {component: 1 for component in data}
         super().__init__(data)
-        self._base_type = _Gamble
-        self._arith_type = frozenGamble
+        self._normless_type = Gamble
 
     def __xor__(self, other):
         """Cylindrical extension"""
-        return self._arith_type({(x, y): self[x] for x in self
-                                                 for y in other})
+        return self._normless_type({(x, y): self[x] for x in self
+                                                    for y in other})
 
     def bounds(self):
         """The minimum and maximum values of the gamble
@@ -43,7 +64,7 @@ class _Gamble(_Vector):
           :rtype: :class:`~murasyp.gambles.Gamble`
 
         >>> Gamble({'a': 1, 'b': 3, 'c': 4}).scaled_shifted()
-        frozenGamble({'a': 0, 'c': 1, 'b': '2/3'})
+        Gamble({'a': 0, 'c': 1, 'b': '2/3'})
 
         .. note::
 
@@ -79,7 +100,7 @@ class _Gamble(_Vector):
           :rtype: :class:`~murasyp.gambles.Gamble`
 
         >>> Gamble({'a': 1, 'b': 3, 'c': 4}).normalized()
-        frozenGamble({'a': '1/4', 'c': 1, 'b': '3/4'})
+        Gamble({'a': '1/4', 'c': 1, 'b': '3/4'})
 
         .. note::
 
@@ -93,48 +114,12 @@ class _Gamble(_Vector):
         return None if norm == 0 else self / norm
 
 
-class Gamble(_Gamble, Vector):
-    """Gambles map states to utility payoffs
-
-    This class derives from :class:`~murasyp.vectors.Vector`, so its methods
-    apply here as well.
-
-    What has changed:
-
-    * There is a new constructor. If `data` is not a
-      :class:`~collections.Mapping`, but is a :class:`~collections.Iterable`,
-      then its so-called indicator function is generated.
-
-      >>> Gamble('abc')
-      Gamble({'a': 1, 'c': 1, 'b': 1})
-      >>> Gamble(['abc'])
-      Gamble({'abc': 1})
-
-    * A gamble's domain can be cylindrically extended to the cartesian product
-      of its domain and a specified :class:`~collections.Iterable`.
-
-      >>> Gamble({'a': 0, 'b': -1}) ^ 'cd'
-      frozenGamble({('b', 'c'): -1, ('a', 'd'): 0, ('a', 'c'): 0, ('b', 'd'): -1})
-
-    """
-
-
-class frozenGamble(_Gamble, frozenVector):
-    """Frozen gambles
-
-    This class is the immutable cousin of :class:`~murasyp.gambles.Gamble`.
-    It shares most of its functionality and relates to it in the same way that
-    :class:`~murasyp.vectors.frozenVector` relates to 
-    :class:`~murasyp.vectors.Vector`.
-
-    """
-
-
-class Ray(frozenGamble):
+class Ray(Gamble):
     """Rays are directions in gamble space
 
-    This class derives from :class:`~murasyp.gambles.frozenGamble`, so its
-    methods apply here as well.
+    This class derives from :class:`~murasyp.gambles.Gamble`, so its methods
+    apply here as well. Rays are permanently frozen to guarantee that
+    normalization is preserved.
 
     What has changed:
 
@@ -145,11 +130,19 @@ class Ray(frozenGamble):
       >>> Ray({'a': 0})
       Ray({})
 
-    * Ray-arithmetic results in gambles (which can be converted to rays).
+    * Thawing a ray is disallowed:
+
+      >>> Ray({}).thaw()
+      Traceback (most recent call last):
+        ...
+      TypeError: normalized functions cannot be thawed
+
+      For the same reason, ray-arithmetic results in gambles (which can be
+      converted to rays):
 
       >>> r = Ray({'a': 1,'b': -2})
       >>> .3 * r * r + r / 2
-      frozenGamble({'a': '13/40', 'b': '-1/5'})
+      Gamble({'a': '13/40', 'b': '-1/5'})
 
     """
 

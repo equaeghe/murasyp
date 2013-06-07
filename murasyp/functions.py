@@ -91,6 +91,7 @@ class Function(Hashable, MutableMapping):
         self._mapping = {arg: self._make_rational(value)
                          for arg, value in mapping.items()}
         self._frozen = frozen
+        self._normless_type = Function
 
     def _make_rational(self, value):
         """Make a Fraction of acceptable input"""
@@ -162,7 +163,10 @@ class Function(Hashable, MutableMapping):
         Function({'b': 2})
 
         """
-        self._frozen = False
+        if type(self) == self._normless_type:
+            self._frozen = False
+        else:
+            raise TypeError("normalized functions cannot be thawed")
 
     def domain(self):
         """Domain of the function
@@ -207,16 +211,16 @@ class Function(Hashable, MutableMapping):
         """Application of a binary operator to a function/scalar-pair"""
         try:
             other = self._make_rational(other)
-            return type(self)({arg: operator(value, other)
-                               for arg, value in self.items()})
+            return self._normless_type({arg: operator(value, other)
+                                        for arg, value in self.items()})
         except NotImplementedError:
             raise
 
     def _with_function(self, other, operator):
         """pointwise application of a binary operator to a pair of functions"""
         if isinstance(other, type(self)):
-            return type(self)({arg: operator(self[arg], other[arg])
-                               for arg in self._domain_joiner(other)})
+            return self._normless_type({arg: operator(self[arg], other[arg])
+                                        for arg in self._domain_joiner(other)})
         else:
             raise NotImplementedError
 
