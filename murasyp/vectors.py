@@ -8,8 +8,7 @@ class _Vector(_Function):
         """Create a vector"""
         super().__init__(mapping)
         self._base_type = _Vector
-        self._mutable_type = Vector
-        self._frozen_type = frozenVector
+        self._arith_type = frozenVector
 
     __getitem__ = lambda self, x: (self._mapping[x] if x in self._mapping
                                                     else self._make_rational(0))
@@ -18,7 +17,7 @@ class _Vector(_Function):
 
     def __or__(self, other):
         """Restriction or extension with zero"""
-        return self._mutable_type({x: self[x] for x in other})
+        return self._arith_type({x: self[x] for x in other})
 
     def mass(self):
         """Sum of the values of the vector
@@ -40,7 +39,7 @@ class _Vector(_Function):
           :rtype: :class:`~murasyp.vectors.Vector`
 
         >>> Vector({'a': 1, 'b': '-1/2','c': 0}).sum_normalized()
-        Vector({'a': 2, 'c': 0, 'b': -1})
+        frozenVector({'a': 2, 'c': 0, 'b': -1})
         >>> Vector({'a': 1, 'b': -1,'c': 0}).sum_normalized() == None
         True
 
@@ -89,16 +88,16 @@ class Vector(_Vector, Function):
       >>> f = Vector({'a': 1.1, 'b': '-1/2','c': 0})
       >>> g = Vector({'b': '.6', 'c': -2, 'd': 0.0})
       >>> 1 + (.3 * f - g) / 2
-      Vector({'a': '233/200', 'c': 2, 'b': '5/8', 'd': 1})
+      frozenVector({'a': '233/200', 'c': 2, 'b': '5/8', 'd': 1})
 
     * A vector's domain can be restricted/extended to the elements of a
       specified :class:`~collections.Iterable`.
 
       >>> f = Vector({'a': 1.1, 'b': '-1/2','c': 0})
       >>> f | 'ab'
-      Vector({'a': '11/10', 'b': '-1/2'})
+      frozenVector({'a': '11/10', 'b': '-1/2'})
       >>> f | 'ad'
-      Vector({'a': '11/10', 'd': 0})
+      frozenVector({'a': '11/10', 'd': 0})
 
     """
 
@@ -107,7 +106,7 @@ class frozenVector(_Vector, frozenFunction):
     """Frozen vectors
 
     This class is the immutable cousin of :class:`~murasyp.vectors.Vector`.
-    It inherits most of its functionality and relates to it in the same way that
+    It shares most of its functionality and relates to it in the same way that
     :class:`~murasyp.functions.frozenFunction` relates to 
     :class:`~murasyp.functions.Function`.
 
@@ -172,7 +171,7 @@ class Trafo(MutableMapping):
       >>> T['a'] = {('a', 'c'): 1, ('a', 'd'): 1}
       >>> T['b'] = {('b', 'c'): 1, ('b', 'd'): 1}
       >>> T << Vector({'a': 1, 'b': 2})
-      Vector({('b', 'c'): 2, ('a', 'd'): 1, ('a', 'c'): 1, ('b', 'd'): 2})
+      frozenVector({('b', 'c'): 2, ('a', 'd'): 1, ('a', 'c'): 1, ('b', 'd'): 2})
       >>> P = Polytope([Vector({'a': -2})])
       >>> T << P
       Polytope({frozenVector({('a', 'd'): -2, ('a', 'c'): -2})})

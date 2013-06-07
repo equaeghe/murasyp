@@ -9,8 +9,7 @@ class _Function(Mapping):
         self._mapping = {arg: self._make_rational(value)
                          for arg, value in mapping.items()}
         self._base_type = _Function
-        self._mutable_type = Function
-        self._frozen_type = frozenFunction
+        self._arith_type = frozenFunction
 
     def _make_rational(self, value):
         """Make a Fraction of acceptable input"""
@@ -81,16 +80,16 @@ class _Function(Mapping):
         """Application of a binary operator to a function/scalar-pair"""
         try:
             other = self._make_rational(other)
-            return self._mutable_type({arg: operator(value, other)
-                                       for arg, value in self.items()})
+            return self._arith_type({arg: operator(value, other)
+                                     for arg, value in self.items()})
         except:
             return NotImplemented
 
     def _with_function(self, other, operator):
         """pointwise application of a binary operator to a pair of functions"""
         if isinstance(other, self._base_type):
-            return self._mutable_type({arg: operator(self[arg], other[arg])
-                                       for arg in self._domain_joiner(other)})
+            return self._arith_type({arg: operator(self[arg], other[arg])
+                                     for arg in self._domain_joiner(other)})
         else:
             raise NotImplementedError
 
@@ -140,9 +139,9 @@ class Function(_Function, MutableMapping):
         fractions and should be seen as just a convenient input representation
         for decimal numbers.
 
-    * Its members are :class:`~collections.MutableMapping`; this means that they can be modified after their 
-      creation:
-      
+    * Its members are :class:`~collections.MutableMapping`; this means that they
+      can be modified after their creation:
+
       >>> f = Function({'a': -1})
       >>> f['a'] = 5; f['b'] = 2; f
       Function({'a': 5, 'b': 2})
@@ -157,9 +156,19 @@ class Function(_Function, MutableMapping):
       >>> f = Function({'a': 1.1, 'b': '-1/2','c': 0})
       >>> g = Function({'b': '.6', 'c': -2, 'd': 0.0})
       >>> -1 + (.3 * f - g) / 2
-      Function({'c': 0, 'b': '-11/8'})
+      frozenFunction({'c': 0, 'b': '-11/8'})
       >>> f * g
-      Function({'c': 0, 'b': '-3/10'})
+      frozenFunction({'c': 0, 'b': '-3/10'})
+
+      .. note::
+
+        Function arithmetic always results in :class:`~murasyp.functions.frozenFunction`. Equality, however, is based
+        on content:
+
+        >>> frozenFunction({'a': 1}) == Function({'a': 1})
+        True
+        >>> type(frozenFunction({'a': 1})) == type(Function({'a': 1}))
+        False
 
       .. note::
 
@@ -179,7 +188,7 @@ class frozenFunction(_Function, Hashable):
     """Frozen rational-valued functions
 
     This class is the immutable cousin of :class:`~murasyp.functions.Function`.
-    It inherits most of its functionality.
+    It shares most of its functionality.
 
     What has changed:
 
@@ -200,25 +209,6 @@ class frozenFunction(_Function, Hashable):
       TypeError: unhashable type: 'Function'
       >>> {frozenFunction({})}
       {frozenFunction({})}
-
-    .. note::
-
-       Function arithmetic always results in mutable functions:
-
-       >>> f = frozenFunction({'a': 1})
-       >>> 2 * f
-       Function({'a': 2})
-       >>> f * f
-       Function({'a': 1})
-
-    .. note::
-
-       Equality, however, is based on content:
-
-       >>> frozenFunction({'a': 1}) == Function({'a': 1})
-       True
-       >>> type(frozenFunction({'a': 1})) == type(Function({'a': 1}))
-       False
 
     """
 

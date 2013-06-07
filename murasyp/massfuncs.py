@@ -1,6 +1,6 @@
 from collections import Set, Mapping
 from murasyp.vectors import frozenVector
-from murasyp.gambles import Gamble
+from murasyp.gambles import _Gamble
 
 class UMFunc(frozenVector):
     """(Unit) mass functions map states or events to abstract mass values
@@ -67,7 +67,7 @@ class UMFunc(frozenVector):
       >>> m = UMFunc({'a': 1.7, 'b': -.7})
       >>> n = UMFunc({'a': .5, 'b': .5})
       >>> m + n
-      Vector({'a': '11/5', 'b': '-1/5'})
+      frozenVector({'a': '11/5', 'b': '-1/5'})
       >>> UMFunc(.5 * m + n / 2)
       UMFunc({'a': '11/10', 'b': '-1/10'})
 
@@ -85,24 +85,23 @@ class UMFunc(frozenVector):
         else: # uniform
             super().__init__({component: 1 / self._make_rational(len(data))
                               for component in data})
-        self._frozen_type = UMFunc
 
     def __or__(self, other):
         """Mass function conditional on the given event"""
-        return type(self)(self._mutable_type(self) | other)
+        return type(self)(self._arith_type(self) | other)
 
     def __mul__(self, other):
         """'Expectation' of a gamble"""
-        if isinstance(other, Gamble):
+        if isinstance(other, _Gamble):
             pspace = self.domain() & other.domain()
             return sum((self | pspace)[x] * other[x] for x in pspace)
         else:
-            return self._mutable_type(self) * other
+            return self._arith_type(self) * other
 
-    __add__ = lambda self, other: self._mutable_type(self) + other
+    __add__ = lambda self, other: self._base_type(self) + other
     __radd__ = __add__
 
-    __truediv__ = lambda self, other: self._mutable_type(self) / other
+    __truediv__ = lambda self, other: self._base_type(self) / other
 
     __rmul__ = __mul__
 
@@ -130,4 +129,3 @@ class PMFunc(UMFunc):
         if not self.is_nonnegative():
             raise ValueError("no PMFunc can be constructed from a Mapping "
                              + str(data) + " with negative values")
-        self._frozen_type = PMFunc

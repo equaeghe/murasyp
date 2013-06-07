@@ -10,13 +10,12 @@ class _Gamble(_Vector):
           data = {component: 1 for component in data}
         super().__init__(data)
         self._base_type = _Gamble
-        self._mutable_type = Gamble
-        self._frozen_type = frozenGamble
+        self._arith_type = frozenGamble
 
     def __xor__(self, other):
         """Cylindrical extension"""
-        return self._mutable_type({(x, y): self[x] for x in self
-                                                   for y in other})
+        return self._arith_type({(x, y): self[x] for x in self
+                                                 for y in other})
 
     def bounds(self):
         """The minimum and maximum values of the gamble
@@ -44,7 +43,7 @@ class _Gamble(_Vector):
           :rtype: :class:`~murasyp.gambles.Gamble`
 
         >>> Gamble({'a': 1, 'b': 3, 'c': 4}).scaled_shifted()
-        Gamble({'a': 0, 'c': 1, 'b': '2/3'})
+        frozenGamble({'a': 0, 'c': 1, 'b': '2/3'})
 
         .. note::
 
@@ -80,7 +79,7 @@ class _Gamble(_Vector):
           :rtype: :class:`~murasyp.gambles.Gamble`
 
         >>> Gamble({'a': 1, 'b': 3, 'c': 4}).normalized()
-        Gamble({'a': '1/4', 'c': 1, 'b': '3/4'})
+        frozenGamble({'a': '1/4', 'c': 1, 'b': '3/4'})
 
         .. note::
 
@@ -115,7 +114,7 @@ class Gamble(_Gamble, Vector):
       of its domain and a specified :class:`~collections.Iterable`.
 
       >>> Gamble({'a': 0, 'b': -1}) ^ 'cd'
-      Gamble({('b', 'c'): -1, ('a', 'd'): 0, ('a', 'c'): 0, ('b', 'd'): -1})
+      frozenGamble({('b', 'c'): -1, ('a', 'd'): 0, ('a', 'c'): 0, ('b', 'd'): -1})
 
     """
 
@@ -124,7 +123,7 @@ class frozenGamble(_Gamble, frozenVector):
     """Frozen gambles
 
     This class is the immutable cousin of :class:`~murasyp.gambles.Gamble`.
-    It inherits most of its functionality and relates to it in the same way that
+    It shares most of its functionality and relates to it in the same way that
     :class:`~murasyp.vectors.frozenVector` relates to 
     :class:`~murasyp.vectors.Vector`.
 
@@ -150,7 +149,7 @@ class Ray(frozenGamble):
 
       >>> r = Ray({'a': 1,'b': -2})
       >>> .3 * r * r + r / 2
-      Gamble({'a': '13/40', 'b': '-1/5'})
+      frozenGamble({'a': '13/40', 'b': '-1/5'})
 
     """
 
@@ -160,7 +159,6 @@ class Ray(frozenGamble):
         gamble = self.normalized()
         data = {} if gamble == None else gamble | gamble.support()
         super().__init__(data)
-        self._frozen_type = Ray
 
 
 class Cone(Polytope):

@@ -131,8 +131,7 @@ class DesirSet(set):
         calculated and added to the set of desirable gambles.
 
         >>> D = DesirSet()
-        >>> D.set_lower_pr(Gamble({'a', 'b'}) | {'a', 'b', 'c'}, .4)
-        >>> D
+        >>> D.set_lower_pr(Gamble({'a', 'b'}) | {'a', 'b', 'c'}, .4); D
         DesirSet({Cone({Ray({'a': 1, 'c': '-2/3', 'b': 1}), Ray({'a': 1, 'c': 1, 'b': 1})})})
 
         .. note::
@@ -156,8 +155,7 @@ class DesirSet(set):
         calculated and added to the set of desirable gambles.
 
         >>> D = DesirSet()
-        >>> D.set_upper_pr(Gamble({'a', 'b'}) | {'a', 'b', 'c'}, .4)
-        >>> D
+        >>> D.set_upper_pr(Gamble({'a', 'b'}) | {'a', 'b', 'c'}, .4); D
         DesirSet({Cone({Ray({'a': -1, 'c': '2/3', 'b': -1}), Ray({'a': 1, 'c': 1, 'b': 1})})})
 
         .. note::
@@ -181,9 +179,8 @@ class DesirSet(set):
         value.
 
         >>> D = DesirSet()
-        >>> D.set_pr(Gamble({'a', 'b'}) | {'a', 'b', 'c'}, .4)
-        >>> D
-        DesirSet({Cone({Ray({'a': -1, 'c': '2/3', 'b': -1}), Ray({'a': 1, 'c': 1, 'b': 1})}), Cone({Ray({'a': 1, 'c': '-2/3', 'b': 1}), Ray({'a': 1, 'c': 1, 'b': 1})})})
+        >>> D.set_pr(Gamble({'a', 'b'}) | {'a', 'b', 'c'}, .4); D
+        DesirSet({Cone({Ray({'a': 1, 'c': '-2/3', 'b': 1}), Ray({'a': 1, 'c': 1, 'b': 1})}), Cone({Ray({'a': -1, 'c': '2/3', 'b': -1}), Ray({'a': 1, 'c': 1, 'b': 1})})})
 
         .. note::
 
@@ -240,9 +237,8 @@ class DesirSet(set):
         containing non-singleton cones:
 
         >>> D = DesirSet()
-        >>> D.set_pr(Gamble('b') | {'a', 'b'}, 0)
-        >>> D
-        DesirSet({Cone({Ray({'a': 1, 'b': 1}), Ray({'b': 1})}), Cone({Ray({'a': 1, 'b': 1}), Ray({'b': -1})})})
+        >>> D.set_pr(Gamble('b') | {'a', 'b'}, 0); D
+        DesirSet({Cone({Ray({'b': -1}), Ray({'a': 1, 'b': 1})}), Cone({Ray({'a': 1, 'b': 1}), Ray({'b': 1})})})
         >>> D.apl()
         True
 
@@ -274,7 +270,7 @@ class DesirSet(set):
         >>> D = DesirSet(['abc'])
         >>> D.set_lower_pr({'a': 1, 'b': 0, 'c': 1}, .5)
         >>> D.get_credal()
-        CredalSet({PMFunc({'a': '1/2', 'b': '1/2'}), PMFunc({'c': '1/2', 'b': '1/2'}), PMFunc({'a': 1}), PMFunc({'c': 1})})
+        CredalSet({PMFunc({'c': 1}), PMFunc({'a': '1/2', 'b': '1/2'}), PMFunc({'a': 1}), PMFunc({'c': '1/2', 'b': '1/2'})})
 
         """
         C = Cone.union(*self)
