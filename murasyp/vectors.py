@@ -1,7 +1,7 @@
 from collections import Set, Mapping, MutableMapping
-from murasyp.functions import _Function, Function, frozenFunction
+from murasyp.functions import Function
 
-class _Vector(_Function):
+class _Vector(Function):
     """Vector (base class)"""
 
     def __init__(self, mapping={}):
@@ -102,7 +102,7 @@ class Vector(_Vector, Function):
     """
 
 
-class frozenVector(_Vector, frozenFunction):
+class frozenVector(_Vector, Function):
     """Frozen vectors
 
     This class is the immutable cousin of :class:`~murasyp.vectors.Vector`.
