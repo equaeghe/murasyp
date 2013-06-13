@@ -77,42 +77,6 @@ class Gamble(Vector):
         minval, maxval = self.bounds()
         return None if maxval == minval else (self - minval) / (maxval - minval)
 
-    def norm(self):
-        """The max-norm of the gamble
-
-          :returns: the max-norm
-                    :math:`\|f\|_\infty=\max_{x\in\mathcal{X}}|f(x)|` of the
-                    gamble :math:`f`
-          :rtype: :class:`~fractions.Fraction`
-
-        >>> Gamble({'a': 1, 'b': 3, 'c': 4}).norm()
-        Fraction(4, 1)
-
-        """
-        minval, maxval = self.bounds()
-        return max(-minval, maxval)
-
-    def normalized(self):
-        """Max-norm normalized version of the gamble
-
-          :returns: a normalized version :math:`f/\|f\|_\infty` of the gamble
-                    :math:`f`
-          :rtype: :class:`~murasyp.gambles.Gamble`
-
-        >>> Gamble({'a': 1, 'b': 3, 'c': 4}).normalized()
-        Gamble({'a': '1/4', 'c': 1, 'b': '3/4'})
-
-        .. note::
-
-          ``None`` is returned in case the the gamble's norm is zero.
-
-          >>> Gamble({'a': 0}).normalized() == None
-          True
-
-        """
-        norm = self.norm()
-        return None if norm == 0 else self / norm
-
 
 class Ray(Gamble):
     """Rays are directions in gamble space
@@ -149,7 +113,7 @@ class Ray(Gamble):
     def __init__(self, data={}):
         """Create a ray"""
         super().__init__(data)
-        gamble = self.normalized()
+        gamble = self.max_normalized()
         data = {} if gamble == None else gamble | gamble.support()
         super().__init__(data)
 

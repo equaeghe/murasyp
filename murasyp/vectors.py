@@ -49,6 +49,37 @@ class Vector(Function):
         """Restriction or extension with zero"""
         return self._normless_type({x: self[x] for x in other})
 
+    def max_norm(self):
+        """The max-norm of the gamble
+
+          :returns: the max-norm
+                    :math:`\|f\|_\infty=\max_{x\in\mathcal{X}}|f(x)|` of the
+                    gamble :math:`f`
+          :rtype: :class:`~fractions.Fraction`
+
+        >>> Vector({'a': 1, 'b': 3, 'c': 4}).max_norm()
+        Fraction(4, 1)
+
+        """
+        return max(abs(val) for val in self.values())
+
+    def max_normalized(self):
+        """Max-norm normalized version of the gamble
+
+          :returns: a normalized version :math:`f/\|f\|_\infty` of the gamble
+                    :math:`f`
+          :rtype: :class:`~murasyp.gambles.Gamble`
+
+        >>> Vector({'a': 1, 'b': 3, 'c': 4}).max_normalized()
+        Vector({'a': '1/4', 'c': 1, 'b': '3/4'})
+        >>> Vector({'a': 0}).max_normalized()
+        Vector({})
+
+        """
+        vector = self | self.support()
+        norm = vector.max_norm()
+        return vector if norm == 0 else vector / norm
+
     def mass(self):
         """Sum of the values of the vector
 
@@ -61,16 +92,16 @@ class Vector(Function):
         """
         return sum(self.values())
 
-    def sum_normalized(self):
+    def mass_normalized(self):
         """'Sum-of-values'-normalized version of the vector
 
           :returns: the gamble, but with its values divided by the sum of the
                     vector's values
           :rtype: :class:`~murasyp.vectors.Vector`
 
-        >>> Vector({'a': 1, 'b': '-1/2','c': 0}).sum_normalized()
+        >>> Vector({'a': 1, 'b': '-1/2','c': 0}).mass_normalized()
         Vector({'a': 2, 'c': 0, 'b': -1})
-        >>> Vector({'a': 1, 'b': -1,'c': 0}).sum_normalized() == None
+        >>> Vector({'a': 1, 'b': -1,'c': 0}).mass_normalized() == None
         True
 
         .. note::

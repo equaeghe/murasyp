@@ -86,7 +86,7 @@ class UMFunc(Vector):
         """Create a unit mass function"""
         if isinstance(data, Mapping):
             super().__init__(data)
-            umfunc = self.sum_normalized()
+            umfunc = self.mass_normalized()
             if umfunc == None:
                 raise ValueError("no UMFunc can be constructed from a Mapping "
                                 + str(data) + " with a total mass of zero")
