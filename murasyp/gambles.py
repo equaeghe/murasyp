@@ -112,10 +112,8 @@ class Ray(Gamble):
 
     def __init__(self, data={}):
         """Create a ray"""
-        super().__init__(data)
-        gamble = self.max_normalized()
-        data = {} if gamble == None else gamble | gamble.support()
-        super().__init__(data)
+        gamble = Gamble(data).max_normalized()
+        super().__init__(gamble | gamble.support())
 
 
 class Cone(Polytope):

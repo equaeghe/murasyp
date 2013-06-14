@@ -61,7 +61,7 @@ class Vector(Function):
         Fraction(4, 1)
 
         """
-        return max(abs(val) for val in self.values())
+        return max(abs(val) for val in self.values()) if len(self) > 0 else 0
 
     def max_normalized(self):
         """Max-norm normalized version of the gamble
@@ -76,9 +76,8 @@ class Vector(Function):
         Vector({})
 
         """
-        vector = self | self.support()
-        norm = vector.max_norm()
-        return vector if norm == 0 else vector / norm
+        norm = self.max_norm()
+        return type(self)({}) if norm == 0 else self / norm
 
     def mass(self):
         """Sum of the values of the vector
