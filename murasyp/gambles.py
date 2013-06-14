@@ -30,13 +30,11 @@ class Gamble(Vector):
         """Create a gamble"""
         if not isinstance(data, Mapping):  # assume representation of an event
           data = {component: 1 for component in data}
-        super().__init__(data)
-        self._normless_type = Gamble
+        super().__init__(data, frozen)
 
     def __xor__(self, other):
         """Cylindrical extension"""
-        return self._normless_type({(x, y): self[x] for x in self
-                                                    for y in other})
+        return type(self)({(x, y): self[x] for x in self for y in other})
 
     def bounds(self):
         """The minimum and maximum values of the gamble
@@ -99,7 +97,7 @@ class Ray(Gamble):
       >>> Ray({}).thaw()
       Traceback (most recent call last):
         ...
-      TypeError: normalized functions cannot be thawed
+      TypeError: <class 'murasyp.gambles.Ray'> cannot be thawed
 
       For the same reason, ray-arithmetic results in gambles (which can be
       converted to rays):
@@ -113,7 +111,8 @@ class Ray(Gamble):
     def __init__(self, data={}):
         """Create a ray"""
         gamble = Gamble(data).max_normalized()
-        super().__init__(gamble | gamble.support())
+        super().__init__(gamble | gamble.support(), None)
+        self._normless_type = Gamble
 
 
 class Cone(Polytope):

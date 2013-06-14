@@ -67,37 +67,33 @@ class UMFunc(Vector):
       >>> UMFunc({'a': 1}).thaw()
       Traceback (most recent call last):
         ...
-      TypeError: normalized functions cannot be thawed
+      TypeError: <class 'murasyp.massfuncs.UMFunc'> cannot be thawed
 
       For the same reason, unit mass function-arithmetic results in vectors,
       which may be converted to a unit mass function in case it satisfies the
       conditions.
 
       >>> m = UMFunc({'a': 1.7, 'b': -.7})
-      >>> n = UMFunc({'a': .5, 'b': .5})
+      >>> n = UMFunc('ab')
       >>> m + n
       Vector({'a': '11/5', 'b': '-1/5'})
-      >>> UMFunc(.5 * m + n / 2)
-      UMFunc({'a': '11/10', 'b': '-1/10'})
+      >>> UMFunc(.75 * m + n / 4)
+      UMFunc({'a': '7/5', 'b': '-2/5'})
 
     """
 
     def __init__(self, data={}):
         """Create a unit mass function"""
         if isinstance(data, Mapping):
-            super().__init__(data)
-            umfunc = self.mass_normalized()
+            umfunc = Vector(data).mass_normalized()
             if umfunc == None:
                 raise ValueError("no UMFunc can be constructed from a Mapping "
                                 + str(data) + " with a total mass of zero")
-            super().__init__(umfunc | umfunc.support(), True)
+            super().__init__(umfunc | umfunc.support(), None)
         else: # uniform
             super().__init__({component: 1 / self._make_rational(len(data))
-                              for component in data}, True)
-
-    def __or__(self, other):
-        """Mass function conditional on the given event"""
-        return type(self)(self._normless_type(self) | other)
+                              for component in data}, None)
+        self._normless_type = Vector
 
     def __mul__(self, other):
         """'Expectation' of a gamble"""
@@ -106,13 +102,6 @@ class UMFunc(Vector):
             return sum((self | pspace)[x] * other[x] for x in pspace)
         else:
             return self._normless_type(self) * other
-
-    __add__ = lambda self, other: self._normless_type(self) + other
-    __radd__ = __add__
-
-    __truediv__ = lambda self, other: self._normless_type(self) / other
-
-    __rmul__ = __mul__
 
 
 class PMFunc(UMFunc):

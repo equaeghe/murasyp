@@ -35,11 +35,6 @@ class Vector(Function):
 
     """
 
-    def __init__(self, data={}, frozen=True):
-        """Create a vector"""
-        super().__init__(data, frozen)
-        self._normless_type = Vector
-
     __getitem__ = lambda self, x: (self._mapping[x] if x in self._mapping
                                                     else self._make_rational(0))
 
@@ -47,7 +42,7 @@ class Vector(Function):
 
     def __or__(self, other):
         """Restriction or extension with zero"""
-        return self._normless_type({x: self[x] for x in other})
+        return type(self)({x: self[x] for x in other})
 
     def max_norm(self):
         """The max-norm of the gamble
@@ -72,8 +67,13 @@ class Vector(Function):
 
         >>> Vector({'a': 1, 'b': 3, 'c': 4}).max_normalized()
         Vector({'a': '1/4', 'c': 1, 'b': '3/4'})
-        >>> Vector({'a': 0}).max_normalized()
-        Vector({})
+
+        .. note::
+
+          The empty vector is returned in case the vector's max-norm is zero:
+
+          >>> Vector({'a': 0}).max_normalized()
+          Vector({})
 
         """
         norm = self.max_norm()

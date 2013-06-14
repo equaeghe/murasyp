@@ -91,7 +91,7 @@ class Function(Hashable, MutableMapping):
         self._mapping = {arg: self._make_rational(value)
                          for arg, value in mapping.items()}
         self._frozen = frozen
-        self._normless_type = Function
+        self._normless_type = type(self)
 
     def _make_rational(self, value):
         """Make a Fraction of acceptable input"""
@@ -163,10 +163,10 @@ class Function(Hashable, MutableMapping):
         Function({'b': 2})
 
         """
-        if type(self) == self._normless_type:
-            self._frozen = False
+        if self._frozen == None:
+            raise TypeError(str(type(self)) + " cannot be thawed")
         else:
-            raise TypeError("normalized functions cannot be thawed")
+            self._frozen = False
 
     def domain(self):
         """Domain of the function
