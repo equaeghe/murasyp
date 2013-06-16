@@ -35,6 +35,7 @@ Helper classes
 .. toctree::
   :maxdepth: 2
 
+  helpers
   mathprog
 
 Indices and tables

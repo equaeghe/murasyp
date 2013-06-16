@@ -1,18 +1,15 @@
-from collections import Mapping, MutableMapping, Hashable
+from collections import Mapping, MutableMapping
 from fractions import Fraction
-from murasyp import _make_rational
+from murasyp import _make_rational, Freezable
 
-class Function(Hashable, MutableMapping):
+class Function(Freezable, MutableMapping):
     """Rational-valued functions
 
       :type `mapping`: :class:`~collections.Mapping` (such as a :class:`dict`)
         to a representation of :class:`~numbers.Real`
-      :type `frozen`: :class:`~bool`
 
-    This class is implemented as a :class:`~collections.Hashable` 
-    :class:`~collections.MutableMapping`; its mutability can be controlled using
-    the `frozen` parameter and the :meth:`~murasyp.functions.Function.freeze`
-    and :meth:`~murasyp.functions.Function.thaw` methods.
+    This class is implemented as a :class:`~murasyp.Freezable` 
+    :class:`~collections.MutableMapping`.
 
     Features:
 
@@ -89,9 +86,9 @@ class Function(Hashable, MutableMapping):
 
     def __init__(self, mapping={}, frozen=True):
         """Create a rational-valued function"""
+        Freezable.__init__(self, frozen)
         self._mapping = {arg: _make_rational(value)
                          for arg, value in mapping.items()}
-        self._frozen = frozen
         self._normless_type = type(self)
 
     __len__ = lambda self: len(self._mapping)
@@ -100,17 +97,13 @@ class Function(Hashable, MutableMapping):
     __getitem__ = lambda self, arg: self._mapping[arg]
     __hash__ = lambda self: hash(frozenset(self.items()))
 
+    @Freezable.freeze_safe
     def __setitem__(self, arg, value):
-        if self._frozen:
-            raise TypeError("frozen functions are immutable")
-        else:
-            self._mapping.__setitem__(arg, _make_rational(value))
+        self._mapping.__setitem__(arg, _make_rational(value))
 
+    @Freezable.freeze_safe
     def __delitem__(self, arg):
-        if self._frozen:
-            raise TypeError("frozen functions are immutable.")
-        else:
-            self._mapping.__delitem__(arg)
+        self._mapping.__delitem__(arg)
 
     def __repr__(self):
         """Return a readable unambiguous string representation"""
@@ -123,41 +116,6 @@ class Function(Hashable, MutableMapping):
                           (repr(str(val)) if '/' in str(val) else str(val))
                           for arg, val in self.items()) +
                 '}')
-
-    def freeze(self):
-        """Freeze the function, i.e., make it effectively immutable
-
-        >>> f = Function({}, False)
-        >>> f['a'] = 1; f
-        Function({'a': 1})
-        >>> f.freeze()
-        >>> f['b'] = 2; f
-        Traceback (most recent call last):
-          ...
-        TypeError: frozen functions are immutable
-        Function({'a': 1})
-
-        """
-        self._frozen = True
-
-    def thaw(self):
-        """Thaw the function, i.e., make it effectively mutable
-
-        >>> f = Function({}, True)
-        >>> f['a'] = 1; f
-        Traceback (most recent call last):
-          ...
-        TypeError: frozen functions are immutable
-        Function({})
-        >>> f.thaw()
-        >>> f['b'] = 2; f
-        Function({'b': 2})
-
-        """
-        if self._frozen == None:
-            raise TypeError(repr(self) + " cannot be thawed")
-        else:
-            self._frozen = False
 
     def domain(self):
         """Domain of the function
