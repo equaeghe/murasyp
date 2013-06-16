@@ -1,5 +1,6 @@
 from collections import Mapping, MutableMapping, Hashable
 from fractions import Fraction
+from murasyp import _make_rational
 
 class Function(Hashable, MutableMapping):
     """Rational-valued functions
@@ -88,19 +89,10 @@ class Function(Hashable, MutableMapping):
 
     def __init__(self, mapping={}, frozen=True):
         """Create a rational-valued function"""
-        self._mapping = {arg: self._make_rational(value)
+        self._mapping = {arg: _make_rational(value)
                          for arg, value in mapping.items()}
         self._frozen = frozen
         self._normless_type = type(self)
-
-    def _make_rational(self, value):
-        """Make a Fraction of acceptable input"""
-        if type(value) == float: # treat floats as decimals
-            value = str(value)
-        try:
-            return Fraction(value)
-        except ValueError(repr(value) + " is not a Rational number"):
-            raise
 
     __len__ = lambda self: len(self._mapping)
     __iter__ = lambda self: iter(self._mapping)
@@ -112,8 +104,7 @@ class Function(Hashable, MutableMapping):
         if self._frozen:
             raise TypeError("frozen functions are immutable")
         else:
-            value = self._make_rational(value)
-            self._mapping.__setitem__(arg, value)
+            self._mapping.__setitem__(arg, _make_rational(value))
 
     def __delitem__(self, arg):
         if self._frozen:
@@ -210,8 +201,8 @@ class Function(Hashable, MutableMapping):
     def _with_scalar(self, other, operator):
         """Application of a binary operator to a function/scalar-pair"""
         try:
-            other = self._make_rational(other)
-            return self._normless_type({arg: operator(value, other)
+            return self._normless_type({arg: operator(value,
+                                                      _make_rational(other))
                                         for arg, value in self.items()})
         except NotImplementedError:
             raise
@@ -239,7 +230,8 @@ class Function(Hashable, MutableMapping):
     __mul__ = lambda self, other: self._pointwise(other, Fraction.__mul__)
     __rmul__ = __mul__
 
-    __truediv__ = lambda self, other: self._with_scalar(other, Fraction.__truediv__)
+    def __truediv__(self, other):
+        return self._with_scalar(other, Fraction.__truediv__)
 
     __neg__ = lambda self: self * (-1)
 

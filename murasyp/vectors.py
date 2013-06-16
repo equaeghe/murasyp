@@ -1,4 +1,5 @@
 from collections import Set, Mapping, MutableMapping
+from fractions import Fraction
 from murasyp.functions import Function
 
 class Vector(Function):
@@ -36,7 +37,7 @@ class Vector(Function):
     """
 
     __getitem__ = lambda self, x: (self._mapping[x] if x in self._mapping
-                                                    else self._make_rational(0))
+                                                    else Fraction(0))
 
     _domain_joiner = lambda self, other: iter(self.domain() | other.domain())
 

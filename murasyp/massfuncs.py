@@ -1,4 +1,5 @@
 from collections import Set, Mapping
+from fractions import Fraction
 from murasyp.vectors import Vector
 from murasyp.gambles import Gamble
 
@@ -91,7 +92,7 @@ class UMFunc(Vector):
                                 + str(data) + " with a total mass of zero")
             super().__init__(umfunc | umfunc.support(), None)
         else: # uniform
-            super().__init__({component: 1 / self._make_rational(len(data))
+            super().__init__({component: Fraction(1, len(data))
                               for component in data}, None)
         self._normless_type = Vector
 
