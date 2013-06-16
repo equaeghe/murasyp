@@ -155,7 +155,7 @@ class Function(Hashable, MutableMapping):
 
         """
         if self._frozen == None:
-            raise TypeError(str(type(self)) + " cannot be thawed")
+            raise TypeError(repr(self) + " cannot be thawed")
         else:
             self._frozen = False
 
