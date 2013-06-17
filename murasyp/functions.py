@@ -28,45 +28,6 @@ class Function(Freezable, MutableMapping):
         fractions and should be seen as just a convenient input representation
         for decimal numbers.
 
-    * If `frozen=True`, the :class:`~murasyp.functions.Function` is effectively 
-      immutable:
-
-      >>> f = Function({})
-      >>> f['a'] = 3
-      Traceback (most recent call last):
-        ...
-      TypeError: frozen functions are immutable
-
-      If `frozen=False`, the :class:`~murasyp.functions.Function` is effectively 
-      mutable:
-
-      >>> f = Function({'a': -1}, False)
-      >>> f['a'] = 5; f['b'] = 2; f
-      Function({'a': 5, 'b': 2})
-      >>> del f['a']; f
-      Function({'b': 2})
-      >>> f.clear(); f
-      Function({})
-
-      However, strange things may happen if mutable objects are used as keys in
-      :class:`~collections.Set` or :class:`~collections.Mapping`:
-
-      >>> f = Function({}, False) # frozen=False
-      >>> g = Function({}) # so frozen=True by default
-      >>> f == g # only content matters for equality, not mutability
-      True
-      >>> S = {f}; S
-      {Function({})}
-      >>> (f in S) & (g in S)
-      True
-      >>> f['a'] = 1; S
-      {Function({'a': 1})}
-      >>> (f in S) | (g in S)
-      False
-
-      So it is good practice to :meth:`~murasyp.functions.Function.freeze` a
-      :class:`~murasyp.functions.Function` before using it as a key.
-
     * Scalar multiplication and division, as well as pointwise multiplication,
       addition, and subtraction (also with scalars) is possible.
 
