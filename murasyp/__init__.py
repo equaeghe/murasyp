@@ -89,8 +89,8 @@ class Freezable(Hashable):
 
     __hash__ = lambda self: NotImplementedError
 
-    @staticmethod
-    def freeze_safe(method):
+    @classmethod
+    def freeze_safe(cls, method):
         """Decorater to make Freezable subclass methods aware of mutability"""
         def freeze_safe_method(self, *args, **kwargs):
             if self._frozen:
