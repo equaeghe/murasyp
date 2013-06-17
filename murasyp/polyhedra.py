@@ -20,7 +20,7 @@ class _VectorHull(Freezable, MutableSet):
         mat = Matrix(number_type='fraction')
         self._add_tableau(mat, vector)
         self._add_coefficient_constraints(mat)
-        mat.rep_type = RepType.GENERATOR
+        mat.rep_type = RepType.INEQUALITY
         mat.obj_type = LPObjType.MAX # does not matter, feasibility problem
         mat.obj_func = (0,) + len(self) * (0,) # feasibility, so constant objective
         lp = LinProg(mat)
