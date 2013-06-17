@@ -1,6 +1,6 @@
 from collections import Mapping, MutableMapping
 from fractions import Fraction
-from murasyp import _make_rational, Freezable
+from murasyp import Freezable
 
 class Function(Freezable, MutableMapping):
     """Rational-valued functions
@@ -48,9 +48,17 @@ class Function(Freezable, MutableMapping):
     def __init__(self, mapping={}, frozen=True):
         """Create a rational-valued function"""
         Freezable.__init__(self, frozen)
-        self._mapping = {arg: _make_rational(value)
+        self._mapping = {arg: self.make_rational(value)
                          for arg, value in mapping.items()}
         self._normless_type = type(self)
+
+    @classmethod
+    def make_rational(cls, value):
+        """Make a Fraction of acceptable input"""
+        try:
+            return Fraction(str(value))
+        except ValueError(repr(value) + " is not a rational number"):
+            raise
 
     __len__ = lambda self: len(self._mapping)
     __iter__ = lambda self: iter(self._mapping)
@@ -60,7 +68,7 @@ class Function(Freezable, MutableMapping):
 
     @Freezable.freeze_safe
     def __setitem__(self, arg, value):
-        self._mapping.__setitem__(arg, _make_rational(value))
+        self._mapping.__setitem__(arg, self.make_rational(value))
 
     @Freezable.freeze_safe
     def __delitem__(self, arg):
@@ -121,7 +129,7 @@ class Function(Freezable, MutableMapping):
         """Application of a binary operator to a function/scalar-pair"""
         try:
             return self._normless_type({arg: operator(value,
-                                                      _make_rational(other))
+                                                      self.make_rational(other))
                                         for arg, value in self.items()})
         except NotImplementedError:
             raise

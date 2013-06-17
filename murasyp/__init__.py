@@ -1,15 +1,7 @@
-from fractions import Fraction
 from collections import Hashable
 
 __version__ = '(git)'
 __release__ = __version__
-
-def _make_rational(value):
-    """Make a Fraction of acceptable input"""
-    try:
-        return Fraction(str(value))
-    except ValueError(repr(value) + " is not a rational number"):
-        raise
 
 class Freezable(Hashable):
     """Hashable objects that can be made immutable
