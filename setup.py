@@ -1,7 +1,7 @@
 """Setup script for murasyp."""
 
-# improb is a Python module for working with imprecise probabilities
-# Copyright (c) 2008-2011, Matthias Troffaes
+# murasyp is Python software for accept/reject statement-based uncertainty modeling
+# Copyright (c) 2011-2013, Erik Quaeghebeur
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
