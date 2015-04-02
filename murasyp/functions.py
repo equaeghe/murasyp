@@ -15,8 +15,7 @@ class Function(Mapping):
       especially convenient.
 
       >>> f = Function({'a': 11e-1, 'b': '-1/2','c': 0})
-      >>> f
-      Function({'a': '11/10', 'c': 0, 'b': '-1/2'})
+      >>> assert f == Function({'a': '11/10', 'c': 0, 'b': '-1/2'})
       >>> f['a']
       Fraction(11, 10)
 
@@ -31,10 +30,8 @@ class Function(Mapping):
 
       >>> f = Function({'a': 1.1, 'b': '-1/2','c': 0})
       >>> g = Function({'b': '.6', 'c': -2, 'd': 0.0})
-      >>> -1 + (.3 * f - g) / 2
-      Function({'c': 0, 'b': '-11/8'})
-      >>> f * g
-      Function({'c': 0, 'b': '-3/10'})
+      >>> assert -1 + (.3 * f - g) / 2 == Function({'c': 0, 'b': '-11/8'})
+      >>> assert f * g == Function({'c': 0, 'b': '-3/10'})
 
       .. note::
 
@@ -84,8 +81,10 @@ class Function(Mapping):
                     function is defined
           :rtype: :class:`frozenset`
 
-        >>> Function({'a': 1, 'b': -1, 'c': 0}).domain()
-        frozenset({'a', 'c', 'b'})
+        >>> assert (
+        ...     Function({'a': 1, 'b': -1, 'c': 0}).domain() ==
+        ...     frozenset({'a', 'c', 'b'})
+        ... )
 
         """
         return frozenset(self.keys())
@@ -97,8 +96,10 @@ class Function(Mapping):
                     returned by the function
           :rtype: :class:`frozenset`
 
-        >>> Function({'a': 1, 'b': -1, 'c': 0}).range()
-        frozenset({Fraction(0, 1), Fraction(1, 1), Fraction(-1, 1)})
+        >>> assert (
+        ...     Function({'a': 1, 'b': -1, 'c': 0}).range() ==
+        ...     frozenset({Fraction(0, 1), Fraction(1, 1), Fraction(-1, 1)})
+        ... )
 
         """
         return frozenset(self.values())
@@ -110,8 +111,10 @@ class Function(Mapping):
                     for which the function is nonzero
           :rtype: :class:`frozenset`
 
-        >>> Function({'a': 1, 'b': -1, 'c': 0}).support()
-        frozenset({'a', 'b'})
+        >>> assert (
+        ...     Function({'a': 1, 'b': -1, 'c': 0}).support() ==
+        ...     frozenset({'a', 'b'})
+        ... )
 
         """
         return frozenset(arg for arg, value in self.items() if value != 0)

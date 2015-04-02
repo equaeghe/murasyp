@@ -15,16 +15,17 @@ class Gamble(Vector):
       :class:`~collections.Hashable` :class:`~collections.Container`, then its
       so-called indicator function is generated.
 
-      >>> Gamble('abc')
-      Gamble({'a': 1, 'c': 1, 'b': 1})
-      >>> Gamble({'abc'})
-      Gamble({'abc': 1})
+      >>> assert Gamble('abc') == Gamble({'a': 1, 'c': 1, 'b': 1})
+      >>> assert Gamble({'abc'}) == Gamble({'abc': 1})
 
     * A gamble's domain can be cylindrically extended to the cartesian product
       of its domain and a specified :class:`~collections.Set`.
 
-      >>> Gamble({'a': 0, 'b': -1}) ^ {'c', 'd'}
-      Gamble({('b', 'c'): -1, ('a', 'd'): 0, ('a', 'c'): 0, ('b', 'd'): -1})
+      >>> assert (
+      ...     Gamble({'a': 0, 'b': -1}) ^ {'c', 'd'} ==
+      ...     Gamble({('b', 'c'): -1, ('a', 'd'): 0,
+      ...             ('a', 'c'): 0, ('b', 'd'): -1})
+      ... )
 
     """
 
@@ -67,15 +68,16 @@ class Gamble(Vector):
                     :math:`(f-\min f)/(\max f-\min f)` of the gamble :math:`f`
           :rtype: :class:`~murasyp.gambles.Gamble`
 
-        >>> Gamble({'a': 1, 'b': 3, 'c': 4}).scaled_shifted()
-        Gamble({'a': 0, 'c': 1, 'b': '2/3'})
+        >>> assert (
+        ...     Gamble({'a': 1, 'b': 3, 'c': 4}).scaled_shifted() ==
+        ...     Gamble({'a': 0, 'c': 1, 'b': '2/3'})
+        ... )
 
         .. note::
 
           ``None`` is returned in case the gamble is constant:
 
-          >>> Gamble({'a': 2, 'b': 2}).scaled_shifted() == None
-          True
+          >>> assert Gamble({'a': 2, 'b': 2}).scaled_shifted() == None
 
         """
         minval, maxval = self.bounds()
@@ -103,8 +105,10 @@ class Gamble(Vector):
                     :math:`f`
           :rtype: :class:`~murasyp.gambles.Gamble`
 
-        >>> Gamble({'a': 1, 'b': 3, 'c': 4}).normalized()
-        Gamble({'a': '1/4', 'c': 1, 'b': '3/4'})
+        >>> assert (
+        ...     Gamble({'a': 1, 'b': 3, 'c': 4}).normalized() ==
+        ...     Gamble({'a': '1/4', 'c': 1, 'b': '3/4'})
+        ... )
 
         .. note::
 
@@ -128,16 +132,13 @@ class Ray(Gamble):
 
     * Its domain coincides with its support and it is max-normalized.
 
-      >>> Ray({'a': 5, 'b': -1, 'c': 0})
-      Ray({'a': 1, 'b': '-1/5'})
-      >>> Ray({'a': 0})
-      Ray({})
+      >>> assert Ray({'a': 5, 'b': -1, 'c': 0}) == Ray({'a': 1, 'b': '-1/5'})
+      >>> assert Ray({'a': 0}) == Ray({})
 
     * Ray-arithmetic results in gambles (which can be converted to rays).
 
       >>> r = Ray({'a': 1,'b': -2})
-      >>> .3 * r * r + r / 2
-      Gamble({'a': '13/40', 'b': '-1/5'})
+      >>> assert .3 * r * r + r / 2 == Gamble({'a': '13/40', 'b': '-1/5'})
 
     """
 
@@ -165,12 +166,18 @@ class Cone(Polytope):
         :class:`~collections.Iterable` :class:`~collections.Container` of
         arguments accepted by the :class:`~murasyp.gambles.Ray` constructor.
 
-      >>> Cone([{'a': 2, 'b': 3}, {'b': 1, 'c': 4}])
-      Cone({Ray({'a': '2/3', 'b': 1}), Ray({'c': 1, 'b': '1/4'})})
-      >>> Cone('abc')
-      Cone({Ray({'a': 1}), Ray({'b': 1}), Ray({'c': 1})})
-      >>> Cone({'ab', 'bc'})
-      Cone({Ray({'c': 1, 'b': 1}), Ray({'a': 1, 'b': 1})})
+      >>> assert (
+      ...     Cone([{'a': 2, 'b': 3}, {'b': 1, 'c': 4}]) ==
+      ...     Cone({Ray({'a': '2/3', 'b': 1}), Ray({'c': 1, 'b': '1/4'})})
+      ... )
+      >>> assert (
+      ...     Cone('abc') ==
+      ...     Cone({Ray({'a': 1}), Ray({'b': 1}), Ray({'c': 1})})
+      ... )
+      >>> assert (
+      ...     Cone({'ab', 'bc'}) ==
+      ...     Cone({Ray({'c': 1, 'b': 1}), Ray({'a': 1, 'b': 1})})
+      ... )
 
     This class derives from :class:`~murasyp.vectors.Polytope`, so its methods
     apply here as well.

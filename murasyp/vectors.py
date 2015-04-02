@@ -18,14 +18,12 @@ class Vector(Function, Hashable):
       Traceback (most recent call last):
         ...
       TypeError: unhashable type: 'Function'
-      >>> {Vector({})}
-      {Vector({})}
+      >>> assert {Vector({})} == {Vector({})}
 
     * Unspecified values are assumed to be zero.
 
       >>> f = Vector({'a': 1.1, 'b': '-1/2','c': 0})
-      >>> f
-      Vector({'a': '11/10', 'c': 0, 'b': '-1/2'})
+      >>> assert f == Vector({'a': '11/10', 'c': 0, 'b': '-1/2'})
       >>> f['d']
       Fraction(0, 1)
 
@@ -33,17 +31,17 @@ class Vector(Function, Hashable):
 
       >>> f = Vector({'a': 1.1, 'b': '-1/2','c': 0})
       >>> g = Vector({'b': '.6', 'c': -2, 'd': 0.0})
-      >>> 1 + (.3 * f - g) / 2
-      Vector({'a': '233/200', 'c': 2, 'b': '5/8', 'd': 1})
+      >>> assert (
+      ...     1 + (.3 * f - g) / 2 ==
+      ...     Vector({'a': '233/200', 'c': 2, 'b': '5/8', 'd': 1})
+      ... )
 
     * A vector's domain can be restricted/extended to a specified
       :class:`~collections.Set`.
 
       >>> f = Vector({'a': 1.1, 'b': '-1/2','c': 0})
-      >>> f | {'a','b'}
-      Vector({'a': '11/10', 'b': '-1/2'})
-      >>> f | {'a','d'}
-      Vector({'a': '11/10', 'd': 0})
+      >>> assert f | {'a','b'} == Vector({'a': '11/10', 'b': '-1/2'})
+      >>> assert f | {'a','d'} == Vector({'a': '11/10', 'd': 0})
 
     """
 
@@ -80,10 +78,11 @@ class Vector(Function, Hashable):
                     vector's values
           :rtype: :class:`~murasyp.vectors.Vector`
 
-        >>> Vector({'a': 1, 'b': '-1/2','c': 0}).sum_normalized()
-        Vector({'a': 2, 'c': 0, 'b': -1})
-        >>> Vector({'a': 1, 'b': -1,'c': 0}).sum_normalized() == None
-        True
+        >>> assert (
+        ...     Vector({'a': 1, 'b': '-1/2','c': 0}).sum_normalized() ==
+        ...     Vector({'a': 2, 'c': 0, 'b': -1})
+        ... )
+        >>> assert Vector({'a': 1, 'b': -1,'c': 0}).sum_normalized() == None
 
         .. note::
 
@@ -116,8 +115,10 @@ class Polytope(frozenset):
         :class:`~collections.Iterable` :class:`~collections.Container` of
         arguments accepted by the :class:`~murasyp.vectors.Vector` constructor.
 
-      >>> Polytope([{'a': 2, 'b': 3}, {'b': 1, 'c': 4}])
-      Polytope({Vector({'a': 2, 'b': 3}), Vector({'c': 4, 'b': 1})})
+      >>> assert (
+      ...     Polytope([{'a': 2, 'b': 3}, {'b': 1, 'c': 4}]) ==
+      ...     Polytope({Vector({'a': 2, 'b': 3}), Vector({'c': 4, 'b': 1})})
+      ... )
 
     This class derives from :class:`~frozenset`, so its methods apply here as
     well.
@@ -149,8 +150,7 @@ class Polytope(frozenset):
 
         >>> r = Vector({'a': .03, 'b': -.07})
         >>> s = Vector({'a': .07, 'c': -.03})
-        >>> Polytope({r, s}).domain()
-        frozenset({'a', 'c', 'b'})
+        >>> assert Polytope({r, s}).domain() == frozenset({'a', 'c', 'b'})
 
         """
         return frozenset.union(*(vector.domain() for vector in self))
@@ -171,11 +171,13 @@ class Trafo(MutableMapping):
       >>> T = Trafo()
       >>> T['a'] = {('a', 'c'): 1, ('a', 'd'): 1}
       >>> T['b'] = {('b', 'c'): 1, ('b', 'd'): 1}
-      >>> T << Vector({'a': 1, 'b': 2})
-      Vector({('b', 'c'): 2, ('a', 'd'): 1, ('a', 'c'): 1, ('b', 'd'): 2})
+      >>> assert (
+      ...     T << Vector({'a': 1, 'b': 2}) ==
+      ...     Vector({('b', 'c'): 2, ('a', 'd'): 1,
+      ...             ('a', 'c'): 1, ('b', 'd'): 2})
+      ... )
       >>> P = Polytope({Vector({'a': -2})})
-      >>> T << P
-      Polytope({Vector({('a', 'd'): -2, ('a', 'c'): -2})})
+      >>> assert T << P == Polytope({Vector({('a', 'd'): -2, ('a', 'c'): -2})})
 
     """
     def __init__(self, mapping={}):

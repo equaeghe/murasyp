@@ -16,14 +16,15 @@ class UMFunc(Vector):
       :class:`~collections.Container`, then the mass is spread uniformly over
       its components.
 
-      >>> UMFunc('abc')
-      UMFunc({'a': '1/3', 'c': '1/3', 'b': '1/3'})
+      >>> assert UMFunc('abc') == UMFunc({'a': '1/3', 'c': '1/3', 'b': '1/3'})
 
     * Its total mass, i.e., the sum of its values, is one and its domain
       coincides with its support.
 
-      >>> UMFunc({'a': -.6, 'b': 1.2, 'c': 1.4, 'd': 0})
-      UMFunc({'a': '-3/10', 'c': '7/10', 'b': '3/5'})
+      >>> assert (
+      ...     UMFunc({'a': -.6, 'b': 1.2, 'c': 1.4, 'd': 0}) ==
+      ...     UMFunc({'a': '-3/10', 'c': '7/10', 'b': '3/5'})
+      ... )
       >>> UMFunc({'a': -1, 'b': 1})
       Traceback (most recent call last):
         ...
@@ -32,8 +33,10 @@ class UMFunc(Vector):
     * Restriction becomes conditioning, i.e., it includes renormalization and
       may be impossible if the conditioning event has zero net mass assigned.
 
-      >>> UMFunc({'a': -.6, 'b': 1.2, 'c': 1.4}) | {'a', 'b', 'd'}
-      UMFunc({'a': -1, 'b': 2})
+      >>> assert (
+      ...     UMFunc({'a': -.6, 'b': 1.2, 'c': 1.4}) | {'a', 'b', 'd'} ==
+      ...     UMFunc({'a': -1, 'b': 2})
+      ... )
       >>> UMFunc({'a': -1, 'b': 1, 'd': 1}) | {'a', 'c', 'd'}
       Traceback (most recent call last):
         ...
@@ -49,7 +52,8 @@ class UMFunc(Vector):
       >>> m * f
       Fraction(113, 5)
 
-      Take note, however, that the domain of the gamble acts as a conditioning event (so one can calculate conditional expectations without explicitly
+      Take note, however, that the domain of the gamble acts as a conditioning
+      event (so one can calculate conditional expectations without explicitly
       calculating conditional mass functions).
 
       >>> m = UMFunc({'a': '1/3', 'b': '1/6', 'c': '1/2'})
@@ -66,10 +70,8 @@ class UMFunc(Vector):
 
       >>> m = UMFunc({'a': 1.7, 'b': -.7})
       >>> n = UMFunc({'a': .5, 'b': .5})
-      >>> m + n
-      Vector({'a': '11/5', 'b': '-1/5'})
-      >>> UMFunc(.5 * m + n / 2)
-      UMFunc({'a': '11/10', 'b': '-1/10'})
+      >>> assert m + n == Vector({'a': '11/5', 'b': '-1/5'})
+      >>> assert UMFunc(.5 * m + n / 2) == UMFunc({'a': '11/10', 'b': '-1/10'})
 
     """
 
