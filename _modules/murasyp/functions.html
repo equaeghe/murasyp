@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -67,8 +65,7 @@
 <span class="sd">      especially convenient.</span>
 
 <span class="sd">      &gt;&gt;&gt; f = Function({&#39;a&#39;: 11e-1, &#39;b&#39;: &#39;-1/2&#39;,&#39;c&#39;: 0})</span>
-<span class="sd">      &gt;&gt;&gt; f</span>
-<span class="sd">      Function({&#39;a&#39;: &#39;11/10&#39;, &#39;c&#39;: 0, &#39;b&#39;: &#39;-1/2&#39;})</span>
+<span class="sd">      &gt;&gt;&gt; assert f == Function({&#39;a&#39;: &#39;11/10&#39;, &#39;c&#39;: 0, &#39;b&#39;: &#39;-1/2&#39;})</span>
 <span class="sd">      &gt;&gt;&gt; f[&#39;a&#39;]</span>
 <span class="sd">      Fraction(11, 10)</span>
 
@@ -83,10 +80,8 @@
 
 <span class="sd">      &gt;&gt;&gt; f = Function({&#39;a&#39;: 1.1, &#39;b&#39;: &#39;-1/2&#39;,&#39;c&#39;: 0})</span>
 <span class="sd">      &gt;&gt;&gt; g = Function({&#39;b&#39;: &#39;.6&#39;, &#39;c&#39;: -2, &#39;d&#39;: 0.0})</span>
-<span class="sd">      &gt;&gt;&gt; -1 + (.3 * f - g) / 2</span>
-<span class="sd">      Function({&#39;c&#39;: 0, &#39;b&#39;: &#39;-11/8&#39;})</span>
-<span class="sd">      &gt;&gt;&gt; f * g</span>
-<span class="sd">      Function({&#39;c&#39;: 0, &#39;b&#39;: &#39;-3/10&#39;})</span>
+<span class="sd">      &gt;&gt;&gt; assert -1 + (.3 * f - g) / 2 == Function({&#39;c&#39;: 0, &#39;b&#39;: &#39;-11/8&#39;})</span>
+<span class="sd">      &gt;&gt;&gt; assert f * g == Function({&#39;c&#39;: 0, &#39;b&#39;: &#39;-3/10&#39;})</span>
 
 <span class="sd">      .. note::</span>
 
@@ -136,8 +131,10 @@
 <span class="sd">                    function is defined</span>
 <span class="sd">          :rtype: :class:`frozenset`</span>
 
-<span class="sd">        &gt;&gt;&gt; Function({&#39;a&#39;: 1, &#39;b&#39;: -1, &#39;c&#39;: 0}).domain()</span>
-<span class="sd">        frozenset({&#39;a&#39;, &#39;c&#39;, &#39;b&#39;})</span>
+<span class="sd">        &gt;&gt;&gt; assert (</span>
+<span class="sd">        ...     Function({&#39;a&#39;: 1, &#39;b&#39;: -1, &#39;c&#39;: 0}).domain() ==</span>
+<span class="sd">        ...     frozenset({&#39;a&#39;, &#39;c&#39;, &#39;b&#39;})</span>
+<span class="sd">        ... )</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">frozenset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
@@ -149,8 +146,10 @@
 <span class="sd">                    returned by the function</span>
 <span class="sd">          :rtype: :class:`frozenset`</span>
 
-<span class="sd">        &gt;&gt;&gt; Function({&#39;a&#39;: 1, &#39;b&#39;: -1, &#39;c&#39;: 0}).range()</span>
-<span class="sd">        frozenset({Fraction(0, 1), Fraction(1, 1), Fraction(-1, 1)})</span>
+<span class="sd">        &gt;&gt;&gt; assert (</span>
+<span class="sd">        ...     Function({&#39;a&#39;: 1, &#39;b&#39;: -1, &#39;c&#39;: 0}).range() ==</span>
+<span class="sd">        ...     frozenset({Fraction(0, 1), Fraction(1, 1), Fraction(-1, 1)})</span>
+<span class="sd">        ... )</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">frozenset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
@@ -162,8 +161,10 @@
 <span class="sd">                    for which the function is nonzero</span>
 <span class="sd">          :rtype: :class:`frozenset`</span>
 
-<span class="sd">        &gt;&gt;&gt; Function({&#39;a&#39;: 1, &#39;b&#39;: -1, &#39;c&#39;: 0}).support()</span>
-<span class="sd">        frozenset({&#39;a&#39;, &#39;b&#39;})</span>
+<span class="sd">        &gt;&gt;&gt; assert (</span>
+<span class="sd">        ...     Function({&#39;a&#39;: 1, &#39;b&#39;: -1, &#39;c&#39;: 0}).support() ==</span>
+<span class="sd">        ...     frozenset({&#39;a&#39;, &#39;b&#39;})</span>
+<span class="sd">        ... )</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">frozenset</span><span class="p">(</span><span class="n">arg</span> <span class="k">for</span> <span class="n">arg</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">value</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
@@ -248,7 +249,7 @@
     </div>
     <div class="footer">
         &copy; Copyright 2011–2013, Erik Quaeghebeur.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
     </div>
   </body>
 </html>

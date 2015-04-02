@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -68,14 +66,15 @@
 <span class="sd">      :class:`~collections.Container`, then the mass is spread uniformly over</span>
 <span class="sd">      its components.</span>
 
-<span class="sd">      &gt;&gt;&gt; UMFunc(&#39;abc&#39;)</span>
-<span class="sd">      UMFunc({&#39;a&#39;: &#39;1/3&#39;, &#39;c&#39;: &#39;1/3&#39;, &#39;b&#39;: &#39;1/3&#39;})</span>
+<span class="sd">      &gt;&gt;&gt; assert UMFunc(&#39;abc&#39;) == UMFunc({&#39;a&#39;: &#39;1/3&#39;, &#39;c&#39;: &#39;1/3&#39;, &#39;b&#39;: &#39;1/3&#39;})</span>
 
 <span class="sd">    * Its total mass, i.e., the sum of its values, is one and its domain</span>
 <span class="sd">      coincides with its support.</span>
 
-<span class="sd">      &gt;&gt;&gt; UMFunc({&#39;a&#39;: -.6, &#39;b&#39;: 1.2, &#39;c&#39;: 1.4, &#39;d&#39;: 0})</span>
-<span class="sd">      UMFunc({&#39;a&#39;: &#39;-3/10&#39;, &#39;c&#39;: &#39;7/10&#39;, &#39;b&#39;: &#39;3/5&#39;})</span>
+<span class="sd">      &gt;&gt;&gt; assert (</span>
+<span class="sd">      ...     UMFunc({&#39;a&#39;: -.6, &#39;b&#39;: 1.2, &#39;c&#39;: 1.4, &#39;d&#39;: 0}) ==</span>
+<span class="sd">      ...     UMFunc({&#39;a&#39;: &#39;-3/10&#39;, &#39;c&#39;: &#39;7/10&#39;, &#39;b&#39;: &#39;3/5&#39;})</span>
+<span class="sd">      ... )</span>
 <span class="sd">      &gt;&gt;&gt; UMFunc({&#39;a&#39;: -1, &#39;b&#39;: 1})</span>
 <span class="sd">      Traceback (most recent call last):</span>
 <span class="sd">        ...</span>
@@ -84,8 +83,10 @@
 <span class="sd">    * Restriction becomes conditioning, i.e., it includes renormalization and</span>
 <span class="sd">      may be impossible if the conditioning event has zero net mass assigned.</span>
 
-<span class="sd">      &gt;&gt;&gt; UMFunc({&#39;a&#39;: -.6, &#39;b&#39;: 1.2, &#39;c&#39;: 1.4}) | {&#39;a&#39;, &#39;b&#39;, &#39;d&#39;}</span>
-<span class="sd">      UMFunc({&#39;a&#39;: -1, &#39;b&#39;: 2})</span>
+<span class="sd">      &gt;&gt;&gt; assert (</span>
+<span class="sd">      ...     UMFunc({&#39;a&#39;: -.6, &#39;b&#39;: 1.2, &#39;c&#39;: 1.4}) | {&#39;a&#39;, &#39;b&#39;, &#39;d&#39;} ==</span>
+<span class="sd">      ...     UMFunc({&#39;a&#39;: -1, &#39;b&#39;: 2})</span>
+<span class="sd">      ... )</span>
 <span class="sd">      &gt;&gt;&gt; UMFunc({&#39;a&#39;: -1, &#39;b&#39;: 1, &#39;d&#39;: 1}) | {&#39;a&#39;, &#39;c&#39;, &#39;d&#39;}</span>
 <span class="sd">      Traceback (most recent call last):</span>
 <span class="sd">        ...</span>
@@ -101,7 +102,8 @@
 <span class="sd">      &gt;&gt;&gt; m * f</span>
 <span class="sd">      Fraction(113, 5)</span>
 
-<span class="sd">      Take note, however, that the domain of the gamble acts as a conditioning event (so one can calculate conditional expectations without explicitly</span>
+<span class="sd">      Take note, however, that the domain of the gamble acts as a conditioning</span>
+<span class="sd">      event (so one can calculate conditional expectations without explicitly</span>
 <span class="sd">      calculating conditional mass functions).</span>
 
 <span class="sd">      &gt;&gt;&gt; m = UMFunc({&#39;a&#39;: &#39;1/3&#39;, &#39;b&#39;: &#39;1/6&#39;, &#39;c&#39;: &#39;1/2&#39;})</span>
@@ -118,10 +120,8 @@
 
 <span class="sd">      &gt;&gt;&gt; m = UMFunc({&#39;a&#39;: 1.7, &#39;b&#39;: -.7})</span>
 <span class="sd">      &gt;&gt;&gt; n = UMFunc({&#39;a&#39;: .5, &#39;b&#39;: .5})</span>
-<span class="sd">      &gt;&gt;&gt; m + n</span>
-<span class="sd">      Vector({&#39;a&#39;: &#39;11/5&#39;, &#39;b&#39;: &#39;-1/5&#39;})</span>
-<span class="sd">      &gt;&gt;&gt; UMFunc(.5 * m + n / 2)</span>
-<span class="sd">      UMFunc({&#39;a&#39;: &#39;11/10&#39;, &#39;b&#39;: &#39;-1/10&#39;})</span>
+<span class="sd">      &gt;&gt;&gt; assert m + n == Vector({&#39;a&#39;: &#39;11/5&#39;, &#39;b&#39;: &#39;-1/5&#39;})</span>
+<span class="sd">      &gt;&gt;&gt; assert UMFunc(.5 * m + n / 2) == UMFunc({&#39;a&#39;: &#39;11/10&#39;, &#39;b&#39;: &#39;-1/10&#39;})</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -219,7 +219,7 @@
     </div>
     <div class="footer">
         &copy; Copyright 2011–2013, Erik Quaeghebeur.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
     </div>
   </body>
 </html>

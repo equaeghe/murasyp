@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -67,16 +65,17 @@
 <span class="sd">      :class:`~collections.Hashable` :class:`~collections.Container`, then its</span>
 <span class="sd">      so-called indicator function is generated.</span>
 
-<span class="sd">      &gt;&gt;&gt; Gamble(&#39;abc&#39;)</span>
-<span class="sd">      Gamble({&#39;a&#39;: 1, &#39;c&#39;: 1, &#39;b&#39;: 1})</span>
-<span class="sd">      &gt;&gt;&gt; Gamble({&#39;abc&#39;})</span>
-<span class="sd">      Gamble({&#39;abc&#39;: 1})</span>
+<span class="sd">      &gt;&gt;&gt; assert Gamble(&#39;abc&#39;) == Gamble({&#39;a&#39;: 1, &#39;c&#39;: 1, &#39;b&#39;: 1})</span>
+<span class="sd">      &gt;&gt;&gt; assert Gamble({&#39;abc&#39;}) == Gamble({&#39;abc&#39;: 1})</span>
 
 <span class="sd">    * A gamble&#39;s domain can be cylindrically extended to the cartesian product</span>
 <span class="sd">      of its domain and a specified :class:`~collections.Set`.</span>
 
-<span class="sd">      &gt;&gt;&gt; Gamble({&#39;a&#39;: 0, &#39;b&#39;: -1}) ^ {&#39;c&#39;, &#39;d&#39;}</span>
-<span class="sd">      Gamble({(&#39;b&#39;, &#39;c&#39;): -1, (&#39;a&#39;, &#39;d&#39;): 0, (&#39;a&#39;, &#39;c&#39;): 0, (&#39;b&#39;, &#39;d&#39;): -1})</span>
+<span class="sd">      &gt;&gt;&gt; assert (</span>
+<span class="sd">      ...     Gamble({&#39;a&#39;: 0, &#39;b&#39;: -1}) ^ {&#39;c&#39;, &#39;d&#39;} ==</span>
+<span class="sd">      ...     Gamble({(&#39;b&#39;, &#39;c&#39;): -1, (&#39;a&#39;, &#39;d&#39;): 0,</span>
+<span class="sd">      ...             (&#39;a&#39;, &#39;c&#39;): 0, (&#39;b&#39;, &#39;d&#39;): -1})</span>
+<span class="sd">      ... )</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -119,15 +118,16 @@
 <span class="sd">                    :math:`(f-\min f)/(\max f-\min f)` of the gamble :math:`f`</span>
 <span class="sd">          :rtype: :class:`~murasyp.gambles.Gamble`</span>
 
-<span class="sd">        &gt;&gt;&gt; Gamble({&#39;a&#39;: 1, &#39;b&#39;: 3, &#39;c&#39;: 4}).scaled_shifted()</span>
-<span class="sd">        Gamble({&#39;a&#39;: 0, &#39;c&#39;: 1, &#39;b&#39;: &#39;2/3&#39;})</span>
+<span class="sd">        &gt;&gt;&gt; assert (</span>
+<span class="sd">        ...     Gamble({&#39;a&#39;: 1, &#39;b&#39;: 3, &#39;c&#39;: 4}).scaled_shifted() ==</span>
+<span class="sd">        ...     Gamble({&#39;a&#39;: 0, &#39;c&#39;: 1, &#39;b&#39;: &#39;2/3&#39;})</span>
+<span class="sd">        ... )</span>
 
 <span class="sd">        .. note::</span>
 
 <span class="sd">          ``None`` is returned in case the gamble is constant:</span>
 
-<span class="sd">          &gt;&gt;&gt; Gamble({&#39;a&#39;: 2, &#39;b&#39;: 2}).scaled_shifted() == None</span>
-<span class="sd">          True</span>
+<span class="sd">          &gt;&gt;&gt; assert Gamble({&#39;a&#39;: 2, &#39;b&#39;: 2}).scaled_shifted() == None</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">minval</span><span class="p">,</span> <span class="n">maxval</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bounds</span><span class="p">()</span>
@@ -155,8 +155,10 @@
 <span class="sd">                    :math:`f`</span>
 <span class="sd">          :rtype: :class:`~murasyp.gambles.Gamble`</span>
 
-<span class="sd">        &gt;&gt;&gt; Gamble({&#39;a&#39;: 1, &#39;b&#39;: 3, &#39;c&#39;: 4}).normalized()</span>
-<span class="sd">        Gamble({&#39;a&#39;: &#39;1/4&#39;, &#39;c&#39;: 1, &#39;b&#39;: &#39;3/4&#39;})</span>
+<span class="sd">        &gt;&gt;&gt; assert (</span>
+<span class="sd">        ...     Gamble({&#39;a&#39;: 1, &#39;b&#39;: 3, &#39;c&#39;: 4}).normalized() ==</span>
+<span class="sd">        ...     Gamble({&#39;a&#39;: &#39;1/4&#39;, &#39;c&#39;: 1, &#39;b&#39;: &#39;3/4&#39;})</span>
+<span class="sd">        ... )</span>
 
 <span class="sd">        .. note::</span>
 
@@ -180,16 +182,13 @@
 
 <span class="sd">    * Its domain coincides with its support and it is max-normalized.</span>
 
-<span class="sd">      &gt;&gt;&gt; Ray({&#39;a&#39;: 5, &#39;b&#39;: -1, &#39;c&#39;: 0})</span>
-<span class="sd">      Ray({&#39;a&#39;: 1, &#39;b&#39;: &#39;-1/5&#39;})</span>
-<span class="sd">      &gt;&gt;&gt; Ray({&#39;a&#39;: 0})</span>
-<span class="sd">      Ray({})</span>
+<span class="sd">      &gt;&gt;&gt; assert Ray({&#39;a&#39;: 5, &#39;b&#39;: -1, &#39;c&#39;: 0}) == Ray({&#39;a&#39;: 1, &#39;b&#39;: &#39;-1/5&#39;})</span>
+<span class="sd">      &gt;&gt;&gt; assert Ray({&#39;a&#39;: 0}) == Ray({})</span>
 
 <span class="sd">    * Ray-arithmetic results in gambles (which can be converted to rays).</span>
 
 <span class="sd">      &gt;&gt;&gt; r = Ray({&#39;a&#39;: 1,&#39;b&#39;: -2})</span>
-<span class="sd">      &gt;&gt;&gt; .3 * r * r + r / 2</span>
-<span class="sd">      Gamble({&#39;a&#39;: &#39;13/40&#39;, &#39;b&#39;: &#39;-1/5&#39;})</span>
+<span class="sd">      &gt;&gt;&gt; assert .3 * r * r + r / 2 == Gamble({&#39;a&#39;: &#39;13/40&#39;, &#39;b&#39;: &#39;-1/5&#39;})</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -217,12 +216,18 @@
 <span class="sd">        :class:`~collections.Iterable` :class:`~collections.Container` of</span>
 <span class="sd">        arguments accepted by the :class:`~murasyp.gambles.Ray` constructor.</span>
 
-<span class="sd">      &gt;&gt;&gt; Cone([{&#39;a&#39;: 2, &#39;b&#39;: 3}, {&#39;b&#39;: 1, &#39;c&#39;: 4}])</span>
-<span class="sd">      Cone({Ray({&#39;a&#39;: &#39;2/3&#39;, &#39;b&#39;: 1}), Ray({&#39;c&#39;: 1, &#39;b&#39;: &#39;1/4&#39;})})</span>
-<span class="sd">      &gt;&gt;&gt; Cone(&#39;abc&#39;)</span>
-<span class="sd">      Cone({Ray({&#39;a&#39;: 1}), Ray({&#39;b&#39;: 1}), Ray({&#39;c&#39;: 1})})</span>
-<span class="sd">      &gt;&gt;&gt; Cone({&#39;ab&#39;, &#39;bc&#39;})</span>
-<span class="sd">      Cone({Ray({&#39;c&#39;: 1, &#39;b&#39;: 1}), Ray({&#39;a&#39;: 1, &#39;b&#39;: 1})})</span>
+<span class="sd">      &gt;&gt;&gt; assert (</span>
+<span class="sd">      ...     Cone([{&#39;a&#39;: 2, &#39;b&#39;: 3}, {&#39;b&#39;: 1, &#39;c&#39;: 4}]) ==</span>
+<span class="sd">      ...     Cone({Ray({&#39;a&#39;: &#39;2/3&#39;, &#39;b&#39;: 1}), Ray({&#39;c&#39;: 1, &#39;b&#39;: &#39;1/4&#39;})})</span>
+<span class="sd">      ... )</span>
+<span class="sd">      &gt;&gt;&gt; assert (</span>
+<span class="sd">      ...     Cone(&#39;abc&#39;) ==</span>
+<span class="sd">      ...     Cone({Ray({&#39;a&#39;: 1}), Ray({&#39;b&#39;: 1}), Ray({&#39;c&#39;: 1})})</span>
+<span class="sd">      ... )</span>
+<span class="sd">      &gt;&gt;&gt; assert (</span>
+<span class="sd">      ...     Cone({&#39;ab&#39;, &#39;bc&#39;}) ==</span>
+<span class="sd">      ...     Cone({Ray({&#39;c&#39;: 1, &#39;b&#39;: 1}), Ray({&#39;a&#39;: 1, &#39;b&#39;: 1})})</span>
+<span class="sd">      ... )</span>
 
 <span class="sd">    This class derives from :class:`~murasyp.vectors.Polytope`, so its methods</span>
 <span class="sd">    apply here as well.</span>
@@ -282,7 +287,7 @@
     </div>
     <div class="footer">
         &copy; Copyright 2011–2013, Erik Quaeghebeur.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
     </div>
   </body>
 </html>
