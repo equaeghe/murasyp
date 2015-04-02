@@ -2,6 +2,7 @@ from collections import Mapping
 from cdd import Matrix, RepType
 from murasyp.massfuncs import PMFunc
 from murasyp.gambles import Gamble, Ray
+import murasyp.desirs
 import murasyp.mathprog
 
 class CredalSet(set):
