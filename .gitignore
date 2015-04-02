@@ -3,3 +3,6 @@ doctrees/
 doctest/
 *.pyc
 *.kate-swp
+build/*
+dist/*
+*.egg-info/*

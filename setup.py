@@ -31,13 +31,13 @@ Operating System :: OS Independent"""
 from setuptools import setup, find_packages
 
 with open("README.rst", "rb") as readme_file:
-    doclines = readme_file.read().split("\n")
+    doclines = readme_file.read().decode().split("\n")
 
 with open("requirements.txt", "rb") as requires_file:
-    requires = requires_file.read().split()
+    requires = requires_file.read().decode().split()
 
 with open("VERSION", "rb") as version_file:
-    version = version_file.read().strip()
+    version = version_file.read().decode().strip()
 
 setup(
     name="murasyp",
